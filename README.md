@@ -3,7 +3,7 @@
 Standalone ReAct trace collection code for:
 - **GAIA** (text-only subset; file-based tasks filtered out)
 - **BBH (modified)** (MCQ → open-ended “GAIA-style”, with `\\boxed{}` answer instruction)
-- **Reasoning Gym** (infinite task generator)
+- > [**Reasoning Gym**](https://github.com/open-thought/reasoning-gym) (infinite task generator)
 
 This repo supports:
 - **`--sources bbh`**
