@@ -5,7 +5,10 @@ Standalone **ReAct trace collection** code for:
 - **BBH (modified)** (MCQ → open-ended “GAIA-style”, with `\\boxed{}` answer instruction)
 - **Reasoning Gym** (procedural task generator)
 
-It focuses only on GAIA, modified BBH, and Reasoning Gym.
+This repo supports:
+- **`--sources bbh`**
+- **`--sources gaia`**
+- **`--sources reasoning-gym`**
 
 ### Install
 
@@ -40,10 +43,13 @@ Example (Reasoning Gym via config file), from repo root:
 python collect_traces.py \
   --sources reasoning-gym \
   --rg-config configs/rg_all_tasks_seed256_n624.yaml \
-  --rg-root /path/to/reasoning-gym \
+  --rg-root /home/ubuntu/workspace/reasoning-gym \
   --rg-size 624 \
-  --model google/gemini-2.5-flash-lite-preview-09-2025 \
-  --concurrency 8 \
+  --model google/gemini-3-flash-preview \
+  --reasoning-effort low \
+  --max-tokens 100000 \
+  --concurrency 16 \
+  --max-steps 30 \
   --allowed-tools all
 ```
 
