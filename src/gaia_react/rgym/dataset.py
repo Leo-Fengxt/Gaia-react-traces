@@ -202,22 +202,22 @@ def load_reasoning_gym_tasks(
     else:
         name = str(dataset_name or "").strip()
         if not name:
-            raise ValueError("For reasoning-gym source, you must pass either --rg-config PATH or --rg-dataset NAME")
+            raise ValueError("For reasoning-gym source, you must pass either --config PATH or --dataset NAME")
         specs = [RGDatasetSpec(name=name, weight=1.0, config={})]
 
     if dataset_config_json and len(specs) == 1 and not config_path:
         try:
             cfg = json.loads(str(dataset_config_json))
         except Exception as e:
-            raise ValueError("--rg-dataset-config-json must be valid JSON") from e
+            raise ValueError("--dataset-config-json must be valid JSON") from e
         if not isinstance(cfg, dict):
-            raise ValueError("--rg-dataset-config-json must be a JSON object (mapping)")
+            raise ValueError("--dataset-config-json must be a JSON object (mapping)")
         specs[0].config = dict(cfg)
 
     for s in specs:
         if s.name not in DATASETS:
             raise ValueError(
-                f"Reasoning Gym dataset '{s.name}' not found/registered. Use --rg-list-datasets to see available names."
+                f"Reasoning Gym dataset '{s.name}' not found/registered. Use --list-datasets to see available names."
             )
 
     ds_obj: Any

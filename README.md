@@ -50,8 +50,8 @@ Example (Reasoning Gym via config file), from repo root:
 ```bash
 python collect_traces.py \
   --sources reasoning-gym \
-  --rg-config configs/rg_all_tasks_seed256_n624.yaml \
-  --rg-size 624 \
+  --config configs/rg_all_tasks_seed256_n624.yaml \
+  --size 624 \
   --model google/gemini-3-flash-preview \
   --reasoning-effort low \
   --max-tokens 100000 \

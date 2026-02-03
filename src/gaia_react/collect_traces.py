@@ -203,20 +203,20 @@ def _load_source_tasks(args: argparse.Namespace, source: str) -> List[TraceTask]
         rg_root = str(rg_root_raw).strip() if rg_root_raw else None
         if rg_root == "":
             rg_root = None
-        if bool(getattr(args, "rg_list_datasets", False)):
+        if bool(getattr(args, "list_datasets", False)):
             names = list_reasoning_gym_datasets(rg_root=rg_root)
             print("\n".join(names))
             raise SystemExit(0)
 
-        rg_seed = int(getattr(args, "rg_seed", None) or seed)
-        rg_size = int(getattr(args, "rg_size", None) or (cap if cap is not None else 200))
+        dataset_seed = int(getattr(args, "dataset_seed", None) or seed)
+        dataset_size = int(getattr(args, "size", None) or (cap if cap is not None else 200))
         tasks = load_reasoning_gym_tasks(
             rg_root=rg_root,
-            config_path=getattr(args, "rg_config", None),
-            dataset_name=getattr(args, "rg_dataset", None),
-            dataset_config_json=getattr(args, "rg_dataset_config_json", None),
-            size=rg_size,
-            seed=rg_seed,
+            config_path=getattr(args, "config", None),
+            dataset_name=getattr(args, "dataset", None),
+            dataset_config_json=getattr(args, "dataset_config_json", None),
+            size=dataset_size,
+            seed=dataset_seed,
             limit=cap,
             append_boxed_instruction=not bool(getattr(args, "rg_no_boxed_instruction", False)),
         )
@@ -566,7 +566,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--gaia-subset", type=str, default="2023_all")
     p.add_argument("--gaia-split", type=str, default="validation")
 
-    # Reasoning Gym
+    # Procedural sources (Reasoning Gym)
     p.add_argument(
         "--rg-root",
         type=str,
@@ -574,22 +574,25 @@ def parse_args() -> argparse.Namespace:
         help="Optional path to a local reasoning-gym repo root. Omit if `reasoning_gym` is installed.",
     )
     p.add_argument(
+        "--list-datasets",
         "--rg-list-datasets",
-        dest="rg_list_datasets",
+        dest="list_datasets",
         action="store_true",
         default=False,
-        help="List available Reasoning Gym dataset names and exit (use with --sources reasoning-gym).",
+        help="List available dataset names and exit (use with --sources reasoning-gym).",
     )
-    p.add_argument("--rg-config", type=str, default=None, help="Reasoning Gym dataset config (YAML/JSON).")
-    p.add_argument("--rg-dataset", type=str, default=None, help="Single Reasoning Gym dataset name (ignored if --rg-config).")
+    p.add_argument("--config", "--rg-config", dest="config", type=str, default=None, help="Dataset config (YAML/JSON).")
+    p.add_argument("--dataset", "--rg-dataset", dest="dataset", type=str, default=None, help="Single dataset name (ignored if --config).")
     p.add_argument(
+        "--dataset-config-json",
         "--rg-dataset-config-json",
+        dest="dataset_config_json",
         type=str,
         default=None,
-        help="JSON object with dataset-specific config fields for --rg-dataset.",
+        help="JSON object with dataset-specific config fields for --dataset.",
     )
-    p.add_argument("--rg-size", type=int, default=None, help="How many Reasoning Gym tasks to generate for this run.")
-    p.add_argument("--rg-seed", type=int, default=None, help="Seed for Reasoning Gym generation (defaults to --seed).")
+    p.add_argument("--size", "--rg-size", dest="size", type=int, default=None, help="How many tasks to generate for this run.")
+    p.add_argument("--dataset-seed", "--rg-seed", dest="dataset_seed", type=int, default=None, help="Seed for generation (defaults to --seed).")
     p.add_argument(
         "--rg-no-boxed-instruction",
         action="store_true",
@@ -605,7 +608,7 @@ async def main() -> None:
     _load_dotenv_if_present()
 
     # Special mode: list Reasoning Gym datasets without requiring any API keys.
-    if bool(getattr(args, "rg_list_datasets", False)):
+    if bool(getattr(args, "list_datasets", False)):
         srcs = [str(s).strip().lower() for s in list(getattr(args, "sources", []) or [])]
         if srcs and all(s in {"reasoning-gym", "reasoning_gym", "rgym"} for s in srcs):
             rg_root_raw = getattr(args, "rg_root", None)
