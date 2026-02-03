@@ -1,10 +1,4 @@
-"""
-Browserbase API client (minimal).
-
-Used to:
-- create Browserbase sessions (with proxies + stealth defaults)
-- retrieve session downloads as a ZIP archive
-"""
+"""Browserbase API client (minimal)."""
 
 from __future__ import annotations
 
@@ -67,8 +61,7 @@ class BrowserbaseClient:
         *,
         project_id: Optional[str] = None,
         proxies: Union[bool, List[Dict[str, Any]]] = False,
-        # We try Advanced Stealth first, then fall back to Basic Stealth if the account
-        # doesn't have access.
+        # advanced_stealth may fall back if unavailable for the account.
         advanced_stealth: bool = False,
         browser_settings: Optional[Dict[str, Any]] = None,
         timeout_seconds: Optional[int] = None,
@@ -88,7 +81,6 @@ class BrowserbaseClient:
             base_settings.update(browser_settings)
         if advanced_stealth:
             base_settings.setdefault("advancedStealth", True)
-        # Keep Browserbase defaults unless explicitly overridden.
         base_settings.setdefault("solveCaptchas", True)
         base_settings.setdefault("recordSession", True)
         base_settings.setdefault("logSession", True)
@@ -121,13 +113,11 @@ class BrowserbaseClient:
                 status=str(data.get("status") or ""),
             )
 
-        # Try Advanced Stealth only when explicitly requested, and fall back to Basic Stealth if rejected.
         try:
             return await do_create(payload)
         except BrowserbaseError:
             if not advanced_stealth:
                 raise
-            # Retry without the advancedStealth flag.
             payload2 = dict(payload)
             bs = dict(payload2.get("browserSettings") or {})
             bs.pop("advancedStealth", None)

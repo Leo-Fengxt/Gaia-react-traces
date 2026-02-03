@@ -1,16 +1,4 @@
-"""
-OpenRouter LLM Client for GAIA ReAct Runner.
-
-Configured for reasoning mode (defaults, can be overridden):
-- temperature: 1.0
-- top_p: 0.95 (set to None to omit top_p entirely)
-- max_tokens: 32768
-- reasoning.effort: "medium"
-- reasoning.exclude: false (return reasoning tokens separately when supported)
-- timeout: 900s (15 minutes)
-
-Does NOT use :online suffix - web search is handled by Exa tools.
-"""
+"""OpenRouter chat client wrapper (OpenAI-compatible)."""
 
 from __future__ import annotations
 
@@ -25,8 +13,7 @@ class LLMResponse:
     """Response from LLM call."""
 
     content: str
-    # Provider-specific: optional hidden reasoning tokens (chain-of-thought).
-    # When OpenRouter is configured with reasoning.exclude=false, some models return this separately.
+    # Optional provider-returned reasoning text (if enabled).
     reasoning: Optional[str] = None
     cost: float = 0.0
     model: str = ""
@@ -35,19 +22,7 @@ class LLMResponse:
 
 
 class OpenRouterClient:
-    """
-    OpenRouter API client configured for reasoning mode.
-
-    Settings:
-    - temperature: 1.0 (recommended for some reasoning models)
-    - top_p: 0.95 (optional; set to None to omit)
-    - max_tokens: 32768
-    - reasoning.effort: "medium"
-    - reasoning.exclude: false
-    - timeout: 900s
-
-    Does NOT use web search (:online suffix) - web is handled by Exa.
-    """
+    """OpenRouter API client (sync + async)."""
 
     BASE_URL = "https://openrouter.ai/api/v1"
 
@@ -140,15 +115,12 @@ class OpenRouterClient:
             "temperature": temp,
             "max_tokens": tokens,
         }
-        # Some callers want "no top_p" semantics (don't send nucleus sampling at all).
         if self.top_p is not None:
             request_kwargs["top_p"] = self.top_p
 
-        # Stop sequences (crucial for ReAct: prevent runaway generations)
         if stop is not None:
             request_kwargs["stop"] = stop
 
-        # Configure reasoning
         if self.reasoning_effort != "none":
             request_kwargs["extra_body"] = {
                 "reasoning": {
@@ -158,7 +130,6 @@ class OpenRouterClient:
                 }
             }
         else:
-            # Explicitly disable reasoning
             request_kwargs["extra_body"] = {
                 "reasoning": {
                     "enabled": False,
@@ -173,8 +144,7 @@ class OpenRouterClient:
         message = response.choices[0].message
         content = message.content or ""
 
-        # Best-effort extraction of OpenRouter "reasoning" field.
-        # The OpenAI SDK may not expose unknown fields directly, so we try a few fallbacks.
+        # Extract optional OpenRouter "reasoning" field.
         reasoning: Optional[str] = None
         try:
             r = getattr(message, "reasoning", None)
@@ -189,7 +159,6 @@ class OpenRouterClient:
                 if isinstance(r, str) and r.strip():
                     reasoning = r
         if reasoning is None:
-            # pydantic v2
             try:
                 d = message.model_dump()  # type: ignore[attr-defined]
             except Exception:
@@ -199,7 +168,6 @@ class OpenRouterClient:
                 if isinstance(r, str) and r.strip():
                     reasoning = r
         if reasoning is None:
-            # pydantic v1
             try:
                 d = message.dict()  # type: ignore[attr-defined]
             except Exception:
@@ -209,7 +177,6 @@ class OpenRouterClient:
                 if isinstance(r, str) and r.strip():
                     reasoning = r
 
-        # Calculate cost estimate and track tokens
         cost = 0.0
         usage = None
         if hasattr(response, "usage") and response.usage:
@@ -220,11 +187,9 @@ class OpenRouterClient:
                 "completion_tokens": completion_tokens,
                 "total_tokens": prompt_tokens + completion_tokens,
             }
-            # Track cumulative tokens
             self._total_prompt_tokens += prompt_tokens
             self._total_completion_tokens += completion_tokens
-            # Rough placeholder cost estimate. Pricing varies by provider/model on OpenRouter.
-            # If you need accurate cost reporting, update these rates per your model selection.
+            # Approximate cost estimate (model/provider pricing varies).
             cost = (prompt_tokens * 0.10 + completion_tokens * 0.40) / 1_000_000
 
         self._total_cost += cost
@@ -267,8 +232,7 @@ class OpenRouterClient:
             return parsed
         except Exception as e:
             error_msg = str(e)
-            # Some OpenRouter/Cloudflare failures include an entire HTML error page in the exception text.
-            # Keep the error message small so it doesn't pollute prompts/logs.
+            # Trim HTML/Cloudflare error pages.
             lower = error_msg.lower()
             if "<!doctype html" in lower or "<html" in lower or "cloudflare" in lower:
                 error_msg = "OpenRouter temporarily unavailable (Cloudflare)."
@@ -315,8 +279,7 @@ class OpenRouterClient:
                     model=used_model,
                     finish_reason="context_length_exceeded",
                 )
-            # Some OpenRouter/Cloudflare failures include an entire HTML error page in the exception text.
-            # Keep the error message small so it doesn't pollute prompts/logs.
+            # Trim HTML/Cloudflare error pages.
             lower = error_msg.lower()
             if "<!doctype html" in lower or "<html" in lower or "cloudflare" in lower:
                 error_msg = "OpenRouter temporarily unavailable (Cloudflare)."

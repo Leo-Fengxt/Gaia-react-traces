@@ -18,20 +18,11 @@ from ..trace_task import TraceTask
 
 
 def _repo_root() -> Path:
-    # <repo>/src/gaia_react/rgym/dataset.py -> parents[4] == <repo>
     return Path(__file__).resolve().parents[4]
 
 
 def default_reasoning_gym_root() -> Path:
-    """
-    Heuristic default for a local clone.
-
-    Preferred:
-    - $REASONING_GYM_ROOT (or $RGYM_ROOT)
-    - sibling to this repo (common when both are cloned under the same workspace dir)
-    - inside this repo
-    - current working directory
-    """
+    """Best-effort default path to a local reasoning-gym clone."""
     env = os.getenv("REASONING_GYM_ROOT") or os.getenv("RGYM_ROOT")
     if env:
         return Path(env).expanduser().resolve()
@@ -82,16 +73,7 @@ def _import_reasoning_gym(rg_root: Optional[str]) -> Any:
 
 @contextlib.contextmanager
 def _suppress_generation_noise():
-    """
-    Some RG datasets generate problems by executing snippets of Python code.
-
-    Those snippets can emit:
-    - `SyntaxWarning: invalid escape sequence ...` (from generated code strings)
-    - debug `print(...)` output (e.g., metaclass demos)
-
-    We silence stdout/stderr + those warnings during dataset construction/item generation
-    so `collect_traces.py` logs stay clean.
-    """
+    """Suppress stdout/stderr and common warnings during RG generation."""
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="invalid escape sequence", category=SyntaxWarning)
         warnings.filterwarnings("ignore", message="invalid escape sequence", category=DeprecationWarning)

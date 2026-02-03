@@ -1,20 +1,8 @@
-"""
-Exa AI API Client for search and content retrieval.
-
-This client uses the /search and /contents endpoints.
-
-The search endpoint can optionally include:
-- highlights: LLM-selected relevant snippets (low-cost, high-signal)
-- summary: LLM-generated page summary (low-cost, high-signal)
-- subpages: Related subpages with their own highlights/summaries
-
-These are lightweight features that massively reduce context size
-compared to fetching full page text, while preserving key information.
-Use web_contents for full text when highlights/summary are insufficient.
-"""
+"""Exa API client (search + contents)."""
 
 from __future__ import annotations
 
+import asyncio
 import os
 import json
 import aiohttp
@@ -44,8 +32,7 @@ class ExaSearchResult:
     published_date: Optional[str] = None
     author: Optional[str] = None
     id: Optional[str] = None
-    text: str = ""  # Full page text content (if requested)
-    # Lightweight LLM-extracted fields (low-cost, high-signal)
+    text: str = ""  # Full page text (optional)
     highlights: List[str] = field(default_factory=list)
     highlight_scores: List[float] = field(default_factory=list)
     summary: Optional[str] = None
@@ -86,17 +73,7 @@ class ExaContentsResponse:
 
 
 class ExaClient:
-    """
-    EXA API client for search and content retrieval.
-
-    Endpoints used:
-    - /search: Semantic or keyword search (with optional highlights/summary/subpages)
-    - /contents: Full text retrieval from specific URLs
-
-    Recommended usage pattern:
-    1. Use search with highlights=True, summary=True for initial exploration (low-cost, high-signal)
-    2. Use get_contents for URLs that need full text inspection
-    """
+    """EXA API client."""
 
     BASE_URL = "https://api.exa.ai"
     DEFAULT_TIMEOUT = 60
@@ -199,31 +176,25 @@ class ExaClient:
             "useAutoprompt": False,
         }
 
-        # Build contents options - always request something
         contents: Dict[str, Any] = {
             "livecrawl": "fallback",
         }
 
-        # Full text (expensive, only when explicitly requested)
         if include_text:
             contents["text"] = {"maxCharacters": max_characters}
 
-        # Highlights (low-cost, high-signal)
         if highlights:
             contents["highlights"] = {"numSentences": highlights_num_sentences}
 
-        # Summary (low-cost, high-signal)
         if summary:
             contents["summary"] = True
 
-        # Subpages (discover related content) - just a number, not an object
         if subpages and subpages > 0:
             contents["subpages"] = subpages
 
         if contents:
             payload["contents"] = contents
 
-        # Add optional filters
         if start_published_date:
             payload["startPublishedDate"] = start_published_date
         if end_published_date:
@@ -244,10 +215,8 @@ class ExaClient:
         if "error" in data:
             return ExaSearchResponse(error=data["error"])
 
-        # Parse results
         results = []
         for item in data.get("results", []):
-            # Parse subpages
             subpages_list = []
             for sp in item.get("subpages", []):
                 subpages_list.append(
@@ -307,7 +276,6 @@ class ExaClient:
         if "error" in data:
             return ExaContentsResponse(error=data["error"])
 
-        # Parse results
         results = []
         for item in data.get("results", []):
             results.append(
@@ -320,13 +288,11 @@ class ExaClient:
                 )
             )
 
-        # Parse statuses for errors
         statuses = data.get("statuses", [])
         for status_info in statuses:
             url = status_info.get("id", "")
             if status_info.get("status") == "error":
                 error_info = status_info.get("error", {})
-                # Find corresponding result and mark as error
                 found = False
                 for result in results:
                     if result.url == url:
@@ -336,7 +302,6 @@ class ExaClient:
                         break
 
                 if not found:
-                    # Add error result if not found
                     results.append(
                         ExaContentResult(
                             url=url,
@@ -372,7 +337,6 @@ def format_search_results(response: ExaSearchResponse) -> str:
         if result.published_date:
             lines.append(f"    Published: {result.published_date}")
         if result.text:
-            # Include snippet of text
             snippet = result.text[:500] + "..." if len(result.text) > 500 else result.text
             lines.append(f"    Snippet: {snippet}")
         lines.append("")
@@ -406,7 +370,4 @@ def format_contents_results(response: ExaContentsResponse) -> str:
 
     return "\n".join(lines)
 
-
-# Import asyncio for the timeout error
-import asyncio
 

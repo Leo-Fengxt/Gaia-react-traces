@@ -1,11 +1,4 @@
-"""
-Trace collection CLI (standalone).
-
-Sources included in this repo:
-- BBH (modified, MCQ -> open-ended)
-- GAIA (HF gated dataset; filters out file-based tasks)
-- Reasoning Gym (procedural generator)
-"""
+"""Trace collection CLI."""
 
 from __future__ import annotations
 

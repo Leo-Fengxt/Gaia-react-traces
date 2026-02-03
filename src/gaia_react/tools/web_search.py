@@ -1,9 +1,4 @@
-"""
-Web Search Tool using Exa API.
-
-By default, returns highlights + summary + subpages (low-cost, high-signal)
-instead of full page text. Use web_contents to drill down into specific URLs.
-"""
+"""Web search tool (Exa)."""
 
 from __future__ import annotations
 
@@ -22,11 +17,9 @@ class WebSearchResultItem:
     published_date: Optional[str] = None
     author: Optional[str] = None
     score: float = 0.0
-    # Lightweight LLM-extracted fields
     highlights: List[str] = field(default_factory=list)
     summary: Optional[str] = None
     subpages: List[ExaSubpage] = field(default_factory=list)
-    # Full text (only if explicitly requested)
     text: str = ""
 
 
@@ -64,18 +57,15 @@ class WebSearchOutput:
             if result.author:
                 lines.append(f"    Author: {result.author}")
 
-            # Summary (most concise overview)
             if result.summary:
                 lines.append(f"    SUMMARY: {result.summary}")
 
-            # Highlights (key sentences)
             if result.highlights:
                 lines.append("    HIGHLIGHTS:")
                 for hl in result.highlights[:5]:
                     hl_text = hl[:500] + "..." if len(hl) > 500 else hl
                     lines.append(f"      - {hl_text}")
 
-            # Subpages (related content on same domain)
             if result.subpages:
                 lines.append("    SUBPAGES:")
                 for sp in result.subpages[:3]:
@@ -85,7 +75,6 @@ class WebSearchOutput:
                         sp_summary = sp.summary[:200] + "..." if len(sp.summary) > 200 else sp.summary
                         lines.append(f"        Summary: {sp_summary}")
 
-            # Full text (only if included - usually not)
             if result.text:
                 text_preview = result.text[:1000] + "..." if len(result.text) > 1000 else result.text
                 lines.append(f"    TEXT_PREVIEW: {text_preview}")
@@ -129,14 +118,11 @@ class WebSearchTool:
         end_published_date: Optional[str] = None,
         include_text: Optional[List[str]] = None,
         exclude_text: Optional[List[str]] = None,
-        # Lightweight content options (default: enabled)
         highlights: Optional[bool] = None,
         summary: Optional[bool] = None,
         subpages: Optional[int] = None,
-        # Full text option (default: disabled - use web_contents instead)
         full_text: bool = False,
         max_characters: int = 50000,
-        # Legacy aliases for backward compatibility
         context: Optional[bool] = None,
         context_max_characters: Optional[int] = None,
         include_contents: Optional[bool] = None,
@@ -146,20 +132,16 @@ class WebSearchTool:
 
         num_results = num_results or self.default_num_results
 
-        # Handle legacy aliases
         if context is not None or context_max_characters is not None or include_contents is not None:
-            # Legacy mode: context=True or include_contents=True means full_text
             if context or include_contents:
                 full_text = True
             if context_max_characters:
                 max_characters = context_max_characters
 
-        # Resolve defaults
         use_highlights = highlights if highlights is not None else self.default_highlights
         use_summary = summary if summary is not None else self.default_summary
         use_subpages = subpages if subpages is not None else self.default_subpages
 
-        # Normalize include/exclude_text to list[str] or None
         if isinstance(include_text, str):
             include_text = [include_text]
         if isinstance(exclude_text, str):
@@ -199,7 +181,6 @@ class WebSearchTool:
             if response.error:
                 return WebSearchOutput(results=[], error=response.error, request_id=response.request_id)
 
-            # Convert to tool results
             results = []
             for r in response.results:
                 results.append(
