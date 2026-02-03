@@ -1,6 +1,6 @@
-### What this repo is
+### Gaia agent traces synthesis
 
-Standalone **ReAct trace collection** code for:
+Standalone ReAct trace collection code for:
 - **GAIA** (text-only subset; file-based tasks filtered out)
 - **BBH (modified)** (MCQ → open-ended “GAIA-style”, with `\\boxed{}` answer instruction)
 - **Reasoning Gym** (procedural task generator)
