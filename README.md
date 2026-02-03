@@ -40,7 +40,7 @@ pip install -e ".[browser]"
 - **If using web_search/web_contents**: `EXA_API_KEY`
 - **If using execute_python**: `E2B_API_KEY`
 - **If using browser tool**: `BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID`
-- **For GAIA** (gated HF dataset): `HF_TOKEN` (must accept dataset terms on HF)
+- **For GAIA** (gated HF dataset): `HF_TOKEN`
 
 ### Run
 
