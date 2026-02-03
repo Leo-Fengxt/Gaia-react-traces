@@ -10,6 +10,11 @@ This repo supports:
 - **`--sources gaia`**
 - **`--sources reasoning-gym`**
 
+Supported tools:
+- Web search and web contents via **EXA**
+- Code sandbox (python) via **E2B**
+- Browser tools via **Browserbase** (not recommended)
+
 ### Install
 
 From the repo root:
