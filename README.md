@@ -23,7 +23,8 @@ Supported tools:
 From the repo root:
 
 ```bash
-python -m venv .venv
+cd Gaia-react-traces
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
 ```
