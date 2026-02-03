@@ -11,7 +11,7 @@ This repo supports:
 - **`--sources reasoning-gym`**
 
 Supported backends:
-- Openrouter
+- Openrouter (openai compatible)
 
 Supported tools:
 - Web search and web contents via **EXA**
@@ -61,7 +61,7 @@ python collect_traces.py \
   --allowed-tools all
 ```
 
-`reasoning_gym` is installed as a normal dependency. Use `--rg-root /path/to/reasoning-gym` only if you want to run against a local checkout.
+`reasoning_gym` is installed as a dependency. Use `--rg-root /path/to/reasoning-gym` against a local checkout.
 
 Outputs are written to `runs/collect/<run_id>/`:
 - `traces/` (per-task JSON traces; filenames are sanitized by replacing `:` with `-`)
