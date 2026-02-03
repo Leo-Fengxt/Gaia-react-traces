@@ -59,7 +59,7 @@ python collect_traces.py \
   --allowed-tools all
 ```
 
-`reasoning_gym` is installed as a dependency. Use `--rg-root /path/to/reasoning-gym` against a local checkout.
+`reasoning_gym` is installed as a dependency. Use `--rg-root /path/to/reasoning-gym` for local checkout.
 
 Outputs are written to `runs/collect/<run_id>/`:
 - `traces/` (per-task JSON traces; filenames are sanitized by replacing `:` with `-`)
