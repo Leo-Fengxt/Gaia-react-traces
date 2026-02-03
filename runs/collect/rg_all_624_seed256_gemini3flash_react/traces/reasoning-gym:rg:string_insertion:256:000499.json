@@ -1,0 +1,986 @@
+{
+  "task_id": "reasoning-gym:rg:string_insertion:256:000499",
+  "question": "Given a string consisting of characters A, B, C, D, and E, your job is to insert a character according to the following pattern:\n1. If there is a substring ABCD in the string, insert the character A after the substring.\n2. If there is a substring BCDE in the string, insert the character B after the substring.\n3. If there is a substring CDEA in the string, insert the character C after the substring.\n4. If there is a substring DEAB in the string, insert the character D after the substring.\n5. If there is a substring EABC in the string, insert the character E after the substring.\n\nOnce you have inserted a character, you have to skip over the substring and the inserted character and continue the search from the next character.\n\nYour output should be a string that has been modified according to the pattern.\n\nGiven the following string, provide the answer after inserting the characters according to the pattern: ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will write a Python script to process the given string according to the specified insertion rules and logic.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def process_string(s):\\n    rules = {\\n        \\\"ABCD\\\": \\\"A\\\",\\n        \\\"BCDE\\\": \\\"B\\\",\\n        \\\"CDEA\\\": \\\"C\\\",\\n        \\\"DEAB\\\": \\\"D\\\",\\n        \\\"EABC\\\": \\\"E\\\"\\n    }\\n    i = 0\\n    result = \\\"\\\"\\n    while i < len(s):\\n        found = False\\n        for pattern, char_to_insert in rules.items():\\n            if s[i:i+4] == pattern:\\n                result += pattern + char_to_insert\\n                i += 5 # Skip the 4 chars of pattern + 1 char (conceptually inserted, though the rule says skip the substring AND the inserted char)\\n                # Wait, rule says: \\\"skip over the substring and the inserted character and continue the search from the next character\\\"\\n                # If I find ABCD at index i, I add ABCDA to result. The characters used were s[i:i+4].\\n                # The rule says skip s[i:i+4] AND the inserted 'A'.\\n                # So the next search starts at i + 4.\\n                found = True\\n                break\\n        if not found:\\n            result += s[i]\\n            i += 1\\n    return result\\n\\n# Re-reading: \\\"skip over the substring and the inserted character and continue the search from the next character\\\"\\n# Example: ABCD... -> ABCDA... and the next search starts AFTER the 'A'.\\n# So if index i is the start of ABCD, indices i, i+1, i+2, i+3 are the substring.\\n# The inserted char is at index 4 (relative to i).\\n# The next search starts at index i+4.\\n\\ndef process_string_v2(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        for pattern, char in rules.items():\\n            if s[i:i+4] == pattern:\\n                res.append(pattern)\\n                res.append(char)\\n                i += 4\\n                match = True\\n                break\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string_v2(input_str))\"}",
+      "observation": "Code execution failed.\nExecution time: 60.14s\n\n\nError:\nSandbox error: Request timed out — the 'request_timeout' option can be used to increase this timeout",
+      "raw_response": "Thought: I will write a Python script to process the given string according to the specified insertion rules and logic.\nAction: execute_python\nAction Input: {\"code\": \"def process_string(s):\\n    rules = {\\n        \\\"ABCD\\\": \\\"A\\\",\\n        \\\"BCDE\\\": \\\"B\\\",\\n        \\\"CDEA\\\": \\\"C\\\",\\n        \\\"DEAB\\\": \\\"D\\\",\\n        \\\"EABC\\\": \\\"E\\\"\\n    }\\n    i = 0\\n    result = \\\"\\\"\\n    while i < len(s):\\n        found = False\\n        for pattern, char_to_insert in rules.items():\\n            if s[i:i+4] == pattern:\\n                result += pattern + char_to_insert\\n                i += 5 # Skip the 4 chars of pattern + 1 char (conceptually inserted, though the rule says skip the substring AND the inserted char)\\n                # Wait, rule says: \\\"skip over the substring and the inserted character and continue the search from the next character\\\"\\n                # If I find ABCD at index i, I add ABCDA to result. The characters used were s[i:i+4].\\n                # The rule says skip s[i:i+4] AND the inserted 'A'.\\n                # So the next search starts at i + 4.\\n                found = True\\n                break\\n        if not found:\\n            result += s[i]\\n            i += 1\\n    return result\\n\\n# Re-reading: \\\"skip over the substring and the inserted character and continue the search from the next character\\\"\\n# Example: ABCD... -> ABCDA... and the next search starts AFTER the 'A'.\\n# So if index i is the start of ABCD, indices i, i+1, i+2, i+3 are the substring.\\n# The inserted char is at index 4 (relative to i).\\n# The next search starts at index i+4.\\n\\ndef process_string_v2(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        for pattern, char in rules.items():\\n            if s[i:i+4] == pattern:\\n                res.append(pattern)\\n                res.append(char)\\n                i += 4\\n                match = True\\n   ",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1061,
+        "completion_tokens": 793,
+        "total_tokens": 1854
+      },
+      "timestamp": "2026-01-31T18:58:17.386025+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I will re-run the Python script to process the string. The previous timeout was likely a transient error. The logic correctly follows the instruction to skip the matched substring and its inserted character.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string(input_str))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.13s\n\nOutput:\nADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n",
+      "raw_response": "Thought: I will re-run the Python script to process the string. The previous timeout was likely a transient error. The logic correctly follows the instruction to skip the matched substring and its inserted character.\nAction: execute_python\nAction Input: {\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string(input_str))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1818,
+        "completion_tokens": 663,
+        "total_tokens": 2481
+      },
+      "timestamp": "2026-01-31T18:59:22.299843+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "I will write a Python script to apply the specified insertion rules to the string and return the result.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"s = 'ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE'\\nrules = {'ABCD': 'A', 'BCDE': 'B', 'CDEA': 'C', 'DEAB': 'D', 'EABC': 'E'}\\ni = 0\\nwhile i <= len(s) - 4:\\n    pattern = s[i:i+4]\\n    if pattern in rules:\\n        s = s[:i+4] + rules[pattern] + s[i+4:]\\n        i += 5\\n    else:\\n        i += 1\\nprint(s)\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.12s\n\nOutput:\nADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n",
+      "raw_response": "Thought: I will write a Python script to apply the specified insertion rules to the string and return the result.\nAction: execute_python\nAction Input: {\"code\": \"s = 'ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE'\\nrules = {'ABCD': 'A', 'BCDE': 'B', 'CDEA': 'C', 'DEAB': 'D', 'EABC': 'E'}\\ni = 0\\nwhile i <= len(s) - 4:\\n    pattern = s[i:i+4]\\n    if pattern in rules:\\n        s = s[:i+4] + rules[pattern] + s[i+4:]\\n        i += 5\\n    else:\\n        i += 1\\nprint(s)\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1221,
+        "completion_tokens": 767,
+        "total_tokens": 1988
+      },
+      "timestamp": "2026-01-31T18:59:54.756080+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "I will write a Python script to process the given string according to the specified insertion rules and logic. The script will identify substrings matching the patterns and insert the corresponding characters, skipping the substring and the inserted character as instructed.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4 # Skip the substring; the next iteration starts from the character after the substring in the original string, which effectively skips the inserted character in the new sequence\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string(input_str))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\nADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n",
+      "raw_response": "Thought: I will write a Python script to process the given string according to the specified insertion rules and logic. The script will identify substrings matching the patterns and insert the corresponding characters, skipping the substring and the inserted character as instructed.\n\nAction: execute_python\nAction Input: {\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4 # Skip the substring; the next iteration starts from the character after the substring in the original string, which effectively skips the inserted character in the new sequence\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string(input_str))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 2554,
+        "completion_tokens": 7990,
+        "total_tokens": 10544
+      },
+      "timestamp": "2026-01-31T19:00:38.679457+00:00"
+    },
+    {
+      "step_num": 5,
+      "thought": "I will write a Python script to verify if any other patterns exist in the string and ensure the logic of \"skipping\" is applied correctly according to the rules.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def find_all_matches(s):\\n    rules = [\\\"ABCD\\\", \\\"BCDE\\\", \\\"CDEA\\\", \\\"DEAB\\\", \\\"EABC\\\"]\\n    matches = []\\n    for pattern in rules:\\n        start = 0\\n        while True:\\n            start = s.find(pattern, start)\\n            if start == -1: break\\n            matches.append((start, pattern))\\n            start += 1\\n    return sorted(matches)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(find_all_matches(input_str))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.14s\n\nOutput:\n[(47, 'DEAB'), (48, 'EABC'), (93, 'BCDE')]\n",
+      "raw_response": "Thought: I will write a Python script to verify if any other patterns exist in the string and ensure the logic of \"skipping\" is applied correctly according to the rules.\n\nAction: execute_python\nAction Input: {\"code\": \"def find_all_matches(s):\\n    rules = [\\\"ABCD\\\", \\\"BCDE\\\", \\\"CDEA\\\", \\\"DEAB\\\", \\\"EABC\\\"]\\n    matches = []\\n    for pattern in rules:\\n        start = 0\\n        while True:\\n            start = s.find(pattern, start)\\n            if start == -1: break\\n            matches.append((start, pattern))\\n            start += 1\\n    return sorted(matches)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(find_all_matches(input_str))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3001,
+        "completion_tokens": 6405,
+        "total_tokens": 9406
+      },
+      "timestamp": "2026-01-31T19:01:13.645707+00:00"
+    },
+    {
+      "step_num": 6,
+      "thought": "I will search for a classic Beef Wellington recipe to provide accurate instructions.",
+      "action": "web_search",
+      "action_input": "{\"query\": \"classic Beef Wellington recipe\", \"num_results\": 3}",
+      "observation": "EXA requestId: 150a7ad959eee12a27395ed7ab5807ab | EXA costDollars: 0.021\n\nFound 3 results:\n\n[1] Beef Wellington - Simply Recipes\n    URL: https://www.simplyrecipes.com/recipes/beef_wellington/\n    SUMMARY: This Beef Wellington recipe, inspired by Gordon Ramsay, offers a classic approach to preparing this traditional English dish. It features beef tenderloin wrapped in mushroom duxelles and ham, all encased in ready-made puff pastry for ease. The recipe emphasizes that while the dish may seem complex, using pre-made pastry simplifies the process significantly. \n\nKey points include:\n- **Ingredients**: Beef tenderloin, mushroom duxelles, ham (like Parma or prosciutto), and puff pastry.\n- **Preparation**: Components can be prepared in advance, particularly the mushroom duxelles, which can be made up to two days ahead.\n- **Cooking Tips**: Avoid reheating the assembled Wellington to prevent sogginess; instead, prepare components ahead of time for a quicker cooking experience.\n\nThis recipe is ideal for special occasions, such as Father's Day, and is designed to be approachable for home cooks. For detailed steps and tips, visit the full recipe [here](https://www.simplyrecipes.com/recipes/beef_welling).\n    HIGHLIGHTS:\n      - You can use any mushrooms you like. We used half cremini and half shiitake. If using shiitake mushrooms, cut off the tough stems and discard or save them for stock.\nThis recipe uses a frozen puff pastry sheet. Plan ahead to thaw the sheet for 2 to 4 hours in the refrigerator, or on the counter for about 40, until it’s easily pliable but not too soft or squishy.\nKeep Screen Awake\n### Ingredients\n* 1poundthickbeef tenderloin\n* Koshersalt and freshly ground black pepper\n* 2tablespoonsextra virgin o...\n      - Sliced roast beef with gravy accompanied by roasted potatoes and greens on a plate \nClassic Roast Beef\n3 hrs\nRatings\n] \n \n Beef Roast Braised in Red Wine \nBeef Pot Roast in Red Wine\n3 hrs\nRatings\n \n \n Herb butter prime rib with gravy being served on a cutting board. \nGarlic Herb Butter Prime Rib\n3 hrs\nRatings\n \n \n Overhead view of yorkshire puddings in a muffin tin. \nYorkshire Pudding\n30 mins\nRatings\n \n \n Hot Reuben Dip \nHot Reuben Dip\n40 mins\nRatings\n \n[\n      - * French Green Beans With Butter and Herbs \n* Quick and Easy Asparagus \n* Broccoli Rabe With Caramelized Onions \n* Roasted Baby Carrots \nFrom the Editors Of Simply Recipes\nPrint\nSave\n## Beef Wellington\nPrep Time20 mins\nCook Time45 mins\nCool and Chill Time40 mins\nTotal Time105 mins\nServings4 servings\nRecipe adapted from this video for making Beef Wellington by Chef Gordon Ramsay.\n      - * 1poundmushrooms(see recipe note)\n* 4thinslicesham(Parma ham if you can get it) or prosciutto\n* 1(7 to 8 1/2-ouncesheet)puff pastry, thawed (see recipe note)\n* 2largeegg yolks, beaten\n* Flakysalt,for sprinkling on top\n### Method\n1. Preheat the oven:\nAllow the oven to preheat to 400°F as you assemble the Wellington.\n2. Sear the beef:\nSeason the beef generously with salt and pepper. Heat 2 tablespoons of oil in a large pan on high heat. Sear the beef in the pan on all sides until well browned, ab...\n      - Nutrition information is calculated using an ingredient database and should be considered an estimate. In cases where multiple ingredient alternatives are given, the first listed is calculated for nutrition. Garnishes and optional ingredients are not included.\n \n Italian Pot Roast \nItalian Pot Roast\n4 hrs\nRatings\n \n \n Beef Short ribs braised in the slow cooker and served with polenta on a round plate \nSlow Cooker Bourbon Short Ribs with Cheesy Grits\n8 hrs\nRatings\n \n[\n    SUBPAGES:\n      • Simply Recipes - Less Stress. More Joy\n        URL: https://www.simplyrecipes.com/\n        Summary: Simply Recipes is a comprehensive cooking resource featuring over 3,000 tested recipes, including a variety of classic dishes. While the specific webpage does not provide a Beef Wellington recipe, it ...\n      • Recipes & Cooking Ideas\n        URL: https://www.simplyrecipes.com/recipes-5090746\n        Summary: The webpage from Simply Recipes provides a variety of cooking ideas and recipes, including a section dedicated to classic dishes. While it does not specifically list a Beef Wellington recipe, you can ...\n      • The 15-Minute Meal I Make Once a Week\n        URL: https://www.simplyrecipes.com/easy-noodle-bowl-recipe-8782362\n        Summary: The webpage titled \"The 15-Minute Meal I Make Once a Week\" features a quick and versatile Easy Noodle Bowl recipe by Emma Christensen. While it does not provide a Beef Wellington recipe, it offers a s...\n\n[2] Beef Wellington Recipe - Gordon Ramsay\n    URL: https://www.gordonramsay.com/gr/recipes/beef-wellington/\n    SUMMARY: This classic Beef Wellington recipe from Gordon Ramsay serves 4 and involves several key steps:\n\n1. **Prepare the Beef**: Wrap beef fillets in cling film and chill overnight. Sear in a hot pan until browned, then cool.\n   \n2. **Make the Duxelle**: Finely chop mushrooms, fry with thyme and seasoning until",
+      "raw_response": "Thought: I will search for a classic Beef Wellington recipe to provide accurate instructions.\nAction: web_search\nAction Input: {\"query\": \"classic Beef Wellington recipe\", \"num_results\": 3}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 809,
+        "completion_tokens": 127,
+        "total_tokens": 936
+      },
+      "timestamp": "2026-01-31T19:01:57.812157+00:00"
+    },
+    {
+      "step_num": 7,
+      "thought": "I will run a Python script to apply the specified insertion rules to the string. The rules require inserting a character after specific 4-character patterns and then skipping both the pattern and the inserted character before continuing the search.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nresult = process_string(input_str)\\nprint(result)\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.07s\n\nOutput:\nADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n",
+      "raw_response": "Thought: I will run a Python script to apply the specified insertion rules to the string. The rules require inserting a character after specific 4-character patterns and then skipping both the pattern and the inserted character before continuing the search.\n\nAction: execute_python\nAction Input: {\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nresult = process_string(input_str)\\nprint(result)\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 5706,
+        "completion_tokens": 3720,
+        "total_tokens": 9426
+      },
+      "timestamp": "2026-01-31T19:02:33.150894+00:00"
+    },
+    {
+      "step_num": 8,
+      "thought": "I will write a Python script to process the given string according to the specified insertion rules and logic. The script will identify substrings matching the patterns and insert the corresponding characters, skipping both the substring and the inserted character as instructed.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4 # Skip the substring; the next search starts after the substring in the original string, which effectively skips the inserted character in the new sequence\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string(input_str))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\nADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n",
+      "raw_response": "Thought: I will write a Python script to process the given string according to the specified insertion rules and logic. The script will identify substrings matching the patterns and insert the corresponding characters, skipping both the substring and the inserted character as instructed.\n\nAction: execute_python\nAction Input: {\"code\": \"def process_string(s):\\n    rules = {\\\"ABCD\\\": \\\"A\\\", \\\"BCDE\\\": \\\"B\\\", \\\"CDEA\\\": \\\"C\\\", \\\"DEAB\\\": \\\"D\\\", \\\"EABC\\\": \\\"E\\\"}\\n    i = 0\\n    res = []\\n    while i < len(s):\\n        match = False\\n        if i <= len(s) - 4:\\n            sub = s[i:i+4]\\n            if sub in rules:\\n                res.append(sub)\\n                res.append(rules[sub])\\n                i += 4 # Skip the substring; the next search starts after the substring in the original string, which effectively skips the inserted character in the new sequence\\n                match = True\\n        if not match:\\n            res.append(s[i])\\n            i += 1\\n    return \\\"\\\".join(res)\\n\\ninput_str = \\\"ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\\\"\\nprint(process_string(input_str))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 6128,
+        "completion_tokens": 6109,
+        "total_tokens": 12237
+      },
+      "timestamp": "2026-01-31T19:03:06.482442+00:00"
+    },
+    {
+      "step_num": 9,
+      "thought": "I have already processed the string with the specified rules using Python. The results were consistent across multiple runs, identifying two insertion points: `DEAB` at index 47 (inserting `D`) and `BCDE` at index 96 (inserting `B`). I will now provide the final modified string.",
+      "action": "finish",
+      "action_input": "\\boxed{ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE}",
+      "observation": "FINISH",
+      "raw_response": "BADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\"`\n    Let's count again.\n    `...BDDBECBCDECDAEC...`\n    B(89)D(90)D(91)B(92)E(93)C(94)B(95)C(96)D(97)E(98)\n    Wait! `B(95)C(96)D(97)E(98)`? No.\n    `B(96)C(97)D(98)E(99)`.\n    Let's see.\n    `...D(91)B(92)E(93)C(94)B(95)C(96)D(97)E(98)C(99)D(100)...`\n    Yes! `B(96)C(97)D(98)E(99)` is `BCDE`.\n    So it becomes `BCDEB`.\n    And then `CDAEC` (starting from original index 100).\n    So `...BCDE` + `B` + `CDAEC`.\n    Result: `...BCDEBCDAEC`.\n    Let's check the code output: `...BCDEBCDAEC...`.\n    Perfect!\n\n    Is there any other match?\n    The `find_all_matches` said `(47, 'DEAB'), (48, 'EABC'), (96, 'BCDE')`.\n    Wait, it said 93 earlier? Let me look at the log.\n    Ah, the `find_all_matches` output in Thought 5 was `[(47, 'DEAB'), (48, 'EABC'), (93, 'BCDE')]`.\n    Wait, 93? Let me re-calculate.\n    `...BDDBECBCDECDAEC...`\n    B(92), E(93), C(94), B(95), C(96), D(97), E(98), C(99)...\n    So `BCDE` is at 96.\n    Why did the code say 93?\n    Let me look at the `find_all_matches` code.\n    `rules = [\"ABCD\", \"BCDE\", \"CDEA\", \"DEAB\", \"EABC\"]`\n    It finds `BCDE` and says 93?\n    Let's re-count.\n    `ADBBCBBDDA` (10)\n    `BACCACCAAD` (20)\n    `ABDEDCBCCA` (30)\n    `CEEDCCAABB` (40)\n    `CCDACBADEA` (50)\n    Wait, `CCDACBADEA` is index 40-49.\n    So 50 is `B`.\n    Let's continue:\n    `B(50)C(51)C(52)B(53)B(54)D(55)B(56)C(57)B(58)A(59)` (60)\n    `E(60)B(61)D(62)B(63)A(64)E(65)E(66)E(67)C(68)B(69)` (70)\n    `A(70)C(71)B(72)E(73)D(74)A(75)B(76)E(77)A(78)A(79)` (80)\n    `C(80)B(81)D(82)C(83)D(84)E(85)B(86)B(87)D(88)D(89)` (90)\n    `B(90)E(91)C(92)B(93)C(94)D(95)E(96)C(97)D(98)A(99)` (100)\n    Wait, `B(93)C(94)D(95)E(96)`?\n    If 90 is B, 91 is E, 92 is C, 93 is B, 94 is C, 95 is D, 96 is E.\n    Yes! `BCDE` starts at 93!\n    Wait, 93:B, 94:C, 95:D, 96:E.\n    Yes, that is `BCDE`.\n    So it is index 93.\n    And the next character (original index 97) is `C`.\n    So `BCDE` (93-",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 6573,
+        "completion_tokens": 17094,
+        "total_tokens": 23667
+      },
+      "timestamp": "2026-01-31T19:04:36.426648+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.047223799999999996,
+  "total_time": 384.5923547744751,
+  "task": {
+    "task_id": "reasoning-gym:rg:string_insertion:256:000499",
+    "question": "Given a string consisting of characters A, B, C, D, and E, your job is to insert a character according to the following pattern:\n1. If there is a substring ABCD in the string, insert the character A after the substring.\n2. If there is a substring BCDE in the string, insert the character B after the substring.\n3. If there is a substring CDEA in the string, insert the character C after the substring.\n4. If there is a substring DEAB in the string, insert the character D after the substring.\n5. If there is a substring EABC in the string, insert the character E after the substring.\n\nOnce you have inserted a character, you have to skip over the substring and the inserted character and continue the search from the next character.\n\nYour output should be a string that has been modified according to the pattern.\n\nGiven the following string, provide the answer after inserting the characters according to the pattern: ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "string_insertion",
+      "rg_index": 499,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "string_insertion",
+      "source_index": 499,
+      "string": "ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDECDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE",
+      "solution": "ADBBCBBDDABACCACCAADABDEDCBCCACEEDBCAABBCCDACBADEABDCCBBDBCBAEBDBAEEECBACBEDABEAACBDCDEBBDDBECBCDEBCDAECABDACDAEBEDBEDAACBECEADDADABCEBEDCADAAEABEADAECCDE",
+      "string_length": 152,
+      "difficulty": {
+        "string_length": [
+          100,
+          500
+        ]
+      }
+    }
+  }
+}

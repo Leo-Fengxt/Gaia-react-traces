@@ -1,0 +1,869 @@
+{
+  "task_id": "reasoning-gym:rg:zebra_puzzles:256:000369",
+  "question": "This is a logic puzzle. There are 7 houses (numbered 1 on the left, 7 on the right), from the perspective of someone standing across the street from them. Each has a different person in them. They have different characteristics:\n - Each person has a unique name: david, emily, alice, bob, eric, carol, arnold\n - Everyone has a favorite smoothie: desert, dragonfruit, butterscotch, lemon, darkness, lilac, life\n - Each person has a favorite drink: water, coffee, tea, root beer, milk, boba tea, wine\n - Each person has a favorite color: blue, red, white, brown, green, purple, yellow\n - The people keep different animals: pig, fish, horse, bird, rabbit, cat, dog\n - People use different phone models: oneplus 9, sony xperia 5, huawei p50, xiaomi mi 11, iphone 13, samsung galaxy s21, google pixel 6\n - Each mother is accompanied by their child: billy, bella, alice, meredith, fred, samantha, timothy\n\n1. Carol is the person who uses a OnePlus 9.\n2. The person's child is named Fred is the person who likes milk.\n3. The rabbit owner is the person who loves white.\n4. The person who uses a Xiaomi Mi 11 is the Butterscotch smoothie drinker.\n5. The person whose favorite color is red is Arnold.\n6. The person who loves purple is the boba tea drinker.\n7. The Darkness smoothie drinker is Carol.\n8. The person's child is named Samantha is directly left of the person who is the mother of Timothy.\n9. The fish enthusiast is directly left of Bob.\n10. The person who loves brown is the one who only drinks water.\n11. The dog owner is the coffee drinker.\n12. Bob is the one who only drinks water.\n13. Eric and the person who uses a Samsung Galaxy S21 are next to each other.\n14. The Life smoothie drinker and Alice are next to each other.\n15. David is the Lemon smoothie lover.\n16. The person who uses an iPhone 13 is Bob.\n17. David is in the second house.\n18. The Desert smoothie lover is directly left of the wine drinker.\n19. The person who uses a Sony Xperia 5 is the pig owner.\n20. The person's child is named Samantha is the person who uses a Samsung Galaxy S21.\n21. The person's child is named Meredith is in the first house.\n22. The person's child is named Alice is the person who loves blue.\n23. The person whose favorite color is green and the person who keeps horses are next to each other.\n24. The person whose favorite color is green is the person's child is named Samantha.\n25. The root beer lover is in the sixth house.\n26. The cat lover is the wine drinker.\n27. The Dragonfruit smoothie lover is the person who likes milk.\n28. The boba tea drinker is the person's child is named Bella.\n29. The person who uses a Huawei P50 is directly left of Alice.\n30. Emily is the person who likes milk.\n31. The person who uses a Xiaomi Mi 11 is in the sixth house.\n\nWhat is Name of the person who lives in House 1?? Provide only the name of the person as your final answer.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will solve the logic puzzle by first identifying all entities and their properties, then using a Python script to find the configuration that satisfies all 31 clues.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import itertools\\n\\ndef solve():\\n    houses = [1, 2, 3, 4, 5, 6, 7]\\n    # Attributes: name, smoothie, drink, color, animal, phone, child\\n    # Names: david, emily, alice, bob, eric, carol, arnold\\n    # Smoothies: desert, dragonfruit, butterscotch, lemon, darkness, lilac, life\\n    # Drinks: water, coffee, tea, root beer, milk, boba tea, wine\\n    # Colors: blue, red, white, brown, green, purple, yellow\\n    # Animals: pig, fish, horse, bird, rabbit, cat, dog\\n    # Phones: oneplus 9, sony xperia 5, huawei p50, xiaomi mi 11, iphone 13, samsung galaxy s21, google pixel 6\\n    # Children: billy, bella, alice_child, meredith, fred, samantha, timothy\\n\\n    # Knowns from deductions:\\n    # House 2: David, Lemon\\n    # House 6: Root Beer, Xiaomi Mi 11, Butterscotch\\n    # Child Meredith: House 1\\n    # Bob: Water, iPhone 13, Brown\\n    # Emily: Milk, Fred (child), Dragonfruit\\n    # Carol: Darkness, OnePlus 9\\n    # Arnold: Red\\n    # Child Bella: Boba tea, Purple\\n    # Child Samantha: Samsung Galaxy S21, Green\\n    # Child Alice: Blue\\n    # Drink Coffee: Dog\\n    # Color White: Rabbit\\n    # Drink Wine: Cat, Smoothie Desert (Desert is left of Wine)\\n    # Phone Sony Xperia 5: Pig\\n\\n    # Let's iterate through permutations or use a solver approach.\\n    # Given the complexity, a backtracking search is better.\\n\\n    names = ['david', 'emily', 'alice', 'bob', 'eric', 'carol', 'arnold']\\n    smoothies = ['desert', 'dragonfruit', 'butterscotch', 'lemon', 'darkness', 'lilac', 'life']\\n    drinks = ['water', 'coffee', 'tea', 'root beer', 'milk', 'boba tea', 'wine']\\n    colors = ['blue', 'red', 'white', 'brown', 'green', 'purple', 'yellow']\\n    animals = ['pig', 'fish', 'horse', 'bird', 'rabbit', 'cat', 'dog']\\n    phones = ['oneplus 9', 'sony xperia 5', 'huawei p50', 'xiaomi mi 11', 'iphone 13', 'samsung galaxy s21', 'google pixel 6']\\n    children = ['billy', 'bella', 'alice_child', 'meredith', 'fred', 'samantha', 'timothy']\\n\\n    # Constraints helper\\n    def is_valid(grid):\\n        # check all conditions provided in the puzzle\\n        return True\\n\\n    # Manual deduction path:\\n    # Bob (Water, iPhone 13, Brown) - (9) Fish left of Bob. Bob cannot be H1. \\n    # H2 is David (Lemon). Bob cannot be H2.\\n    # H6 is Xiaomi (Butterscotch, Root Beer). Bob is iPhone 13, so Bob is not H6.\\n    # Emily (Milk, Fred, Dragonfruit) - Milk is not H6 (Root Beer).\\n    # Carol (Darkness, OnePlus 9) - Carol is not H6.\\n    # Samantha (Samantha, Green, Samsung S21) - H6 is Xiaomi, so Samantha not H6.\\n    # H1 child is Meredith.\\n\\n    # Let's try to assign names to houses.\\n    for name_perm in itertools.permutations(names):\\n        if name_perm[1] != 'david': continue # David is house 2\\n        \\n        # names[h-1]\\n        for drink_perm in itertools.permutations(drinks):\\n            if drink_perm[5] != 'root beer': continue # H6 root beer\\n            # (12) Bob: water\\n            if drink_perm[name_perm.index('bob')] != 'water': continue\\n            # (30) Emily: milk\\n            if drink_perm[name_perm.index('emily')] != 'milk': continue\\n            \\n            for phone_perm in itertools.permutations(phones):\\n                if phone_perm[5] != 'xiaomi mi 11': continue # H6 xiaomi\\n                # (1) Carol: oneplus 9\\n                if phone_perm[name_perm.index('carol')] != 'oneplus 9': continue\\n                # (16) Bob: iphone 13\\n                if phone_perm[name_perm.index('bob')] != 'iphone 13': continue\\n                # (13) Eric and Samsung S21 are next to each other\\n                eric_idx = name_perm.index('eric')\\n                samsung_idx = phone_perm.index('samsung galaxy s21')\\n                if abs(eric_idx - samsung_idx) != 1: continue\\n\\n                for smoothie_perm in itertools.permutations(smoothies):\\n                    if smoothie_perm[1] != 'lemon': continue # (15) David: lemon\\n                    if smoothie_perm[5] != 'butterscotch': continue # (4, 31) H6 butterscotch\\n                    # (7) Carol: darkness\\n                    if smoothie_perm[name_perm.index('carol')] != 'darkness': continue\\n                    # (27) Dragonfruit: milk\\n                    if smoothie_perm[drink_perm.index('milk')] != 'dragonfruit': continue\\n                    # (18) Desert left of Wine\\n                    desert_idx = smoothie_perm.index('desert')\\n                    wine_idx = drink_perm.index('wine')\\n                    if wine_idx - desert_idx != 1: continue\\n\\n                    for child_perm in itertools.permutations(children):\\n                        if child_perm[0] != 'meredith': continue # (21) Meredith H1\\n                        # (2) Fred: milk\\n                        if child_perm[drink_perm.index('milk')] != 'fred': continue\\n                        # (28) Boba tea: Bella\\n                        if child_perm[drink_perm.index('boba tea')] != 'bella': continue\\n                        # (20) Samantha: Samsung S21\\n                        if child_perm[phone_perm.index('samsung galaxy s21')] != 'samantha': continue\\n                        # (8) Samantha left of Timothy\\n                        if child_perm.index('timothy') - child_perm.index('samantha') != 1: continue\\n\\n                        for color_perm in itertools.permutations(colors):\\n                            # (10) Brown: water\\n                            if color_perm[drink_perm.index('water')] != 'brown': continue\\n                            # (5) Red: Arnold\\n                            if color_perm[name_perm.index('arnold')] != 'red': continue\\n                            # (6) Purple: boba tea\\n                            if color_perm[drink_perm.index('boba tea')] != 'purple': continue\\n                            # (24) Green: Samantha\\n                            if color_perm[child_perm.index('samantha')] != 'green': continue\\n                            # (22) Child Alice: Blue\\n                            if color_perm[child_perm.index('alice_child')] != 'blue': continue\\n\\n                            for animal_perm in itertools.permutations(animals):\\n                                # (9) Fish left of Bob\\n                                if name_perm.index('bob') - animal_perm.index('fish') != 1: continue\\n                                # (11) Dog: coffee\\n                                if animal_perm[drink_perm.index('coffee')] != 'dog': continue\\n                                # (19) Sony Xperia 5: pig\\n                                if animal_perm[phone_perm.index('sony xperia 5')] != 'pig': continue\\n                                # (26) Cat: wine\\n                                if animal_perm[drink_perm.index('wine')] != 'cat': continue\\n                                # (3) Rabbit: white\\n                                if animal_perm[color_perm.index('white')] != 'rabbit': continue\\n                                # (23) Green next to Horse\\n                                horse_idx = animal_perm.index('horse')\\n                                green_idx = color_perm.index('green')\\n                                if abs(horse_idx - green_idx) != 1: continue\\n\\n                                # Remaining specific constraints\\n                                # (14) Life and Alice (name) next to each other\\n                                life_idx = smoothie_perm.index('life')\\n                                alice_name_idx = name_perm.index('alice')\\n                                if abs(life_idx - alice_name_idx) != 1: continue\\n                                \\n                                # (29) Huawei P50 left of Alice\\n                                huawei_idx = phone_perm.index('huawei p50')\\n                                if alice_name_idx - huawei_idx != 1: continue\\n\\n                                return name_perm[0]\\n    return None\\n\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 38.11s\n\nOutput:\ncarol\n",
+      "raw_response": "Thought: I will solve the logic puzzle by first identifying all entities and their properties, then using a Python script to find the configuration that satisfies all 31 clues.\nAction: execute_python\nAction Input: {\"code\": \"import itertools\\n\\ndef solve():\\n    houses = [1, 2, 3, 4, 5, 6, 7]\\n    # Attributes: name, smoothie, drink, color, animal, phone, child\\n    # Names: david, emily, alice, bob, eric, carol, arnold\\n    # Smoothies: desert, dragonfruit, butterscotch, lemon, darkness, lilac, life\\n    # Drinks: water, coffee, tea, root beer, milk, boba tea, wine\\n    # Colors: blue, red, white, brown, green, purple, yellow\\n    # Animals: pig, fish, horse, bird, rabbit, cat, dog\\n    # Phones: oneplus 9, sony xperia 5, huawei p50, xiaomi mi 11, iphone 13, samsung galaxy s21, google pixel 6\\n    # Children: billy, bella, alice_child, meredith, fred, samantha, timothy\\n\\n    # Knowns from deductions:\\n    # House 2: David, Lemon\\n    # House 6: Root Beer, Xiaomi Mi 11, Butterscotch\\n    # Child Meredith: House 1\\n    # Bob: Water, iPhone 13, Brown\\n    # Emily: Milk, Fred (child), Dragonfruit\\n    # Carol: Darkness, OnePlus 9\\n    # Arnold: Red\\n    # Child Bella: Boba tea, Purple\\n    # Child Samantha: Samsung Galaxy S21, Green\\n    # Child Alice: Blue\\n    # Drink Coffee: Dog\\n    # Color White: Rabbit\\n    # Drink Wine: Cat, Smoothie Desert (Desert is left of Wine)\\n    # Phone Sony Xperia 5: Pig\\n\\n    # Let's iterate through permutations or use a solver approach.\\n    # Given the complexity, a backtracking search is better.\\n\\n    names = ['david', 'emily', 'alice', 'bob', 'eric', 'carol', 'arnold']\\n    smoothies = ['desert', 'dragonfruit', 'butterscotch', 'lemon', 'darkness', 'lilac', 'life']\\n    drinks = ['water', 'coffee', 'tea', 'root beer', 'milk', 'boba tea', 'wine']\\n    colors = ['blue', 'red', 'white', 'brown', 'green', 'purple', 'yellow']\\n    animals = ['pig', 'fish', 'horse', 'bird', 'rabbit', 'cat', 'dog']\\n    phones = ['oneplus 9', 'sony xperi",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1562,
+        "completion_tokens": 4241,
+        "total_tokens": 5803
+      },
+      "timestamp": "2026-01-31T18:46:22.792098+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The logic puzzle was solved using a Python script that checked all 31 constraints across 7 houses. The script identified 'carol' as the person living in House 1.",
+      "action": "finish",
+      "action_input": "\\boxed{carol}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The logic puzzle was solved using a Python script that checked all 31 constraints across 7 houses. The script identified 'carol' as the person living in House 1.\n\nAction: finish\nAction Input: \\boxed{carol}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3821,
+        "completion_tokens": 811,
+        "total_tokens": 4632
+      },
+      "timestamp": "2026-01-31T18:47:07.169142+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{carol}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0025591,
+  "total_time": 66.52080965042114,
+  "task": {
+    "task_id": "reasoning-gym:rg:zebra_puzzles:256:000369",
+    "question": "This is a logic puzzle. There are 7 houses (numbered 1 on the left, 7 on the right), from the perspective of someone standing across the street from them. Each has a different person in them. They have different characteristics:\n - Each person has a unique name: david, emily, alice, bob, eric, carol, arnold\n - Everyone has a favorite smoothie: desert, dragonfruit, butterscotch, lemon, darkness, lilac, life\n - Each person has a favorite drink: water, coffee, tea, root beer, milk, boba tea, wine\n - Each person has a favorite color: blue, red, white, brown, green, purple, yellow\n - The people keep different animals: pig, fish, horse, bird, rabbit, cat, dog\n - People use different phone models: oneplus 9, sony xperia 5, huawei p50, xiaomi mi 11, iphone 13, samsung galaxy s21, google pixel 6\n - Each mother is accompanied by their child: billy, bella, alice, meredith, fred, samantha, timothy\n\n1. Carol is the person who uses a OnePlus 9.\n2. The person's child is named Fred is the person who likes milk.\n3. The rabbit owner is the person who loves white.\n4. The person who uses a Xiaomi Mi 11 is the Butterscotch smoothie drinker.\n5. The person whose favorite color is red is Arnold.\n6. The person who loves purple is the boba tea drinker.\n7. The Darkness smoothie drinker is Carol.\n8. The person's child is named Samantha is directly left of the person who is the mother of Timothy.\n9. The fish enthusiast is directly left of Bob.\n10. The person who loves brown is the one who only drinks water.\n11. The dog owner is the coffee drinker.\n12. Bob is the one who only drinks water.\n13. Eric and the person who uses a Samsung Galaxy S21 are next to each other.\n14. The Life smoothie drinker and Alice are next to each other.\n15. David is the Lemon smoothie lover.\n16. The person who uses an iPhone 13 is Bob.\n17. David is in the second house.\n18. The Desert smoothie lover is directly left of the wine drinker.\n19. The person who uses a Sony Xperia 5 is the pig owner.\n20. The person's child is named Samantha is the person who uses a Samsung Galaxy S21.\n21. The person's child is named Meredith is in the first house.\n22. The person's child is named Alice is the person who loves blue.\n23. The person whose favorite color is green and the person who keeps horses are next to each other.\n24. The person whose favorite color is green is the person's child is named Samantha.\n25. The root beer lover is in the sixth house.\n26. The cat lover is the wine drinker.\n27. The Dragonfruit smoothie lover is the person who likes milk.\n28. The boba tea drinker is the person's child is named Bella.\n29. The person who uses a Huawei P50 is directly left of Alice.\n30. Emily is the person who likes milk.\n31. The person who uses a Xiaomi Mi 11 is in the sixth house.\n\nWhat is Name of the person who lives in House 1?? Provide only the name of the person as your final answer.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "carol",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "zebra_puzzles",
+      "rg_index": 369,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "zebra_puzzles",
+      "source_index": 369,
+      "difficulty": {
+        "num_people": 7,
+        "num_characteristics": 7
+      }
+    }
+  }
+}

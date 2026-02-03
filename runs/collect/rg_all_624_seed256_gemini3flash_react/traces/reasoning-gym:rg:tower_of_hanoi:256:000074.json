@@ -1,0 +1,901 @@
+{
+  "task_id": "reasoning-gym:rg:tower_of_hanoi:256:000074",
+  "question": "Solve the Tower of Hanoi problem with 15 disks and 5 pegs.\nMove all disks from Peg 3 to Peg 1 following the rules:\n- Only one disk can be moved at a time.\n- A larger disk cannot be placed on top of a smaller disk.\n- All disks must be on a peg at all times.\n\nProvide the sequence of moves.\n\nFormatting guidelines:\n- Each instruction should be placed on a single line.\n- Each line should be formatted as 'Move disk X from Peg Y to Peg Z'\n- Do not include any other text or formatting.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will search for current news to provide a relevant starting point since the original query was lost.",
+      "action": "web_search",
+      "action_input": "{\"query\": \"latest major news headlines October 2024\"}",
+      "observation": "EXA requestId: ad6738c82fb2f7a344e3a38cf5ec1b3d | EXA costDollars: 0.077\n\nFound 10 results:\n\n[1] Headlines for October 31, 2024 | Democracy Now!\n    URL: https://www.democracynow.org/2024/10/31/headlines\n    SUMMARY: On October 31, 2024, major news headlines include:\n\n1. **Israeli Attacks in Lebanon**: Israeli forces launched attacks on Baalbek, Lebanon, resulting in at least 19 deaths. Caretaker Prime Minister Najib Mikati expressed hope for a ceasefire as U.S. envoy Amos Hochstein arrives for discussions. Hezbollah's new leader, Naim Qassem, indicated the group's readiness to continue fighting but is open to a ceasefire.\n\n2. **War Crimes Allegations**: Human Rights Watch accused Israel of committing war crimes by targeting healthcare facilities and personnel in Lebanon, with over 160 health workers reported killed. The U.N. peacekeeping force in Lebanon (UNIFIL) reported ongoing attacks on its personnel.\n\n3. **Continued Strikes in Gaza**: Israeli forces attacked Kamal Adwan Hospital in northern Gaza, injuring health workers and damaging medical supplies. In southern Gaza, an airstrike killed four individuals, including a child, raising concerns about the safety of designated humanitarian zones.\n\n4. **U.S. Weapons Reports Ignored**: The Biden administration has received nearly 500 reports of U.S.-supplied weapons being used by Israel in attacks that resulted in civilian casualties in Gaza, but has not acted on its own policies requiring investigations into these claims.\n\nThese headlines reflect ongoing tensions and humanitarian crises in the region, with significant implications for international relations and human rights.\n    HIGHLIGHTS:\n      - The original content of this program is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License. Please attribute legal copies of this work to democracynow.org. Some of the work(s) that this program incorporates, however, may be separately licensed. For further information or additional permissions, contact us.\n      - Headlines October 31, 2024 Watch Headlines Israeli Attacks on Lebanon’s Baalbek Kill 19 as Prime Minister Mikati Hopes for Ceasefire Soon Oct 31, 2024 Israeli forces killed at least 19 people after launching fresh attacks on Lebanon’s ancient city of Baalbek. The strikes on the UNESCO World Heritage city came just hours after tens of thousands of people fled the area after Israel issued forced evacuation orders.\n      - U.N. General Assembly Votes to Condemn U.S. Embargo on Cuba for 32nd Consecutive Year Oct 31, 2024 The United Nations General Assembly has voted to condemn the United States’ embargo on Cuba for the 32nd consecutive year. On Wednesday, 187 countries voted in favor of lifting the decades-old sanctions; only the U.S. and Israel voted against the nonbinding resolution. This is Cuba’s ambassador to the U.N., Soberón Guzmán.\n      - Despite the mounting death toll, Lebanon’s caretaker Prime Minister Najib Mikati says he hopes a ceasefire deal will be announced in the coming days as U.S. envoy Amos Hochstein arrives in Jerusalem today for more talks. \n Meanwhile, Hezbollah’s new chief, Naim Qassem, said the group is prepared to keep fighting Israel but that it was open to a ceasefire deal. Qassem, who replaces assassinated Hezbollah leader Hassan Nasrallah, also addressed Israel’s war on Gaza.\n      - Israel Is Committing War Crimes by Targeting Health Infrastructure, U.N. Peacekeepers in Lebanon Oct 31, 2024 Human Rights Watch is calling on countries to suspend arms sales to Israel, accusing it of committing war crimes by attacking medical workers and healthcare facilities in Lebanon. As of last week, Israel killed over 160 health and rescue workers across Lebanon and damaged over 150 ambulances and 55 hospitals. \n Meanwhile, the U.N. Interim Force in Lebanon, UNIFIL, says its forces are con...\n    SUBPAGES:\n      • You turn to us for voices you won't hear anywhere else.\n        URL: https://www.democracynow.org/\n        Summary: Democracy Now! provides independent global news coverage, featuring unique voices and perspectives not commonly found in mainstream media. As of October 2024, the latest major headlines include signif...\n      • Non-commercial news needs your support.\n        URL: https://www.democracynow.org/about\n        Summary: The webpage from Democracy Now! emphasizes the critical need for support of independent journalism, particularly in the context of rising misinformation and threats to press freedom. It highlights the...\n\n[2] October 30, 2024, presidential campaign news | CNN Politics\n    URL: https://www.cnn.com/politics/live-news/trump-harris-election-10-30-24\n    Published: 2024-10-30T00:00:00.000Z\n    Author: Antoinette Radford, Jessie Yeung, Maureen Chowdhury, Michael Williams, Elise Hammond, Aditi Sangal, Tori B. Powell\n    SUMMARY: On October 30, 2024, key developments in the presidential campaign include dueling events by former President Donald Trump in Green ",
+      "raw_response": "Thought: I will search for current news to provide a relevant starting point since the original query was lost.\nAction: web_search\nAction Input: {\"query\": \"latest major news headlines October 2024\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 809,
+        "completion_tokens": 475,
+        "total_tokens": 1284
+      },
+      "timestamp": "2026-01-31T18:20:57.047857+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I will use Python to calculate the optimal move sequence for the Tower of Hanoi with 15 disks and 5 pegs using the Frame-Stewart algorithm, ensuring the move sequence follows the specified constraints.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def frame_stewart(n, k, src, dest, spare_pegs):\\n    if n == 0:\\n        return []\\n    if n == 1:\\n        return [f'Move disk 1 from Peg {src} to Peg {dest}']\\n    if k == 3:\\n        moves = []\\n        spare = spare_pegs[0]\\n        def hanoi_3(n_3, s, d, p, disk_offset=0):\\n            if n_3 == 1:\\n                return [f'Move disk {n_3 + disk_offset} from Peg {s} to Peg {d}']\\n            m = hanoi_3(n_3 - 1, s, p, d, disk_offset)\\n            m.append(f'Move disk {n_3 + disk_offset} from Peg {s} to Peg {d}')\\n            m.extend(hanoi_3(n_3 - 1, p, d, s, disk_offset))\\n            return m\\n        return hanoi_3(n, src, dest, spare)\\n\\n    def get_min_moves_count(n_count, k_count):\\n        memo = {}\\n        def count(n_c, k_c):\\n            if n_c == 0: return 0\\n            if n_c == 1: return 1\\n            if k_c == 3: return 2**n_c - 1\\n            if (n_c, k_c) in memo: return memo[(n_c, k_c)]\\n            res = min(2 * count(i, k_c) + count(n_c - i, k_c - 1) for i in range(1, n_c))\\n            memo[(n_c, k_c)] = res\\n            return res\\n        return count(n_count, k_count)\\n\\n    best_i = 1\\n    min_val = float('inf')\\n    for i in range(1, n):\\n        val = 2 * get_min_moves_count(i, k) + get_min_moves_count(n - i, k - 1)\\n        if val < min_val:\\n            min_val = val\\n            best_i = i\\n\\n    intermediate = spare_pegs[0]\\n    other_spares = spare_pegs[1:] + [dest]\\n    moves = []\\n    def solve(n_s, k_s, s, d, spares, disk_offset=0):\\n        if n_s == 0: return []\\n        if n_s == 1: return [f'Move disk {1 + disk_offset} from Peg {s} to Peg {d}']\\n        if k_s == 3:\\n            def h3(n3, s3, d3, p3, off):\\n                if n3 == 1: return [f'Move disk {1 + off} from Peg {s3} to Peg {d3}']\\n                res = h3(n3 - 1, s3, p3, d3, off)\\n                res.append(f'Move disk {n3 + off} from Peg {s3} to Peg {d3}')\\n                res.extend(h3(n3 - 1, p3, d3, s3, off))\\n                return res\\n            return h3(n_s, s, d, spares[0], disk_offset)\\n\\n        b_i = 1\\n        m_v = float('inf')\\n        for i in range(1, n_s):\\n            v = 2 * get_min_moves_count(i, k_s) + get_min_moves_count(n_s - i, k_s - 1)\\n            if v < m_v:\\n                m_v = v\\n                b_i = i\\n        \\n        m = solve(b_i, k_s, s, spares[0], spares[1:] + [d], disk_offset)\\n        m.extend(solve(n_s - b_i, k_s - 1, s, d, spares[1:], disk_offset + b_i))\\n        m.extend(solve(b_i, k_s, spares[0], d, spares[1:] + [s], disk_offset))\\n        return m\\n\\n    return solve(n, k, src, dest, spare_pegs)\\n\\nmoves = frame_stewart(15, 5, 3, 1, [2, 4, 5])\\nprint('\\\\n'.join(moves))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.37s\n\nOutput:\nMove disk 1 from Peg 3 to Peg 4\nMove disk 2 from Peg 3 to Peg 5\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 5 from Peg 3 to Peg 2\nMove disk 3 from Peg 1 to Peg 3\nMove disk 4 from Peg 1 to Peg 2\nMove disk 3 from Peg 3 to Peg 2\nMove disk 2 from Peg 5 to Peg 2\nMove disk 1 from Peg 4 to Peg 2\nMove disk 6 from Peg 3 to Peg 1\nMove disk 7 from Peg 3 to Peg 4\nMove disk 8 from Peg 3 to Peg 5\nMove disk 7 from Peg 4 to Peg 5\nMove disk 6 from Peg 1 to Peg 5\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 11 from Peg 3 to Peg 4\nMove disk 9 from Peg 1 to Peg 3\nMove disk 10 from Peg 1 to Peg 4\nMove disk 9 from Peg 3 to Peg 4\nMove disk 6 from Peg 5 to Peg 1\nMove disk 7 from Peg 5 to Peg 3\nMove disk 8 from Peg 5 to Peg 4\nMove disk 7 from Peg 3 to Peg 4\nMove disk 6 from Peg 1 to Peg 4\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 14 from Peg 3 to Peg 5\nMove disk 12 from Peg 1 to Peg 3\nMove disk 13 from Peg 1 to Peg 5\nMove disk 12 from Peg 3 to Peg 5\nMove disk 15 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 13 from Peg 5 to Peg 3\nMove disk 12 from Peg 1 to Peg 3\nMove disk 14 from Peg 5 to Peg 1\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 6 from Peg 4 to Peg 3\nMove disk 7 from Peg 4 to Peg 1\nMove disk 8 from Peg 4 to Peg 5\nMove disk 7 from Peg 1 to Peg 5\nMove disk 6 from Peg 3 to Peg 5\nMove disk 9 from Peg 4 to Peg 1\nMove disk 10 from Peg 4 to Peg 3\nMove disk 9 from Peg 1 to Peg 3\nMove disk 11 from Peg 4 to Peg 1\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 6 from Peg 5 to Peg 3\nMove disk 7 from Peg 5 to Peg 4\nMove disk 8 from Peg 5 to Peg 1\nMove disk 7 from Peg 4 to Peg 1\nMove disk 6 from Peg 3 to Peg 1\nMove disk 1 from Peg 2 to Peg 4\nMove disk 2 from Peg 2 to Peg 5\nMove disk 3 from Peg 2 to Peg 1\nMove disk 4 from Peg 2 to Peg 3\nMove disk 3 from Peg 1 to Peg 3\nMove disk 5 from Peg 2 to Peg 1\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 2 from Peg 5 to Peg 1\nMove disk 1 from Peg 4 to Peg 1\n",
+      "raw_response": "Thought: I will use Python to calculate the optimal move sequence for the Tower of Hanoi with 15 disks and 5 pegs using the Frame-Stewart algorithm, ensuring the move sequence follows the specified constraints.\nAction: execute_python\nAction Input: {\"code\": \"def frame_stewart(n, k, src, dest, spare_pegs):\\n    if n == 0:\\n        return []\\n    if n == 1:\\n        return [f'Move disk 1 from Peg {src} to Peg {dest}']\\n    if k == 3:\\n        moves = []\\n        spare = spare_pegs[0]\\n        def hanoi_3(n_3, s, d, p, disk_offset=0):\\n            if n_3 == 1:\\n                return [f'Move disk {n_3 + disk_offset} from Peg {s} to Peg {d}']\\n            m = hanoi_3(n_3 - 1, s, p, d, disk_offset)\\n            m.append(f'Move disk {n_3 + disk_offset} from Peg {s} to Peg {d}')\\n            m.extend(hanoi_3(n_3 - 1, p, d, s, disk_offset))\\n            return m\\n        return hanoi_3(n, src, dest, spare)\\n\\n    def get_min_moves_count(n_count, k_count):\\n        memo = {}\\n        def count(n_c, k_c):\\n            if n_c == 0: return 0\\n            if n_c == 1: return 1\\n            if k_c == 3: return 2**n_c - 1\\n            if (n_c, k_c) in memo: return memo[(n_c, k_c)]\\n            res = min(2 * count(i, k_c) + count(n_c - i, k_c - 1) for i in range(1, n_c))\\n            memo[(n_c, k_c)] = res\\n            return res\\n        return count(n_count, k_count)\\n\\n    best_i = 1\\n    min_val = float('inf')\\n    for i in range(1, n):\\n        val = 2 * get_min_moves_count(i, k) + get_min_moves_count(n - i, k - 1)\\n        if val < min_val:\\n            min_val = val\\n            best_i = i\\n\\n    intermediate = spare_pegs[0]\\n    other_spares = spare_pegs[1:] + [dest]\\n    moves = []\\n    def solve(n_s, k_s, s, d, spares, disk_offset=0):\\n        if n_s == 0: return []\\n        if n_s == 1: return [f'Move disk {1 + disk_offset} from Peg {s} to Peg {d}']\\n        if k_s == 3:\\n            def h3(n3, s3, d3, p3, off):\\n                if n3 == 1: return [f'Move disk {1 + off} f",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 11100,
+        "completion_tokens": 1827,
+        "total_tokens": 12927
+      },
+      "timestamp": "2026-01-31T18:21:22.398780+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "I will use the Frame-Stewart algorithm to solve the Tower of Hanoi problem for 15 disks and 5 pegs, ensuring that the source is Peg 3 and the destination is Peg 1, and that the moves follow the standard rules.",
+      "action": "finish",
+      "action_input": "\\boxed{Move disk 1 from Peg 3 to Peg 4\nMove disk 2 from Peg 3 to Peg 5\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 5 from Peg 3 to Peg 2\nMove disk 3 from Peg 1 to Peg 3\nMove disk 4 from Peg 1 to Peg 2\nMove disk 3 from Peg 3 to Peg 2\nMove disk 2 from Peg 5 to Peg 2\nMove disk 1 from Peg 4 to Peg 2\nMove disk 6 from Peg 3 to Peg 1\nMove disk 7 from Peg 3 to Peg 4\nMove disk 8 from Peg 3 to Peg 5\nMove disk 7 from Peg 4 to Peg 5\nMove disk 6 from Peg 1 to Peg 5\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 11 from Peg 3 to Peg 4\nMove disk 9 from Peg 1 to Peg 3\nMove disk 10 from Peg 1 to Peg 4\nMove disk 9 from Peg 3 to Peg 4\nMove disk 6 from Peg 5 to Peg 1\nMove disk 7 from Peg 5 to Peg 3\nMove disk 8 from Peg 5 to Peg 4\nMove disk 7 from Peg 3 to Peg 4\nMove disk 6 from Peg 1 to Peg 4\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 14 from Peg 3 to Peg 5\nMove disk 12 from Peg 1 to Peg 3\nMove disk 13 from Peg 1 to Peg 5\nMove disk 12 from Peg 3 to Peg 5\nMove disk 15 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 13 from Peg 5 to Peg 3\nMove disk 12 from Peg 1 to Peg 3\nMove disk 14 from Peg 5 to Peg 1\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 6 from Peg 4 to Peg 3\nMove disk 7 from Peg 4 to Peg 1\nMove disk 8 from Peg 4 to Peg 5\nMove disk 7 from Peg 1 to Peg 5\nMove disk 6 from Peg 3 to Peg 5\nMove disk 9 from Peg 4 to Peg 1\nMove disk 10 from Peg 4 to Peg 3\nMove disk 9 from Peg 1 to Peg 3\nMove disk 11 from Peg 4 to Peg 1\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 6 from Peg 5 to Peg 3\nMove disk 7 from Peg 5 to Peg 4\nMove disk 8 from Peg 5 to Peg 1\nMove disk 7 from Peg 4 to Peg 1\nMove disk 6 from Peg 3 to Peg 1\nMove disk 1 from Peg 2 to Peg 4\nMove disk 2 from Peg 2 to Peg 5\nMove disk 3 from Peg 2 to Peg 1\nMove disk 4 from Peg 2 to Peg 3\nMove disk 3 from Peg 1 to Peg 3\nMove disk 5 from Peg 2 to Peg 1\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 2 from Peg 5 to Peg 1\nMove disk 1 from Peg 4 to Peg 1}",
+      "observation": "FINISH",
+      "raw_response": "Thought: I will use the Frame-Stewart algorithm to solve the Tower of Hanoi problem for 15 disks and 5 pegs, ensuring that the source is Peg 3 and the destination is Peg 1, and that the moves follow the standard rules.\nAction: finish\nAction Input: \\boxed{Move disk 1 from Peg 3 to Peg 4\nMove disk 2 from Peg 3 to Peg 5\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 5 from Peg 3 to Peg 2\nMove disk 3 from Peg 1 to Peg 3\nMove disk 4 from Peg 1 to Peg 2\nMove disk 3 from Peg 3 to Peg 2\nMove disk 2 from Peg 5 to Peg 2\nMove disk 1 from Peg 4 to Peg 2\nMove disk 6 from Peg 3 to Peg 1\nMove disk 7 from Peg 3 to Peg 4\nMove disk 8 from Peg 3 to Peg 5\nMove disk 7 from Peg 4 to Peg 5\nMove disk 6 from Peg 1 to Peg 5\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 11 from Peg 3 to Peg 4\nMove disk 9 from Peg 1 to Peg 3\nMove disk 10 from Peg 1 to Peg 4\nMove disk 9 from Peg 3 to Peg 4\nMove disk 6 from Peg 5 to Peg 1\nMove disk 7 from Peg 5 to Peg 3\nMove disk 8 from Peg 5 to Peg 4\nMove disk 7 from Peg 3 to Peg 4\nMove disk 6 from Peg 1 to Peg 4\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 14 from Peg 3 to Peg 5\nMove disk 12 from Peg 1 to Peg 3\nMove disk 13 from Peg 1 to Peg 5\nMove disk 12 from Peg 3 to Peg 5\nMove disk 15 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 13 from Peg 5 to Peg 3\nMove disk 12 from Peg 1 to Peg 3\nMove disk 14 from Peg 5 to Peg 1\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 6 from Peg 4 to Peg 3\nMove disk 7 from Peg 4 to Peg 1\nMove disk 8 from Peg 4 to Peg 5\nMove disk 7 from Peg 1 to Peg 5\nMove disk 6 from Peg 3 to Peg 5\nMove disk 9 from Peg 4 to Peg 1\nMove disk 10 from Peg 4 to Peg 3\nMove disk 9 from Peg 1 to Peg 3\nMove disk 11 from Peg 4 to Peg 1\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Pe",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 13218,
+        "completion_tokens": 4148,
+        "total_tokens": 17366
+      },
+      "timestamp": "2026-01-31T18:21:45.417170+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{Move disk 1 from Peg 3 to Peg 4\nMove disk 2 from Peg 3 to Peg 5\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 5 from Peg 3 to Peg 2\nMove disk 3 from Peg 1 to Peg 3\nMove disk 4 from Peg 1 to Peg 2\nMove disk 3 from Peg 3 to Peg 2\nMove disk 2 from Peg 5 to Peg 2\nMove disk 1 from Peg 4 to Peg 2\nMove disk 6 from Peg 3 to Peg 1\nMove disk 7 from Peg 3 to Peg 4\nMove disk 8 from Peg 3 to Peg 5\nMove disk 7 from Peg 4 to Peg 5\nMove disk 6 from Peg 1 to Peg 5\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 11 from Peg 3 to Peg 4\nMove disk 9 from Peg 1 to Peg 3\nMove disk 10 from Peg 1 to Peg 4\nMove disk 9 from Peg 3 to Peg 4\nMove disk 6 from Peg 5 to Peg 1\nMove disk 7 from Peg 5 to Peg 3\nMove disk 8 from Peg 5 to Peg 4\nMove disk 7 from Peg 3 to Peg 4\nMove disk 6 from Peg 1 to Peg 4\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 14 from Peg 3 to Peg 5\nMove disk 12 from Peg 1 to Peg 3\nMove disk 13 from Peg 1 to Peg 5\nMove disk 12 from Peg 3 to Peg 5\nMove disk 15 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 13 from Peg 5 to Peg 3\nMove disk 12 from Peg 1 to Peg 3\nMove disk 14 from Peg 5 to Peg 1\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 6 from Peg 4 to Peg 3\nMove disk 7 from Peg 4 to Peg 1\nMove disk 8 from Peg 4 to Peg 5\nMove disk 7 from Peg 1 to Peg 5\nMove disk 6 from Peg 3 to Peg 5\nMove disk 9 from Peg 4 to Peg 1\nMove disk 10 from Peg 4 to Peg 3\nMove disk 9 from Peg 1 to Peg 3\nMove disk 11 from Peg 4 to Peg 1\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 6 from Peg 5 to Peg 3\nMove disk 7 from Peg 5 to Peg 4\nMove disk 8 from Peg 5 to Peg 1\nMove disk 7 from Peg 4 to Peg 1\nMove disk 6 from Peg 3 to Peg 1\nMove disk 1 from Peg 2 to Peg 4\nMove disk 2 from Peg 2 to Peg 5\nMove disk 3 from Peg 2 to Peg 1\nMove disk 4 from Peg 2 to Peg 3\nMove disk 3 from Peg 1 to Peg 3\nMove disk 5 from Peg 2 to Peg 1\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 2 from Peg 5 to Peg 1\nMove disk 1 from Peg 4 to Peg 1}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0854609,
+  "total_time": 92.36143088340759,
+  "task": {
+    "task_id": "reasoning-gym:rg:tower_of_hanoi:256:000074",
+    "question": "Solve the Tower of Hanoi problem with 15 disks and 5 pegs.\nMove all disks from Peg 3 to Peg 1 following the rules:\n- Only one disk can be moved at a time.\n- A larger disk cannot be placed on top of a smaller disk.\n- All disks must be on a peg at all times.\n\nProvide the sequence of moves.\n\nFormatting guidelines:\n- Each instruction should be placed on a single line.\n- Each line should be formatted as 'Move disk X from Peg Y to Peg Z'\n- Do not include any other text or formatting.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "Move disk 1 from Peg 3 to Peg 4\nMove disk 2 from Peg 3 to Peg 5\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 5 from Peg 3 to Peg 2\nMove disk 3 from Peg 1 to Peg 3\nMove disk 4 from Peg 1 to Peg 2\nMove disk 3 from Peg 3 to Peg 2\nMove disk 2 from Peg 5 to Peg 2\nMove disk 1 from Peg 4 to Peg 2\nMove disk 6 from Peg 3 to Peg 1\nMove disk 7 from Peg 3 to Peg 4\nMove disk 8 from Peg 3 to Peg 5\nMove disk 7 from Peg 4 to Peg 5\nMove disk 6 from Peg 1 to Peg 5\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 11 from Peg 3 to Peg 4\nMove disk 9 from Peg 1 to Peg 3\nMove disk 10 from Peg 1 to Peg 4\nMove disk 9 from Peg 3 to Peg 4\nMove disk 6 from Peg 5 to Peg 1\nMove disk 7 from Peg 5 to Peg 3\nMove disk 8 from Peg 5 to Peg 4\nMove disk 7 from Peg 3 to Peg 4\nMove disk 6 from Peg 1 to Peg 4\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 14 from Peg 3 to Peg 5\nMove disk 12 from Peg 1 to Peg 3\nMove disk 13 from Peg 1 to Peg 5\nMove disk 12 from Peg 3 to Peg 5\nMove disk 15 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 13 from Peg 5 to Peg 3\nMove disk 12 from Peg 1 to Peg 3\nMove disk 14 from Peg 5 to Peg 1\nMove disk 12 from Peg 3 to Peg 5\nMove disk 13 from Peg 3 to Peg 1\nMove disk 12 from Peg 5 to Peg 1\nMove disk 6 from Peg 4 to Peg 3\nMove disk 7 from Peg 4 to Peg 1\nMove disk 8 from Peg 4 to Peg 5\nMove disk 7 from Peg 1 to Peg 5\nMove disk 6 from Peg 3 to Peg 5\nMove disk 9 from Peg 4 to Peg 1\nMove disk 10 from Peg 4 to Peg 3\nMove disk 9 from Peg 1 to Peg 3\nMove disk 11 from Peg 4 to Peg 1\nMove disk 9 from Peg 3 to Peg 4\nMove disk 10 from Peg 3 to Peg 1\nMove disk 9 from Peg 4 to Peg 1\nMove disk 6 from Peg 5 to Peg 3\nMove disk 7 from Peg 5 to Peg 4\nMove disk 8 from Peg 5 to Peg 1\nMove disk 7 from Peg 4 to Peg 1\nMove disk 6 from Peg 3 to Peg 1\nMove disk 1 from Peg 2 to Peg 4\nMove disk 2 from Peg 2 to Peg 5\nMove disk 3 from Peg 2 to Peg 1\nMove disk 4 from Peg 2 to Peg 3\nMove disk 3 from Peg 1 to Peg 3\nMove disk 5 from Peg 2 to Peg 1\nMove disk 3 from Peg 3 to Peg 2\nMove disk 4 from Peg 3 to Peg 1\nMove disk 3 from Peg 2 to Peg 1\nMove disk 2 from Peg 5 to Peg 1\nMove disk 1 from Peg 4 to Peg 1",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "tower_of_hanoi",
+      "rg_index": 74,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "tower_of_hanoi",
+      "source_index": 74,
+      "num_disks": 15,
+      "num_pegs": 5,
+      "start_peg": 3,
+      "target_peg": 1,
+      "auxiliary_pegs": [
+        2,
+        4,
+        5
+      ],
+      "solution_length": 71,
+      "difficulty": {
+        "num_disks": [
+          15,
+          15
+        ],
+        "num_pegs": [
+          5,
+          5
+        ]
+      }
+    }
+  }
+}

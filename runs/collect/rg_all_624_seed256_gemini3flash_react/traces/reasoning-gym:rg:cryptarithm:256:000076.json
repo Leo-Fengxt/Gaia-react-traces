@@ -1,0 +1,963 @@
+{
+  "task_id": "reasoning-gym:rg:cryptarithm:256:000076",
+  "question": "Solve this cryptarithm:\n\n     FNO\n    BNIY\n   ENJTT\n    TNOJ\n     EYI\n     YNY\n     BNJ\n     TJJ\n     MNF\n   YYMBO\n   JINJE\n     IEJ\n     YEE\n    FNTM\n    TBOI\n    FMEY\n     BEE\n    BYMJ\n   OTYTF\n   EJYEO\n   OBOTY\n   JFBBM\n     ONO\n     TBM\n+    OYO\n--------\n  TTEYIO\n\nEach letter stands for a unique digit (0-9). No leading letter can be zero.\nProvide a comma separated mapping from letters to digits that satisfies the equation in your final answer. Output format: \"A=1,B=2,C=3\" (without quotes)\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "The script I wrote uses `itertools.permutations`, which has 10! = 3,628,800 iterations. This should run in a few seconds on most machines, but I should check if it fits within the time limits.\nAlso, I should ensure all words are correctly transcribed into the sum.\nWords:\n1. FNO (100F+10N+O)\n2. BNIY (1000B+100N+10I+Y)\n3. ENJTT (10000E+1000N+100J+10T+T)\n4. TNOJ (1000T+100N+10O+J)\n5. EYI (100E+10Y+I)\n6. YNY (100Y+10N+Y)\n7. BNJ (100B+10N+J)\n8. TJJ (100T+10J+J)\n9. MNF (100M+10N+F)\n10. YYMBO (10000Y+1000Y+100M+10B+O)\n11. JINJE (10000J+1000I+100N+10J+E)\n12. IEJ (100I+10E+J)\n13. YEE (100Y+10E+E)\n14. FNTM (1000F+100N+10T+M)\n15. TBOI (1000T+100B+10O+I)\n16. FMEY (1000F+100M+10E+Y)\n17. BEE (100B+10E+E)\n18. BYMJ (1000B+100Y+10M+J)\n19. OTYTF (10000O+1000T+100Y+10T+F)\n20. EJYEO (10000E+1000J+100Y+10E+O)\n21. OBOTY (10000O+1000B+100O+10T+Y)\n22. JFBBM (10000J+1000F+100B+10B+M)\n23. ONO (100O+10N+O)\n24. TBM (100T+10B+M)\n25. OYO (100O+10Y+O)\nResult: TTEYIO (100000T+10000T+1000E+100Y+10I+O)\n\nLet me double check the variables in the sum.\nSumming up coefficients for each letter:\n- F: 100(s1) + 1(s9) + 1000(s14) + 1000(s16) + 1(s19) + 1000(s22) = 3102\n- N: 10(s1) + 100(s2) + 1000(s3) + 100(s4) + 10(s6) + 10(s7) + 10(s9) + 100(s11) + 100(s14) + 10(s23) = 1350\n- O: 1(s1) + 10(s4) + 1(s10) + 10(s15) + 10000(s19) + 1(s20) + 10000(s21) + 100(s21) + 100(s23) + 1(s23) + 100(s25) + 1(s25) = 20224\n- B: 1000(s2) + 100(s7) + 10(s10) + 100(s15) + 100(s17) + 1000(s18) + 1000(s21) + 100(s22) + 10(s22) + 10(s24) = 3330\n- I: 10(s2) + 1(s5) + 1000(s11) + 100(s12) + 1(s15) = 1111\n- Y: 1(s2) + 10(s5) + 100(s6) + 1(s6) + 10000(s10) + 1000(s10) + 100(s13) + 1(s16) + 100(s18) + 100(s19) + 100(s20) + 1(s21) + 10(s25) = 11413\n- E: 10000(s3) + 100(s5) + 1(s11) + 10(s12) + 10(s13) + 1(s13) + 10(s16) + 10(s17) + 1(s17) + 10000(s20) + 10(s20) = 20142\n- J: 100(s3) + 1(s4) + 1(s7) + 10(s8) + 1(s8) + 10000(s11) + 10(s11) + 1(s12) + 1(s18) + 1000(s20) + 10000(s22) = 21124\n- T: 10(s3) + 1(s3) + 1000(s4) + 100(s8) + 10(s14) + 1000(s15) + 1000(s19) + 10(s19) + 10(s21) + 100(s24) = 3231\n- M: 100(s9) + 100(s10) + 1(s14) + 100(s16) + 10(s18) + 1(s22) + 1(s24) = 312\n\nSum = 3102*F + 1350*N + 20224*O + 3330*B + 1111*I + 11413*Y + 20142*E + 21124*J + 3231*T + 312*M\nTarget = 110000*T + 1000*E + 100*Y + 10*I + O\n\nLet's refine the script to use these coefficients, it'll be faster.\n\nWait, check the letters again:\nF N O B I Y E J T M\nTotal letters = 10.\nN must be 0? I should verify that.\nWait, my check for leading letters:\n1. FNO -> F\n2. BNIY -> B\n3. ENJTT -> E\n4. TNOJ -> T\n5. EYI -> E\n6. YNY -> Y\n7. BNJ -> B\n8. TJJ -> T\n9. MNF -> M\n10. YYMBO -> Y\n11. JINJE -> J\n12. IEJ -> I\n13. YEE -> Y\n14. FNTM -> F\n15. TBOI -> T\n16. FMEY -> F\n17. BEE -> B\n18. BYMJ -> B\n19. OTYTF -> O\n20. EJYEO -> E\n21. OBOTY -> O\n22. JFBBM -> J\n23. ONO -> O\n24. TBM -> T\n25. OYO -> O\nResult: TTEYIO -> T\nAll letters except N appear at the start.\nYes, N is the only one that can be zero.\nSo if there's a solution with 10 distinct digits, N must be 0.\nThis reduces the search space to 9! = 362,880.\n\nLet's re-verify the coefficients carefully.\nF:\nFNO: 100\nMNF: 1\nFNTM: 1000\nFMEY: 1000\nOTYTF: 1\nJFBBM: 1000\nTotal F: 100 + 1 + 1000 + 1000 + 1 + 1000 = 3102. Correct.\n\nN:\nFNO: 10\nBNIY: 100\nENJTT: 1000\nTNOJ: 100\nYNY: 10\nBNJ: 10\nMNF: 10\nJINJE: 100\nFNTM: 100\nONO: 10\nTotal N: 10+100+1000+100+10+10+10+100+100+10 = 1450.\nWait, my previous manual count was 1350. Let's re-sum:\n10, 100, 1000, 100, 10, 10, 10, 100, 100, 10.\n10+100 = 110\n110+1000 = 1110\n1110+100 = 1210\n1210+10 = 1220\n1220+10 = 1230\n1230+10 = 1240\n1240+100 = 1340\n1340+100 = 1440\n1440+10 = 1450. Correct.\n\nO:\nFNO: 1\nTNOJ: 10\nYYMBO: 1\nTBOI: 10\nOTYTF: 10000\nEJYEO: 1\nOBOTY: 10000 + 100\nONO: 100 + 1\nOYO: 100 + 1\nTotal O: 1 + 10 + 1 + 10 + 10000 + 1 + 10100 + 101 + 101 = 20325.\nWait, previous manual sum was 20224.\nLet's re-sum O:\n1 (s1)\n10 (s4)\n1 (s10)\n10 (s15)\n10000 (s19)\n1 (s20)\n10000 (s21)\n100 (s21)\n100 (s23)\n1 (s23)\n100 (s25)\n1 (s25)\nSum = 1+10+1+10+10000+1+10000+100+100+1+100+1 = 20325. Correct.\n\nB:\nBNIY: 1000\nBNJ: 100\nYYMBO: 10\nTBOI: 100\nBEE: 100\nBYMJ: 1000\nOBOTY: 1000\nJFBBM: 100 + 10\nTBM: 10\nTotal B: 1000+100+10+100+100+1000+1000+110+10 = 3430.\nWait, previous was 3330.\nSum: 1000(s2) + 100(s7) + 10(s10) + 100(s15) + 100(s17) + 1000(s18) + 1000(s21) + 110(s22) + 10(s24) = 3430. Correct.\n\nI:\nBNIY: 10\nEYI: 1\nJINJE: 1000\nIEJ: 100\nTBOI: 1\nTotal I: 10+1+1000+100+1 = 1112.\nWait, previous was 1111.\n10(s2)+1(s5)+1000(s11)+100(s12)+1(s15) = 1112. Correct.\n\nY:\nBNIY: 1\nEYI: 10\nYNY: 100 + 1\nYYMBO: 10000 + 1000\nYEE: 100\nFMEY: 1\nBYMJ: 100\nOTYTF: 100\nEJYEO: 100\nOBOTY: 1\nOYO: 10\nTotal Y: 1+10+101+11000+100+1+100+100+100+1+10 = 11524.\nWait, previous was 11413.\n1(s2) + 10(s5) + 101(s6) + 11000(s10) + 100(s13) + 1(s16) + 100(s18) + 100(s19) + 100(s20) + 1(s21) + 10(s25) = 11524. Correct.\n\nE:\nENJTT: 10000\nEYI: 100\nJINJE: 1\nIEJ: 10\nYEE: 10 + 1\nFMEY: 10\nBEE: 10 + 1\nEJYEO: 10000 + 10\nTotal E: 10000+100+1+10+11+10+11+10010 = 20153.\nWait, previous was 20142.\n10000(s3) + 100(s5) + 1(s11) + 10(s12) + 11(s13) + 10(s16) + 11(s17) + 10010(s20) = 20153. Correct.\n\nJ:\nENJTT: 100\nTNOJ: 1\nBNJ: 1\nTJJ: 10 + 1\nJINJE: 10000 + 10\nIEJ: 1\nBYMJ: 1\nEJYEO: 1000\nJFBBM: 10000\nTotal J: 100+1+1+11+10010+1+1+1000+10000 = 21125.\nWait, previous was 21124.\n100(s3) + 1(s4) + 1(s7) + 11(s8) + 10010(s11) + 1(s12) + 1(s18) + 1000(s20) + 10000(s22) = 21125. Correct.\n\nT:\nENJTT: 10 + 1\nTNOJ: 1000\nTJJ: 100\nFNTM: 10\nTBOI: 1000\nOTYTF: 1000 + 10\nOBOTY: 10\nTBM: 100\nTotal T: 11+1000+100+10+1000+1010+10+100 = 3241.\nWait, previous was 3231.\n11(s3) + 1000(s4) + 100(s8) + 10(s14) + 1000(s15) + 1010(s19) + 10(s21) + 100(s24) = 3241. Correct.\n\nM:\nMNF: 100\nYYMBO: 100\nFNTM: 1\nFMEY: 100\nBYMJ: 10\nJFBBM: 1\nTBM: 1\nTotal M: 100+100+1+100+10+1+1 = 313.\nWait, previous was 312.\n100(s9) + 100(s10) + 1(s14) + 100(s16) + 10(s18) + 1(s22) + 1(s24) = 313. Correct.\n\nRecalculated Coefficients:\nF: 3102\nN: 1450\nO: 20325\nB: 3430\nI: 1112\nY: 11524\nE: 20153\nJ: 21125\nT: 3241\nM: 313\n\nWait, target = 110000*T + 1000*E + 100*Y + 10*I + O\n\nEquation:\n3102*F + 1450*N + 20325*O + 3430*B + 1112*I + 11524*Y + 20153*E + 21125*J + 3241*T + 313*M = 110000*T + 1000*E + 100*Y + 10*I + O\n\nSimplified:\n3102*F + 1450*N + 20324*O + 3430*B + 1102*I + 11424*Y + 19153*E + 21125*J - 106759*T + 313*M = 0\n\nActually, it's safer to just run the full summation code to avoid manual errors.\nI'll write the script to calculate the sum from the list of strings.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    words = [\\n        'FNO', 'BNIY', 'ENJTT', 'TNOJ', 'EYI', 'YNY', 'BNJ', 'TJJ', 'MNF',\\n        'YYMBO', 'JINJE', 'IEJ', 'YEE', 'FNTM', 'TBOI', 'FMEY', 'BEE',\\n        'BYMJ', 'OTYTF', 'EJYEO', 'OBOTY', 'JFBBM', 'ONO', 'TBM', 'OYO'\\n    ]\\n    result = 'TTEYIO'\\n    \\n    letters = sorted(list(set(''.join(words) + result)))\\n    # ['B', 'E', 'F', 'I', 'J', 'M', 'N', 'O', 'T', 'Y']\\n    \\n    leading_letters = set(word[0] for word in words) | {result[0]}\\n    \\n    from itertools import permutations\\n    for p in permutations(range(10)):\\n        d = dict(zip(letters, p))\\n        \\n        if any(d[ll] == 0 for ll in leading_letters):\\n            continue\\n            \\n        total = 0\\n        for word in words:\\n            val = 0\\n            for char in word:\\n                val = val * 10 + d[char]\\n            total += val\\n            \\n        target = 0\\n        for char in result:\\n            target = target * 10 + d[char]\\n            \\n        if total == target:\\n            return d\\n\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 6.12s\n\nOutput:\n{'B': 6, 'E': 4, 'F': 5, 'I': 8, 'J': 2, 'M': 9, 'N': 0, 'O': 7, 'T': 3, 'Y': 1}\n",
+      "raw_response": "thought\nThe script I wrote uses `itertools.permutations`, which has 10! = 3,628,800 iterations. This should run in a few seconds on most machines, but I should check if it fits within the time limits.\nAlso, I should ensure all words are correctly transcribed into the sum.\nWords:\n1. FNO (100F+10N+O)\n2. BNIY (1000B+100N+10I+Y)\n3. ENJTT (10000E+1000N+100J+10T+T)\n4. TNOJ (1000T+100N+10O+J)\n5. EYI (100E+10Y+I)\n6. YNY (100Y+10N+Y)\n7. BNJ (100B+10N+J)\n8. TJJ (100T+10J+J)\n9. MNF (100M+10N+F)\n10. YYMBO (10000Y+1000Y+100M+10B+O)\n11. JINJE (10000J+1000I+100N+10J+E)\n12. IEJ (100I+10E+J)\n13. YEE (100Y+10E+E)\n14. FNTM (1000F+100N+10T+M)\n15. TBOI (1000T+100B+10O+I)\n16. FMEY (1000F+100M+10E+Y)\n17. BEE (100B+10E+E)\n18. BYMJ (1000B+100Y+10M+J)\n19. OTYTF (10000O+1000T+100Y+10T+F)\n20. EJYEO (10000E+1000J+100Y+10E+O)\n21. OBOTY (10000O+1000B+100O+10T+Y)\n22. JFBBM (10000J+1000F+100B+10B+M)\n23. ONO (100O+10N+O)\n24. TBM (100T+10B+M)\n25. OYO (100O+10Y+O)\nResult: TTEYIO (100000T+10000T+1000E+100Y+10I+O)\n\nLet me double check the variables in the sum.\nSumming up coefficients for each letter:\n- F: 100(s1) + 1(s9) + 1000(s14) + 1000(s16) + 1(s19) + 1000(s22) = 3102\n- N: 10(s1) + 100(s2) + 1000(s3) + 100(s4) + 10(s6) + 10(s7) + 10(s9) + 100(s11) + 100(s14) + 10(s23) = 1350\n- O: 1(s1) + 10(s4) + 1(s10) + 10(s15) + 10000(s19) + 1(s20) + 10000(s21) + 100(s21) + 100(s23) + 1(s23) + 100(s25) + 1(s25) = 20224\n- B: 1000(s2) + 100(s7) + 10(s10) + 100(s15) + 100(s17) + 1000(s18) + 1000(s21) + 100(s22) + 10(s22) + 10(s24) = 3330\n- I: 10(s2) + 1(s5) + 1000(s11) + 100(s12) + 1(s15) = 1111\n- Y: 1(s2) + 10(s5) + 100(s6) + 1(s6) + 10000(s10) + 1000(s10) + 100(s13) + 1(s16) + 100(s18) + 100(s19) + 100(s20) + 1(s21) + 10(s25) = 11413\n- E: 10000(s3) + 100(s5) + 1(s11) + 10(s12) + 10(s13) + 1(s13) + 10(s16) + 10(s17) + 1(s17) + 10000(s20) + 10(s20) = 20142\n- J: 100(s3) + 1(s4) + 1(s7) + 10(s8) + 1(s8) + 10000(s11) + 10(s11) + 1(s12) + 1(s18) + 1000(s20) + 10000(s22) = 21124\n- T: 10(s3) + 1(s3) + 1000(s4) + 100(s8) +",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 971,
+        "completion_tokens": 7756,
+        "total_tokens": 8727
+      },
+      "timestamp": "2026-01-31T18:20:53.652930+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The script successfully found a mapping that satisfies the cryptarithm. I have verified the sum and the constraints (unique digits and no leading zeros).",
+      "action": "finish",
+      "action_input": "\\boxed{B=6,E=4,F=5,I=8,J=2,M=9,N=0,O=7,T=3,Y=1}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The script successfully found a mapping that satisfies the cryptarithm. I have verified the sum and the constraints (unique digits and no leading zeros).\nAction: finish\nAction Input: \\boxed{B=6,E=4,F=5,I=8,J=2,M=9,N=0,O=7,T=3,Y=1}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 6176,
+        "completion_tokens": 2583,
+        "total_tokens": 8759
+      },
+      "timestamp": "2026-01-31T18:21:15.264422+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{B=6,E=4,F=5,I=8,J=2,M=9,N=0,O=7,T=3,Y=1}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0048503,
+  "total_time": 59.413480281829834,
+  "task": {
+    "task_id": "reasoning-gym:rg:cryptarithm:256:000076",
+    "question": "Solve this cryptarithm:\n\n     FNO\n    BNIY\n   ENJTT\n    TNOJ\n     EYI\n     YNY\n     BNJ\n     TJJ\n     MNF\n   YYMBO\n   JINJE\n     IEJ\n     YEE\n    FNTM\n    TBOI\n    FMEY\n     BEE\n    BYMJ\n   OTYTF\n   EJYEO\n   OBOTY\n   JFBBM\n     ONO\n     TBM\n+    OYO\n--------\n  TTEYIO\n\nEach letter stands for a unique digit (0-9). No leading letter can be zero.\nProvide a comma separated mapping from letters to digits that satisfies the equation in your final answer. Output format: \"A=1,B=2,C=3\" (without quotes)\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "B=8,E=9,F=6,I=5,J=7,M=2,N=0,O=1,T=4,Y=3",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "cryptarithm",
+      "rg_index": 76,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "cryptarithm",
+      "source_index": 76,
+      "letters": [
+        "M",
+        "I",
+        "B",
+        "F",
+        "E",
+        "Y",
+        "J",
+        "N",
+        "O",
+        "T"
+      ],
+      "word_values": [
+        601,
+        8053,
+        90744,
+        4017,
+        935,
+        303,
+        807,
+        477,
+        206,
+        33281,
+        75079,
+        597,
+        399,
+        6042,
+        4815,
+        6293,
+        899,
+        8327,
+        14346,
+        97391,
+        18143,
+        76882,
+        101,
+        482,
+        131
+      ],
+      "sum_number": 449351,
+      "words_letters": [
+        "FNO",
+        "BNIY",
+        "ENJTT",
+        "TNOJ",
+        "EYI",
+        "YNY",
+        "BNJ",
+        "TJJ",
+        "MNF",
+        "YYMBO",
+        "JINJE",
+        "IEJ",
+        "YEE",
+        "FNTM",
+        "TBOI",
+        "FMEY",
+        "BEE",
+        "BYMJ",
+        "OTYTF",
+        "EJYEO",
+        "OBOTY",
+        "JFBBM",
+        "ONO",
+        "TBM",
+        "OYO"
+      ],
+      "result_letters": "TTEYIO",
+      "digit_to_letter": {
+        "2": "M",
+        "5": "I",
+        "8": "B",
+        "6": "F",
+        "9": "E",
+        "3": "Y",
+        "7": "J",
+        "0": "N",
+        "1": "O",
+        "4": "T"
+      },
+      "letter_to_digit": {
+        "M": 2,
+        "I": 5,
+        "B": 8,
+        "F": 6,
+        "E": 9,
+        "Y": 3,
+        "J": 7,
+        "N": 0,
+        "O": 1,
+        "T": 4
+      },
+      "difficulty": {
+        "words": [
+          10,
+          50
+        ]
+      }
+    }
+  }
+}

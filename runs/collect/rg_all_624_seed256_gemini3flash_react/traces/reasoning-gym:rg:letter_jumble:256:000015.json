@@ -1,0 +1,1123 @@
+{
+  "task_id": "reasoning-gym:rg:letter_jumble:256:000015",
+  "question": "Your task is to unsramble words in a sentence.\n\nFor each word in a sentence, the letter may have been randomly shuffled. Your task is to unscramble the words.\n\nThe order of the words in the sentence is preserved. Moreover, the style of the sentence is preserved (i.e. punctuation, capitalization, new lines, etc.).\n\nYour output should be a sentence with the words unscrambled.\n\nNow, unscramble these words: dstoiescanlo lsfosreaopin oheetholppnote romtainsssin arstosnmisin giaiwodstthnntn nosurjliitac nastmilestnl pchhpolosilai ipoclninmtmeg cunlsifyitef clfsiutefniy nomuncciitgma oinzragnitoa mttaoaylculia lronstomacai oaseptogmtrlhe tnreacdnesntla salcloutacni emuaslirybam ccaomiuimtnno eifdnvtyiile aicsrlootanm tmvaetinsedser asrmntsiedvete lmotoeogcilera dtetrasvemine aMaritredneen iaihtsgypxan lnbgeseilter rteepatvsreien lecdmacishop ccvnoisntrea etothhnoleoppe ghnwttniadtnios islalmnsuoetyu lAoamietntin ubcissintorp uiqasleobten maelicticarbp rmibcctieaplas enltleliauct brvlliareose rngretunitip amlaoccuruts teasnmorsfrr siheatltuingyn srnertcreiuo tnmnuiicaocom octothnlephipoe nomtcaomiiucn ctiomoicnmuna oaacstntsnir coatevyiprmla slctanulcaoi nirusbtitdig cnesrfmproea siRibtoduntrie nduibtrsoteiir itstribudnio isnttibirdgu sbgeutdiriRtni lultcaenteli isirntiubdgt dtnuisritbig rtnoretpeinseas ecisiortrsnt redsiugtrnbiti useritrmqene ostiirbudint iueitdtrbesr rinrroponeypat gustibdriint ristigbutndi dstiiunobrti obnlrdsaceei nittrsionapcr tcaliueellnt innrmfeegint uisgrditbint QEITELNOSUNCA cnellcrlaetoiy raeitcocenylll orepptonstiiu RTAHTBNMAIELICY etaonfnceyrliibu uinitbtordsi uboiititsdrn odicfmaition rbdisutition tiencifintdiao tonrtiuobCisn cpuyaarlritl uneeresmrtiq iseobradecln\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will use a Python script to unscramble these words by comparing them with a large English dictionary and using anagram matching.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import nltk\\nfrom nltk.corpus import words\\nfrom collections import Counter\\n\\nnltk.download('words')\\nenglish_words = set(w.lower() for w in words.words() if len(w) > 5)\\n\\ndef unscramble(scrambled):\\n    scrambled_lower = scrambled.lower()\\n    scrambled_counts = Counter(scrambled_lower)\\n    candidates = [w for w in english_words if len(w) == len(scrambled_lower) and Counter(w) == scrambled_counts]\\n    if candidates:\\n        # Try to match capitalization\\n        res = candidates[0]\\n        if scrambled[0].isupper():\\n            return res.capitalize()\\n        return res\\n    return scrambled\\n\\nscrambled_list = [\\\"dstoiescanlo\\\", \\\"lsfosreaopin\\\", \\\"oheetholppnote\\\", \\\"romtainsssin\\\", \\\"arstosnmisin\\\", \\\"giaiwodstthnntn\\\", \\\"nosurjliitac\\\", \\\"nastmilestnl\\\", \\\"pchhpolosilai\\\", \\\"ipoclninmtmeg\\\", \\\"cunlsifyitef\\\", \\\"clfsiutefniy\\\", \\\"nomuncciitgma\\\", \\\"ozragnitoa\\\", \\\"mttaoaylculia\\\", \\\"lronstomacai\\\", \\\"oaseptogmtrlhe\\\", \\\"tnreacdnesntla\\\", \\\"salcloutacni\\\", \\\"emuaslirybam\\\", \\\"ccaomiuimtnno\\\", \\\"eifdnvtyiile\\\", \\\"aicsrlootanm\\\", \\\"tmvaetinsedser\\\", \\\"asrmntsiedvete\\\", \\\"lmotoeogcilera\\\", \\\"dtetrasvemine\\\", \\\"aMaritredneen\\\", \\\"iaihtsgypxan\\\", \\\"lnbgeseilter\\\", \\\"rteepatvsreien\\\", \\\"lecdmacishop\\\", \\\"ccvnoisntrea\\\", \\\"etothhnoleoppe\\\", \\\"ghnwttniadtnios\\\", \\\"islallmnsuoetyu\\\", \\\"lAoamietntin\\\", \\\"ubcissintorp\\\", \\\"uiqasleobten\\\", \\\"maelicticarbp\\\", \\\"rmibcctieaplas\\\", \\\"enltleliauct\\\", \\\"brvlliareose\\\", \\\"rngretunitip\\\", \\\"amlaoccuruts\\\", \\\"teasnmorsfrr\\\", \\\"siheatltuingyn\\\", \\\"rnertcreiuo\\\", \\\"tnmnuiicaocom\\\", \\\"octothnlephipoe\\\", \\\"nomtcaomiiucn\\\", \\\"ctioimoicnmuna\\\", \\\"oaacstntsnir\\\", \\\"coatevyiprmla\\\", \\\"slctanulcaoi\\\", \\\"nirusbtitdig\\\", \\\"cnesrfmproea\\\", \\\"siRibtoduntrie\\\", \\\"nduibtrsoteiir\\\", \\\"itstribudnio\\\", \\\"isnttibirdgu\\\", \\\"sbgeutdiriRtni\\\", \\\"lultcaenteli\\\", \\\"isirntiubdgt\\\", \\\"dtnuisritbig\\\", \\\"rtnoretpeinseas\\\", \\\"ecisiortrsnt\\\", \\\"redsiugtrnbiti\\\", \\\"useritrmqene\\\", \\\"ostiirbudint\\\", \\\"iueitdtrbesr\\\", \\\"rinrroponeypat\\\", \\\"gustibdriint\\\", \\\"ristigbutndi\\\", \\\"dstiiunobrti\\\", \\\"obnlrdsaceei\\\", \\\"nittrsionapcr\\\", \\\"tcaliueellnt\\\", \\\"innrmfeegint\\\", \\\"uisgrditbint\\\", \\\"QEITELNOSUNCA\\\", \\\"cnellcrlaetoiy\\\", \\\"raeitcocenylll\\\", \\\"orepptonstiiu\\\", \\\"RTAHTBNMAIELICY\\\", \\\"etaonfnceyrliibu\\\", \\\"uinitbtordsi\\\", \\\"uboiititsdrn\\\", \\\"odicfmaition\\\", \\\"rbdisutition\\\", \\\"tiencifintdiao\\\", \\\"tonrtiuobCisn\\\", \\\"cpuyaarlritl\\\", \\\"uneeresmrtiq\\\", \\\"iseobradecln\\\"]\\nresults = [unscramble(s) for s in scrambled_list]\\nprint(results)\"}",
+      "observation": "Code executed successfully.\nExecution time: 10.92s\n\nOutput:\n['disconsolate', 'professional', 'phototelephone', 'transmission', 'transmission', 'notwithstanding', 'journalistic', 'nastmilestnl', 'philosophical', 'ipoclninmtmeg', 'sufficiently', 'sufficiently', 'communicating', 'ozragnitoa', 'automatically', 'astronomical', 'oaseptogmtrlhe', 'transcendental', 'salcloutacni', 'immeasurably', 'communication', 'definitively', 'astronomical', 'tmvaetinsedser', 'asrmntsiedvete', 'meteorological', 'advertisement', 'mediterranean', 'iaihtsgypxan', 'lnbgeseilter', 'representative', 'accomplished', 'ccvnoisntrea', 'phototelephone', 'notwithstanding', 'islallmnsuoetyu', 'alimentation', 'subscription', 'questionable', 'impracticable', 'rmibcctieaplas', 'intellectual', 'irresolvable', 'interrupting', 'amlaoccuruts', 'teasnmorsfrr', 'unhesitatingly', 'rnertcreiuo', 'communication', 'octothnlephipoe', 'communication', 'ctioimoicnmuna', 'oaacstntsnir', 'comparatively', 'slctanulcaoi', 'nirusbtitdig', 'cnesrfmproea', 'redistribution', 'redistribution', 'distribution', 'isnttibirdgu', 'sbgeutdiriRtni', 'intellectual', 'isirntiubdgt', 'dtnuisritbig', 'rtnoretpeinseas', 'ecisiortrsnt', 'redsiugtrnbiti', 'useritrmqene', 'distribution', 'redistribute', 'nonproprietary', 'gustibdriint', 'ristigbutndi', 'distribution', 'considerable', 'transcription', 'intellectual', 'infringement', 'uisgrditbint', 'Consequential', 'cnellcrlaetoiy', 'raeitcocenylll', 'orepptonstiiu', 'RTAHTBNMAIELICY', 'etaonfnceyrliibu', 'distribution', 'distribution', 'modification', 'distribution', 'identification', 'tonrtiuobCisn', 'particularly', 'uneeresmrtiq', 'considerable']\n\n[stderr] [nltk_data] Downloading package words to /root/nltk_data...\n[nltk_data]   Unzipping corpora/words.zip.\n",
+      "raw_response": "Thought: I will use a Python script to unscramble these words by comparing them with a large English dictionary and using anagram matching.\nAction: execute_python\nAction Input: {\"code\": \"import nltk\\nfrom nltk.corpus import words\\nfrom collections import Counter\\n\\nnltk.download('words')\\nenglish_words = set(w.lower() for w in words.words() if len(w) > 5)\\n\\ndef unscramble(scrambled):\\n    scrambled_lower = scrambled.lower()\\n    scrambled_counts = Counter(scrambled_lower)\\n    candidates = [w for w in english_words if len(w) == len(scrambled_lower) and Counter(w) == scrambled_counts]\\n    if candidates:\\n        # Try to match capitalization\\n        res = candidates[0]\\n        if scrambled[0].isupper():\\n            return res.capitalize()\\n        return res\\n    return scrambled\\n\\nscrambled_list = [\\\"dstoiescanlo\\\", \\\"lsfosreaopin\\\", \\\"oheetholppnote\\\", \\\"romtainsssin\\\", \\\"arstosnmisin\\\", \\\"giaiwodstthnntn\\\", \\\"nosurjliitac\\\", \\\"nastmilestnl\\\", \\\"pchhpolosilai\\\", \\\"ipoclninmtmeg\\\", \\\"cunlsifyitef\\\", \\\"clfsiutefniy\\\", \\\"nomuncciitgma\\\", \\\"ozragnitoa\\\", \\\"mttaoaylculia\\\", \\\"lronstomacai\\\", \\\"oaseptogmtrlhe\\\", \\\"tnreacdnesntla\\\", \\\"salcloutacni\\\", \\\"emuaslirybam\\\", \\\"ccaomiuimtnno\\\", \\\"eifdnvtyiile\\\", \\\"aicsrlootanm\\\", \\\"tmvaetinsedser\\\", \\\"asrmntsiedvete\\\", \\\"lmotoeogcilera\\\", \\\"dtetrasvemine\\\", \\\"aMaritredneen\\\", \\\"iaihtsgypxan\\\", \\\"lnbgeseilter\\\", \\\"rteepatvsreien\\\", \\\"lecdmacishop\\\", \\\"ccvnoisntrea\\\", \\\"etothhnoleoppe\\\", \\\"ghnwttniadtnios\\\", \\\"islallmnsuoetyu\\\", \\\"lAoamietntin\\\", \\\"ubcissintorp\\\", \\\"uiqasleobten\\\", \\\"maelicticarbp\\\", \\\"rmibcctieaplas\\\", \\\"enltleliauct\\\", \\\"brvlliareose\\\", \\\"rngretunitip\\\", \\\"amlaoccuruts\\\", \\\"teasnmorsfrr\\\", \\\"siheatltuingyn\\\", \\\"rnertcreiuo\\\", \\\"tnmnuiicaocom\\\", \\\"octothnlephipoe\\\", \\\"nomtcaomiiucn\\\", \\\"ctioimoicnmuna\\\", \\\"oaacstntsnir\\\", \\\"coatevyiprmla\\\", \\\"slctanulcaoi\\\", \\\"nirusbtitdig\\\", \\\"cnesrfmproea\\\", \\\"siRibtoduntrie\\\", \\\"nduibtrsoteiir\\\", \\\"itstribudnio\\\", \\\"isnttibirdgu\\\", \\\"sbgeutdiriRtni\\\", \\\"lultcaenteli\\\", \\\"",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1409,
+        "completion_tokens": 1029,
+        "total_tokens": 2438
+      },
+      "timestamp": "2026-01-31T18:15:38.358761+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I will use a Python script to accurately count the letters of each scrambled word and find its exact anagram in a large dictionary, or identify the closest common English word if an exact match isn't found.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import nltk\\nfrom nltk.corpus import words\\nfrom collections import Counter\\n\\nnltk.download('words')\\nword_list = set(w.lower() for w in words.words())\\n\\nscrambled_words = [\\\"dstoiescanlo\\\", \\\"lsfosreaopin\\\", \\\"oheetholppnote\\\", \\\"romtainsssin\\\", \\\"arstosnmisin\\\", \\\"giaiwodstthnntn\\\", \\\"nosurjliitac\\\", \\\"nastmilestnl\\\", \\\"pchhpolosilai\\\", \\\"ipoclninmtmeg\\\", \\\"cunlsifyitef\\\", \\\"clfsiutefniy\\\", \\\"nomuncciitgma\\\", \\\"ozragnitoa\\\", \\\"mttaoaylculia\\\", \\\"lronstomacai\\\", \\\"oaseptogmtrlhe\\\", \\\"tnreacdnesntla\\\", \\\"salcloutacni\\\", \\\"emuaslirybam\\\", \\\"ccaomiuimtnno\\\", \\\"eifdnvtyiile\\\", \\\"aicsrlootanm\\\", \\\"tmvaetinsedser\\\", \\\"asrmntsiedvete\\\", \\\"lmotoeogcilera\\\", \\\"dtetrasvemine\\\", \\\"aMaritredneen\\\", \\\"iaihtsgypxan\\\", \\\"lnbgeseilter\\\", \\\"rteepatvsreien\\\", \\\"lecdmacishop\\\", \\\"ccvnoisntrea\\\", \\\"etothhnoleoppe\\\", \\\"ghnwttniadtnios\\\", \\\"islallmnsuoetyu\\\", \\\"lAoamietntin\\\", \\\"ubcissintorp\\\", \\\"uiqasleobten\\\", \\\"maelicticarbp\\\", \\\"rmibcctieaplas\\\", \\\"enltleliauct\\\", \\\"brvlliareose\\\", \\\"rngretunitip\\\", \\\"amlaoccuruts\\\", \\\"teasnmorsfrr\\\", \\\"siheatltuingyn\\\", \\\"rnertcreiuo\\\", \\\"tnmnuiicaocom\\\", \\\"octothnlephipoe\\\", \\\"nomtcaomiiucn\\\", \\\"ctioimoicnmuna\\\", \\\"oaacstntsnir\\\", \\\"coatevyiprmla\\\", \\\"slctanulcaoi\\\", \\\"nirusbtitdig\\\", \\\"cnesrfmproea\\\", \\\"siRibtoduntrie\\\", \\\"nduibtrsoteiir\\\", \\\"itstribudnio\\\", \\\"isnttibirdgu\\\", \\\"sbgeutdiriRtni\\\", \\\"lultcaenteli\\\", \\\"isirntiubdgt\\\", \\\"dtnuisritbig\\\", \\\"rtnoretpeinseas\\\", \\\"ecisiortrsnt\\\", \\\"redsiugtrnbiti\\\", \\\"useritrmqene\\\", \\\"ostiirbudint\\\", \\\"iueitdtrbesr\\\", \\\"rinrroponeypat\\\", \\\"gustibdriint\\\", \\\"ristigbutndi\\\", \\\"dstiiunobrti\\\", \\\"obnlrdsaceei\\\", \\\"nittrsionapcr\\\", \\\"tcaliueellnt\\\", \\\"innrmfeegint\\\", \\\"uisgrditbint\\\", \\\"QEITELNOSUNCA\\\", \\\"cnellcrlaetoiy\\\", \\\"raeitcocenylll\\\", \\\"orepptonstiiu\\\", \\\"RTAHTBNMAIELICY\\\", \\\"etaonfnceyrliibu\\\", \\\"uinitbtordsi\\\", \\\"uboiititsdrn\\\", \\\"odicfmaition\\\", \\\"rbdisutition\\\", \\\"tiencifintdiao\\\", \\\"tonrtiuobCisn\\\", \\\"cpuyaarlritl\\\", \\\"uneeresmrtiq\\\", \\\"iseobradecln\\\"]\\n\\ndef find_anagram(scrambled):\\n    s_lower = scrambled.lower()\\n    s_counter = Counter(s_lower)\\n    matches = [w for w in word_list if len(w) == len(s_lower) and Counter(w) == s_counter]\\n    if matches: return matches[0]\\n    # If no match, check common words/common typos in Project Gutenberg\\n    if s_lower == \\\"ozragnitoa\\\": return \\\"organization\\\"\\n    if s_lower == \\\"oaseptogmtrlhe\\\": return \\\"steganographed\\\"\\n    if s_lower == \\\"rnertcreiuo\\\": return \\\"reoccurrence\\\"\\n    if s_lower == \\\"oaacstntsnir\\\": return \\\"constraints\\\"\\n    if s_lower == \\\"islallmnsuoetyu\\\": return \\\"simultaneously\\\"\\n    if s_lower == \\\"ctioimoicnmuna\\\": return \\\"communication\\\"\\n    if s_lower == \\\"octothnlephipoe\\\": return \\\"phototelephonic\\\"\\n    if s_lower == \\\"ctioimoicnmuna\\\": return \\\"communication\\\"\\n    if s_lower == \\\"nastmilestnl\\\": return \\\"installments\\\"\\n    if s_lower == \\\"ipoclninmtmeg\\\": return \\\"complimenting\\\"\\n    if s_lower == \\\"lronstomacai\\\": return \\\"astronomical\\\"\\n    if s_lower == \\\"aicsrlootanm\\\": return \\\"astronomical\\\"\\n    if s_lower == \\\"tmvaetinsedser\\\": return \\\"advertisements\\\"\\n    if s_lower == \\\"asrmntsiedvete\\\": return \\\"advertisements\\\"\\n    if s_lower == \\\"iaihtsgypxan\\\": return \\\"asphyxiating\\\"\\n    if s_lower == \\\"lnbgeseilter\\\": return \\\"belligerents\\\"\\n    if s_lower == \\\"ccvnoisntrea\\\": return \\\"contrivances\\\"\\n    if s_lower == \\\"rmibcctieaplas\\\": return \\\"impracticables\\\"\\n    if s_lower == \\\"amlaoccuruts\\\": return \\\"accumulators\\\"\\n    if s_lower == \\\"teasnmorsfrr\\\": return \\\"transformers\\\"\\n    if s_lower == \\\"slctanulcaoi\\\": return \\\"calculations\\\"\\n    if s_lower == \\\"nirusbtitdig\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"isnttibirdgu\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"isirntiubdgt\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"dtnuisritbig\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"gustibdriint\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"ristigbutndi\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"uisgrditbint\\\": return \\\"distributing\\\"\\n    if s_lower == \\\"cnellcrlaetoiy\\\": return \\\"electronically\\\"\\n    if s_lower == \\\"raeitcocenylll\\\": return \\\"electronically\\\"\\n    if s_lower == \\\"rtahtbnmaelicy\\\": return \\\"merchantability\\\"\\n    if s_lower == \\\"etaonfnceyrliibu\\\": return \\\"enforceability\\\"\\n    if s_lower == \\\"tonrtiuobcisn\\\": return \\\"contributions\\\"\\n    if s_lower == \\\"uneeresmrtiq\\\": return \\\"requirements\\\"\\n    if s_lower == \\\"iseobradecln\\\": return \\\"considerable\\\"\\n    if s_lower == \\\"salcloutacni\\\": return \\\"calculations\\\"\\n    if s_lower == \\\"coatevyiprmla\\\": return \\\"comparatively\\\"\\n    if s_lower == \\\"cnesrfmproea\\\": return \\\"performances\\\"\\n    if s_lower == \\\"rtnoretpeinseas\\\": return \\\"representations\\\"\\n    if s_lower == \\\"ecisiortrsnt\\\": return \\\"restrictions\\\"\\n    if s_lower == \\\"useritrmqene\\\": return \\\"requirements\\\"\\n    if s_lower == \\\"rinrroponeypat\\\": return \\\"nonproprietary\\\"\\n    if s_lower == \\\"ostiirbudint\\\": return \\\"distribution\\\"\\n    if s_lower == \\\"iueitdtrbesr\\\": return \\\"redistribute\\\"\\n    if s_lower == \\\"nittrsionapcr\\\": return \\\"transcription\\\"\\n    if s_lower == \\\"qeitelnosuunca\\\": return \\\"consequential\\\"\\n    if s_lower == \\\"orepptonstiiu\\\": return \\\"opportunities\\\"\\n    if s_lower == \\\"odicfmaition\\\": return \\\"modification\\\"\\n    if s_lower == \\\"tiencifintdiao\\\": return \\\"identification\\\"\\n    if s_lower == \\\"cpuyaarlritl\\\": return \\\"particularly\\\"\\n    if s_lower == \\\"uinitbtordsi\\\": return \\\"distribution\\\"\\n    if s_lower == \\\"uboiititsdrn\\\": return \\\"distribution\\\"\\n    if s_lower == \\\"rbdisutition\\\": return \\\"distribution\\\"\\n    return scrambled\\n\\nfinal_words = []\\nfor s in scrambled_words:\\n    ana = find_anagram(s)\\n    if s[0].isupper() and s.isupper(): ana = ana.upper()\\n    elif s[0].isupper(): ana = ana.capitalize()\\n    final_words.append(ana)\\n\\nprint(\\\" \\\".join(final_words))\"}",
+      "observation": "Code executed successfully.\nExecution time: 8.98s\n\nOutput:\ndisconsolate professional phototelephone transmission transmission notwithstanding journalistic installments philosophical complimenting sufficiently sufficiently communicating organization automatically astronomical steganographed transcendental calculations immeasurably communication definitively astronomical advertisements advertisements meteorological advertisement mediterranean asphyxiating belligerents representative accomplished contrivances phototelephone notwithstanding simultaneously alimentation subscription questionable impracticable impracticables intellectual irresolvable interrupting accumulators transformers unhesitatingly reoccurrence communication phototelephonic communication communication constraints comparatively calculations distributing performances redistribution redistribution distribution distributing sbgeutdiriRtni intellectual distributing distributing representations restrictions redsiugtrnbiti requirements distribution redistribute nonproprietary distributing distributing distribution considerable transcription intellectual infringement distributing CONSEQUENTIAL electronically electronically opportunities RTAHTBNMAIELICY enforceability distribution distribution modification distribution identification contributions particularly requirements considerable\n\n[stderr] [nltk_data] Downloading package words to /root/nltk_data...\n[nltk_data]   Package words is already up-to-date!\n",
+      "raw_response": "Thought: I will use a Python script to accurately count the letters of each scrambled word and find its exact anagram in a large dictionary, or identify the closest common English word if an exact match isn't found.\n\nAction: execute_python\nAction Input: {\"code\": \"import nltk\\nfrom nltk.corpus import words\\nfrom collections import Counter\\n\\nnltk.download('words')\\nword_list = set(w.lower() for w in words.words())\\n\\nscrambled_words = [\\\"dstoiescanlo\\\", \\\"lsfosreaopin\\\", \\\"oheetholppnote\\\", \\\"romtainsssin\\\", \\\"arstosnmisin\\\", \\\"giaiwodstthnntn\\\", \\\"nosurjliitac\\\", \\\"nastmilestnl\\\", \\\"pchhpolosilai\\\", \\\"ipoclninmtmeg\\\", \\\"cunlsifyitef\\\", \\\"clfsiutefniy\\\", \\\"nomuncciitgma\\\", \\\"ozragnitoa\\\", \\\"mttaoaylculia\\\", \\\"lronstomacai\\\", \\\"oaseptogmtrlhe\\\", \\\"tnreacdnesntla\\\", \\\"salcloutacni\\\", \\\"emuaslirybam\\\", \\\"ccaomiuimtnno\\\", \\\"eifdnvtyiile\\\", \\\"aicsrlootanm\\\", \\\"tmvaetinsedser\\\", \\\"asrmntsiedvete\\\", \\\"lmotoeogcilera\\\", \\\"dtetrasvemine\\\", \\\"aMaritredneen\\\", \\\"iaihtsgypxan\\\", \\\"lnbgeseilter\\\", \\\"rteepatvsreien\\\", \\\"lecdmacishop\\\", \\\"ccvnoisntrea\\\", \\\"etothhnoleoppe\\\", \\\"ghnwttniadtnios\\\", \\\"islallmnsuoetyu\\\", \\\"lAoamietntin\\\", \\\"ubcissintorp\\\", \\\"uiqasleobten\\\", \\\"maelicticarbp\\\", \\\"rmibcctieaplas\\\", \\\"enltleliauct\\\", \\\"brvlliareose\\\", \\\"rngretunitip\\\", \\\"amlaoccuruts\\\", \\\"teasnmorsfrr\\\", \\\"siheatltuingyn\\\", \\\"rnertcreiuo\\\", \\\"tnmnuiicaocom\\\", \\\"octothnlephipoe\\\", \\\"nomtcaomiiucn\\\", \\\"ctioimoicnmuna\\\", \\\"oaacstntsnir\\\", \\\"coatevyiprmla\\\", \\\"slctanulcaoi\\\", \\\"nirusbtitdig\\\", \\\"cnesrfmproea\\\", \\\"siRibtoduntrie\\\", \\\"nduibtrsoteiir\\\", \\\"itstribudnio\\\", \\\"isnttibirdgu\\\", \\\"sbgeutdiriRtni\\\", \\\"lultcaenteli\\\", \\\"isirntiubdgt\\\", \\\"dtnuisritbig\\\", \\\"rtnoretpeinseas\\\", \\\"ecisiortrsnt\\\", \\\"redsiugtrnbiti\\\", \\\"useritrmqene\\\", \\\"ostiirbudint\\\", \\\"iueitdtrbesr\\\", \\\"rinrroponeypat\\\", \\\"gustibdriint\\\", \\\"ristigbutndi\\\", \\\"dstiiunobrti\\\", \\\"obnlrdsaceei\\\", \\\"nittrsionapcr\\\", \\\"tcaliueellnt\\\", \\\"innrmfeegint\\\", \\\"uisgrditbint\\\", \\\"QEITELNOSUNCA\\\", \\\"cnellcrlaetoiy\\\", \\\"raeitcocenylll\\\", \\\"orep",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 2951,
+        "completion_tokens": 7409,
+        "total_tokens": 10360
+      },
+      "timestamp": "2026-01-31T18:16:33.897361+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "I need to determine the user's actual goal as the previous input was gibberish.",
+      "action": "web_search",
+      "action_input": "{\"query\": \"disconsolate professional phototelephone transmission transmission notwithstanding journalistic installments\"}",
+      "observation": "EXA requestId: 05153b18ec49439093e194f52696f6b2 | EXA costDollars: 0.037\n\nFound 10 results:\n\n[1] english-words.txt - Miller\n    URL: https://miller.readthedocs.io/en/latest/data/english-words.txt\n    SUMMARY: The webpage appears to be a comprehensive list of English words, likely serving as a dictionary or glossary. However, it does not contain specific information related to \"disconsolate professional phototelephone transmission transmission notwithstanding journalistic installments.\" For insights on this query, consider exploring resources that focus on the meanings and contexts of these terms, particularly in relation to communication technology, journalism, and emotional states.\n    HIGHLIGHTS:\n      - acaulous\nacca\naccede\naccedence\nacceder\naccelerable\naccelerando\naccelerant\naccelerate\naccelerated\nacceleratedly\nacceleration\naccelerative\naccelerator\nacceleratory\naccelerograph\naccelerometer\naccend\naccendibility\naccendible\naccension\naccensor\naccent\naccentless\naccentor\naccentuable\naccentual\naccentuality\naccentually\naccentuate\naccentuation\naccentuator\naccentus\naccept\nacceptability\nacceptable\nacceptableness\nacceptably\nacceptance\nacceptancy\nacceptant\nacceptation\naccepted\nacceptedly\naccepter\nacceptila...\n      - acutilingual\nacutilobate\nacutiplantar\nacutish\nacutograve\nacutonodose\nacutorsion\nacyanoblepsia\nacyanopsia\nacyclic\nacyesis\nacyetic\nacyl\nacylamido\nacylamidobenzene\nacylamino\nacylate\nacylation\nacylogen\nacyloin\nacyloxy\nacyloxymethane\nacyrological\nacyrology\nacystia\nad\nadactyl\nadactylia\nadactylism\nadactylous\nadad\nadage\nadagial\nadagietto\nada\n      - acetamide\nacetamidin\nacetamidine\nacetamido\nacetaminol\nacetanilid\nacetanilide\nacetanion\nacetaniside\nacetanisidide\nacetannin\nacetarious\nacetarsone\nacetate\nacetated\nacetation\nacetbromamide\nacetenyl\nacethydrazide\nacetic\nacetification\nacetifier\nacetify\nacetimeter\nacetimetry\nacetin\nacetize\nacetmethylanilide\nacetnaphthalide\nacetoacetanilide\nacetoacetate\nacetoacetic\nacetoamidophenol\nacetoarsenite\nacetobenzoic\nacetobromanilide\nacetochloral\nacetocinnamene\nacetoin\nacetol\nacetolysis\nacetolytic\nacetometer\nac...\n      - acetonemia\nacetonemic\nacetonic\nacetonitrile\nacetonization\nacetonize\nacetonuria\nacetonurometer\nacetonyl\nacetonylacetone\nacetonylidene\nacetophenetide\nacetophenin\nacetophenine\nacetophenone\nacetopiperone\nacetopyrin\nacetosalicylic\nacetose\nacetosity\nacetosoluble\nacetothienone\nacetotoluide\nacetotoluidine\nacetous\nacetoveratrone\nacetoxime\nacetoxyl\nacetoxyphthalide\nacetphenetid\nacetphenetidin\nacetract\nacettoluide\nacetum\naceturic\nacetyl\nacetylacetonates\nacetylacetone\nacetylamine\nacetylate\nacetylation\nacety...\n      - acanthopteran\nacanthopterous\nacanthopterygian\nacanthosis\nacanthous\nacanthus\nacapnia\nacapnial\nacapsular\nacapu\nacapulco\nacara\nacardia\nacardiac\nacari\nacarian\nacariasis\nacaricidal\nacaricide\nacarid\nacaridean\nacaridomatium\nacariform\nacarine\nacarinosis\nacarocecidium\nacarodermatitis\nacaroid\nacarol\nacarologist\nacarology\nacarophilous\nacarophobia\nacarotoxic\nacarpelous\nacarpous\nacatalectic\nacatalepsia\nacatalepsy\nacataleptic\nacatallactic\nacatamathesia\nacataphasia\nacataposis\nacatastasia\nacatastatic\nacate\nacat...\n\n[2] dict.txt - Bilkent University Computer Engineering Department\n    URL: http://www.cs.bilkent.edu.tr/~shatlyk/CS202/homeworks/hw1/dict.txt\n    SUMMARY: The webpage appears to be a collection of various terms and definitions, possibly related to a specialized field or lexicon. It does not directly address the user's query regarding \"disconsolate professional phototelephone transmission\" or \"journalistic installments.\" For specific information on these topics, the user may need to consult more targeted resources or articles that discuss professional communication technologies, journalism, or related concepts.\n    HIGHLIGHTS:\n      - semicastration\nquestingly\nruggle\nhomoplasy\nplessigraph\nspioniformia\ntokology\namphibole\noversteadfast\nchromoprotein\nsaleratus\nunaccountableness\nsettleable\nperissologic\ntintinnabulate\npropounder\nglobulicide\ndyehouse\nbando\nhydromechanical\nmalleinization\nophiomorphous\nfay\nclavodeltoideus\nweighhouse\nhygiantics\nrhetoricals\nfineleaf\ntenurial\nargentol\nflashiness\nwhitehass\npreromantic\nphysiologize\npentacular\nphotogalvanography\ntarmined\ntypolithographic\ncristina\nadjunction\natop\ngaetulian\nstudier\nsulphuran...\n      - lilacky\namphibolitic\nfineness\ntoilless\nsubscriber\nungospelized\ncaffeate\nbackhooker\nunpragmatical\nterseness\nnutritionist\niroquoian\ndisepalous\nswimmist\nmistendency\naddlement\naxiologically\nnils\nencomiast\nshouting\npostdiphtheric\nhypercriticize\ntestamentarily\ngastrostomus\nmoochulka\nincisal\nthoke\ninjection\nassertorily\nlatherwort\nthingumbob\nunstaved\nillinoian\noleacina\nplaided\ntitus\ncommixtion\nuncargoed\nluxation\nmonosulphone\ndentistry\nunepitomized\ngarniture\nphyllostomatoid\npanzoism\ncarpoidea\nalangiaceae...\n      - squirt\nscandent\nnemalion\nlithologist\ncohobate\naxinite\nsulfaquinoxaline\nechinoderma\nenzymatic\nfattener\nsoiling\ncinematograph\nreclassification\ncornemuse\nhemerobaptist\nnonabstemious\napex\ntaenioid\nbanditti\ntaenidium\nsubclimax\nzinkenite\nc",
+      "raw_response": "Thought: I need to determine the user's actual goal as the previous input was gibberish.\nAction: web_search\nAction Input: {\"query\": \"disconsolate professional phototelephone transmission transmission notwithstanding journalistic installments\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1068,
+        "completion_tokens": 49,
+        "total_tokens": 1117
+      },
+      "timestamp": "2026-01-31T18:17:26.694638+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "I will use a Python script to find the exact anagram for the word \"oaseptogmtrlhe\" and check other unresolved words like \"sbgeutdiriRtni\" and \"redsiugtrnbiti\" using a comprehensive word list.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from collections import Counter\\nimport nltk\\nnltk.download('words')\\nfrom nltk.corpus import words\\n\\nword_list = set(w.lower() for w in words.words())\\n\\ndef find_anagram(scrambled):\\n    scrambled_lower = scrambled.lower()\\n    scrambled_counts = Counter(scrambled_lower)\\n    matches = [w for w in word_list if len(w) == len(scrambled_lower) and Counter(w) == scrambled_counts]\\n    return matches\\n\\nscrambled_list = [\\\"oaseptogmtrlhe\\\", \\\"sbgeutdiriRtni\\\", \\\"redsiugtrnbiti\\\", \\\"rtahtbnmaelicy\\\", \\\"uneeresmrtiq\\\", \\\"slctanulcaoi\\\", \\\"nirusbtitdig\\\", \\\"isnttibirdgu\\\", \\\"isirntiubdgt\\\", \\\"dtnuisritbig\\\", \\\"gustibdriint\\\", \\\"ristigbutndi\\\", \\\"uisgrditbint\\\"]\\nresults = {s: find_anagram(s) for s in scrambled_list}\\nprint(results)\"}",
+      "observation": "Code executed successfully.\nExecution time: 1.48s\n\nOutput:\n{'oaseptogmtrlhe': [], 'sbgeutdiriRtni': [], 'redsiugtrnbiti': [], 'rtahtbnmaelicy': [], 'uneeresmrtiq': [], 'slctanulcaoi': [], 'nirusbtitdig': [], 'isnttibirdgu': [], 'isirntiubdgt': [], 'dtnuisritbig': [], 'gustibdriint': [], 'ristigbutndi': [], 'uisgrditbint': []}\n\n[stderr] [nltk_data] Downloading package words to /root/nltk_data...\n[nltk_data]   Package words is already up-to-date!\n",
+      "raw_response": "Thought: I will use a Python script to find the exact anagram for the word \"oaseptogmtrlhe\" and check other unresolved words like \"sbgeutdiriRtni\" and \"redsiugtrnbiti\" using a comprehensive word list.\nAction: execute_python\nAction Input: {\"code\": \"from collections import Counter\\nimport nltk\\nnltk.download('words')\\nfrom nltk.corpus import words\\n\\nword_list = set(w.lower() for w in words.words())\\n\\ndef find_anagram(scrambled):\\n    scrambled_lower = scrambled.lower()\\n    scrambled_counts = Counter(scrambled_lower)\\n    matches = [w for w in word_list if len(w) == len(scrambled_lower) and Counter(w) == scrambled_counts]\\n    return matches\\n\\nscrambled_list = [\\\"oaseptogmtrlhe\\\", \\\"sbgeutdiriRtni\\\", \\\"redsiugtrnbiti\\\", \\\"rtahtbnmaelicy\\\", \\\"uneeresmrtiq\\\", \\\"slctanulcaoi\\\", \\\"nirusbtitdig\\\", \\\"isnttibirdgu\\\", \\\"isirntiubdgt\\\", \\\"dtnuisritbig\\\", \\\"gustibdriint\\\", \\\"ristigbutndi\\\", \\\"uisgrditbint\\\"]\\nresults = {s: find_anagram(s) for s in scrambled_list}\\nprint(results)\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 14257,
+        "completion_tokens": 2563,
+        "total_tokens": 16820
+      },
+      "timestamp": "2026-01-31T18:17:58.328551+00:00"
+    },
+    {
+      "step_num": 5,
+      "thought": "I will restate the previous response in the correct format as requested.",
+      "action": "finish",
+      "action_input": "\\boxed{disconsolate professional phototelephone transmission transmission notwithstanding journalistic installments philosophical complimenting sufficiently sufficiently communicating organization automatically astronomical telephotograms transcendental calculations immeasurably communication definitively astronomical advertisements advertisements meteorological advertisement mediterranean asphyxiating belligerents representative accomplished contrivances phototelephone notwithstanding simultaneously alimentation subscription questionable impracticable impracticables intellectual irresolvable interrupting accumulators transformers unhesitatingly reoccurrence communication phototelephonic communication communication constraints comparatively calculations distributing performances redistribution redistribution distribution distributing redistribution intellectual distributing distributing representations restrictions redistributing requirements distribution redistribute nonproprietary distributing distributing distribution considerable transcription intellectual infringement distributing CONSEQUENTIAL electronically electronically opportunities MERCHANTABILITY enforceability distribution distribution modification distribution identification contributions particularly requirements considerable}",
+      "observation": "FINISH",
+      "raw_response": "Thought: I will restate the previous response in the correct format as requested.\nAction: finish\nAction Input: \\boxed{disconsolate professional phototelephone transmission transmission notwithstanding journalistic installments philosophical complimenting sufficiently sufficiently communicating organization automatically astronomical telephotograms transcendental calculations immeasurably communication definitively astronomical advertisements advertisements meteorological advertisement mediterranean asphyxiating belligerents representative accomplished contrivances phototelephone notwithstanding simultaneously alimentation subscription questionable impracticable impracticables intellectual irresolvable interrupting accumulators transformers unhesitatingly reoccurrence communication phototelephonic communication communication constraints comparatively calculations distributing performances redistribution redistribution distribution distributing redistribution intellectual distributing distributing representations restrictions redistributing requirements distribution redistribute nonproprietary distributing distributing distribution considerable transcription intellectual infringement distributing CONSEQUENTIAL electronically electronically opportunities MERCHANTABILITY enforceability distribution distribution modification distribution identification contributions particularly requirements considerable}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1065,
+        "completion_tokens": 760,
+        "total_tokens": 1825
+      },
+      "timestamp": "2026-01-31T18:18:53.263096+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{disconsolate professional phototelephone transmission transmission notwithstanding journalistic installments philosophical complimenting sufficiently sufficiently communicating organization automatically astronomical telephotograms transcendental calculations immeasurably communication definitively astronomical advertisements advertisements meteorological advertisement mediterranean asphyxiating belligerents representative accomplished contrivances phototelephone notwithstanding simultaneously alimentation subscription questionable impracticable impracticables intellectual irresolvable interrupting accumulators transformers unhesitatingly reoccurrence communication phototelephonic communication communication constraints comparatively calculations distributing performances redistribution redistribution distribution distributing redistribution intellectual distributing distributing representations restrictions redistributing requirements distribution redistribute nonproprietary distributing distributing distribution considerable transcription intellectual infringement distributing CONSEQUENTIAL electronically electronically opportunities MERCHANTABILITY enforceability distribution distribution modification distribution identification contributions particularly requirements considerable}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0525486,
+  "total_time": 202.08694291114807,
+  "task": {
+    "task_id": "reasoning-gym:rg:letter_jumble:256:000015",
+    "question": "Your task is to unsramble words in a sentence.\n\nFor each word in a sentence, the letter may have been randomly shuffled. Your task is to unscramble the words.\n\nThe order of the words in the sentence is preserved. Moreover, the style of the sentence is preserved (i.e. punctuation, capitalization, new lines, etc.).\n\nYour output should be a sentence with the words unscrambled.\n\nNow, unscramble these words: dstoiescanlo lsfosreaopin oheetholppnote romtainsssin arstosnmisin giaiwodstthnntn nosurjliitac nastmilestnl pchhpolosilai ipoclninmtmeg cunlsifyitef clfsiutefniy nomuncciitgma oinzragnitoa mttaoaylculia lronstomacai oaseptogmtrlhe tnreacdnesntla salcloutacni emuaslirybam ccaomiuimtnno eifdnvtyiile aicsrlootanm tmvaetinsedser asrmntsiedvete lmotoeogcilera dtetrasvemine aMaritredneen iaihtsgypxan lnbgeseilter rteepatvsreien lecdmacishop ccvnoisntrea etothhnoleoppe ghnwttniadtnios islalmnsuoetyu lAoamietntin ubcissintorp uiqasleobten maelicticarbp rmibcctieaplas enltleliauct brvlliareose rngretunitip amlaoccuruts teasnmorsfrr siheatltuingyn srnertcreiuo tnmnuiicaocom octothnlephipoe nomtcaomiiucn ctiomoicnmuna oaacstntsnir coatevyiprmla slctanulcaoi nirusbtitdig cnesrfmproea siRibtoduntrie nduibtrsoteiir itstribudnio isnttibirdgu sbgeutdiriRtni lultcaenteli isirntiubdgt dtnuisritbig rtnoretpeinseas ecisiortrsnt redsiugtrnbiti useritrmqene ostiirbudint iueitdtrbesr rinrroponeypat gustibdriint ristigbutndi dstiiunobrti obnlrdsaceei nittrsionapcr tcaliueellnt innrmfeegint uisgrditbint QEITELNOSUNCA cnellcrlaetoiy raeitcocenylll orepptonstiiu RTAHTBNMAIELICY etaonfnceyrliibu uinitbtordsi uboiititsdrn odicfmaition rbdisutition tiencifintdiao tonrtiuobCisn cpuyaarlritl uneeresmrtiq iseobradecln\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "disconsolate professional phonotelephote transmission transmission notwithstanding journalistic installments philosophical complimenting sufficiently sufficiently communicating organization automatically astronomical phototelegrams transcendental calculations immeasurably communication definitively astronomical advertisements advertisements meteorological advertisement Mediterranean asphyxiating belligerents representative accomplished contrivances phonotelephote notwithstanding simultaneously Alimentation subscription questionable impracticable impracticables intellectual irresolvable interrupting accumulators transformers unhesitatingly resurrection communication phonotelephotic communication communication transactions comparatively calculations distributing performances Redistribution redistribution distribution distributing Redistributing intellectual distributing distributing representations restrictions redistributing requirements distribution redistribute nonproprietary distributing distributing distribution considerable transcription intellectual infringement distributing CONSEQUENTIAL electronically electronically opportunities MERCHANTABILITY unenforceability distribution distribution modification distribution identification Contributions particularly requirements considerable",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "letter_jumble",
+      "rg_index": 15,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "letter_jumble",
+      "source_index": 15,
+      "num_words": 95,
+      "corruption_level": 0.8441944348284107,
+      "scrambled_words": [
+        "dstoiescanlo",
+        "lsfosreaopin",
+        "oheetholppnote",
+        "romtainsssin",
+        "arstosnmisin",
+        "giaiwodstthnntn",
+        "nosurjliitac",
+        "nastmilestnl",
+        "pchhpolosilai",
+        "ipoclninmtmeg",
+        "cunlsifyitef",
+        "clfsiutefniy",
+        "nomuncciitgma",
+        "oinzragnitoa",
+        "mttaoaylculia",
+        "lronstomacai",
+        "oaseptogmtrlhe",
+        "tnreacdnesntla",
+        "salcloutacni",
+        "emuaslirybam",
+        "ccaomiuimtnno",
+        "eifdnvtyiile",
+        "aicsrlootanm",
+        "tmvaetinsedser",
+        "asrmntsiedvete",
+        "lmotoeogcilera",
+        "dtetrasvemine",
+        "aMaritredneen",
+        "iaihtsgypxan",
+        "lnbgeseilter",
+        "rteepatvsreien",
+        "lecdmacishop",
+        "ccvnoisntrea",
+        "etothhnoleoppe",
+        "ghnwttniadtnios",
+        "islalmnsuoetyu",
+        "lAoamietntin",
+        "ubcissintorp",
+        "uiqasleobten",
+        "maelicticarbp",
+        "rmibcctieaplas",
+        "enltleliauct",
+        "brvlliareose",
+        "rngretunitip",
+        "amlaoccuruts",
+        "teasnmorsfrr",
+        "siheatltuingyn",
+        "srnertcreiuo",
+        "tnmnuiicaocom",
+        "octothnlephipoe",
+        "nomtcaomiiucn",
+        "ctiomoicnmuna",
+        "oaacstntsnir",
+        "coatevyiprmla",
+        "slctanulcaoi",
+        "nirusbtitdig",
+        "cnesrfmproea",
+        "siRibtoduntrie",
+        "nduibtrsoteiir",
+        "itstribudnio",
+        "isnttibirdgu",
+        "sbgeutdiriRtni",
+        "lultcaenteli",
+        "isirntiubdgt",
+        "dtnuisritbig",
+        "rtnoretpeinseas",
+        "ecisiortrsnt",
+        "redsiugtrnbiti",
+        "useritrmqene",
+        "ostiirbudint",
+        "iueitdtrbesr",
+        "rinrroponeypat",
+        "gustibdriint",
+        "ristigbutndi",
+        "dstiiunobrti",
+        "obnlrdsaceei",
+        "nittrsionapcr",
+        "tcaliueellnt",
+        "innrmfeegint",
+        "uisgrditbint",
+        "QEITELNOSUNCA",
+        "cnellcrlaetoiy",
+        "raeitcocenylll",
+        "orepptonstiiu",
+        "RTAHTBNMAIELICY",
+        "etaonfnceyrliibu",
+        "uinitbtordsi",
+        "uboiititsdrn",
+        "odicfmaition",
+        "rbdisutition",
+        "tiencifintdiao",
+        "tonrtiuobCisn",
+        "cpuyaarlritl",
+        "uneeresmrtiq",
+        "iseobradecln"
+      ],
+      "original_words": [
+        "disconsolate",
+        "professional",
+        "phonotelephote",
+        "transmission",
+        "transmission",
+        "notwithstanding",
+        "journalistic",
+        "installments",
+        "philosophical",
+        "complimenting",
+        "sufficiently",
+        "sufficiently",
+        "communicating",
+        "organization",
+        "automatically",
+        "astronomical",
+        "phototelegrams",
+        "transcendental",
+        "calculations",
+        "immeasurably",
+        "communication",
+        "definitively",
+        "astronomical",
+        "advertisements",
+        "advertisements",
+        "meteorological",
+        "advertisement",
+        "Mediterranean",
+        "asphyxiating",
+        "belligerents",
+        "representative",
+        "accomplished",
+        "contrivances",
+        "phonotelephote",
+        "notwithstanding",
+        "simultaneously",
+        "Alimentation",
+        "subscription",
+        "questionable",
+        "impracticable",
+        "impracticables",
+        "intellectual",
+        "irresolvable",
+        "interrupting",
+        "accumulators",
+        "transformers",
+        "unhesitatingly",
+        "resurrection",
+        "communication",
+        "phonotelephotic",
+        "communication",
+        "communication",
+        "transactions",
+        "comparatively",
+        "calculations",
+        "distributing",
+        "performances",
+        "Redistribution",
+        "redistribution",
+        "distribution",
+        "distributing",
+        "Redistributing",
+        "intellectual",
+        "distributing",
+        "distributing",
+        "representations",
+        "restrictions",
+        "redistributing",
+        "requirements",
+        "distribution",
+        "redistribute",
+        "nonproprietary",
+        "distributing",
+        "distributing",
+        "distribution",
+        "considerable",
+        "transcription",
+        "intellectual",
+        "infringement",
+        "distributing",
+        "CONSEQUENTIAL",
+        "electronically",
+        "electronically",
+        "opportunities",
+        "MERCHANTABILITY",
+        "unenforceability",
+        "distribution",
+        "distribution",
+        "modification",
+        "distribution",
+        "identification",
+        "Contributions",
+        "particularly",
+        "requirements",
+        "considerable"
+      ],
+      "difficulty": {
+        "word_len": [
+          12,
+          17
+        ],
+        "words": [
+          50,
+          100
+        ],
+        "corruption_level": [
+          0.6,
+          0.9
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,1233 @@
+{
+  "task_id": "reasoning-gym:rg:string_manipulation:256:000586",
+  "question": "Your job is to repeatedly transform a string according to a set of rules until no further transformations can be performed, or a state is repeated.\n\nEvaluate the following rules in order, and apply the first applicable rule to the string:\n1. If the string contains 'abc', replace the first occurrence with 'cab'.\n2. If the string contains 'ca' (not at the start), remove the first occurrence found after the first character.\n3. If the string prefix is 'cb', replace it with 'aa' and delete the last character.\n4. If the string starts with 'ac', replace the first two characters with 'zz'.\n5. If the string prefix is 'aa', remove the first character.\n6. If the string prefix is 'ab', replace it with 'ca'.\n7. If the string contains 'bca', delete the first occurrence entirely.\n8. If the string ends with 'ba', replace it with 'ab'.\n9. If the string suffix is 'ac', replace it with 'cb'.\n10. If the string ends with 'aa', replace it with 'cc'.\n11. If the string suffix is 'cc', replace it with 'b' and prepend 'a' to the start.\n12. If the string starts with 'cc', remove the first two characters.\n13. If the string prefix is 'bc', delete the first two characters and append 'aa' to the end.\n14. If the string contains 'acb', replace the first occurrence with its reverse ('bca').\n15. If the string starts with 'bb', remove the second character.\n16. If the string prefix is 'ca', replace it with 'bb' and append 'c' to the end.\n17. If the string suffix is 'bb', delete the last two characters.\n18. If the string ends with 'ca', remove the last character.\n19. If the string length is greater than 15, remove the middle character.\n20. If the string contains an even number of 'b's (and at least one 'b'), append 'ab' at the end.\n\nOnce you have applied a rule, repeat the process with the new string until no further transformations can be performed (i.e. the string doesn't change), or a state is repeated.\nIf a state is repeated, the process is terminated, and the repeated state is discarded (i.e. is not considered as the final answer) and the state before the repeated state is considered as the final answer.\n\nYour output should be the final transformed string after applying all the rules.\n\nTransform the following string according to the above list of rules:\naaaababcccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "The Python script I wrote has a few potential issues or ambiguities.\n1.  Rule 2: \"If the string contains 'ca' (not at the start), remove the first occurrence found after the first character.\" My implementation `idx = s.find('ca', 1)` finds 'ca' starting at index 1 or later, which correctly excludes index 0.\n2.  Rule 19: \"If the string length is greater than 15, remove the middle character.\" Middle character of a string of length $L$. If $L$ is odd, it's index $(L-1)/2$. If $L$ is even, usually \"middle character\" needs clarification. In many programming contexts, for length $L$, the \"middle\" is $L//2$. Let's re-read. \"middle character\". For length 16, indices are 0-15. Middle would be 7 or 8. Let's use `(len(s) - 1) // 2` as I did, which for 16 is index 7.\n3.  State repetition: \"the repeated state is discarded ... and the state before the repeated state is considered as the final answer.\" My code does `return seen[-1]` when `s in seen`. This correctly returns the state before the repetition.\n4.  Rule priority: The code evaluates them in order `elif`. This matches \"Evaluate the following rules in order, and apply the first applicable rule\".\n\nWait, I should double check rule 2. `s.find('ca', 1)` finds 'ca' where the 'c' is at index 1 or later. If the string is 'aca', `s.find('ca', 1)` returns 1. This matches \"not at the start\" (not starting at index 0).\n\nLet's refine the script to handle potential large string lengths or infinite loops more safely, although the problem implies it terminates or cycles. Also, I should double-check the rules' implementations.\n\nRule 3: \"prefix is 'cb', replace it with 'aa' and delete the last character.\"\nMy code: `s = 'aa' + s[2:]`, then `s = s[:-1]`. Correct.\n\nRule 13: \"prefix is 'bc', delete the first two characters and append 'aa' to the end.\"\nMy code: `s = s[2:] + 'aa'`. Correct.\n\nRule 16: \"prefix is 'ca', replace it with 'bb' and append 'c' to the end.\"\nMy code: `s = 'bb' + s[2:] + 'c'`. Correct.\n\nRule 20: \"If the string contains an even number of 'b's (and at least one 'b'), append 'ab' at the end.\"\nMy code: `s.count('b') > 0 and s.count('b') % 2 == 0`. Correct.\n\nWait, looking at the string length... it's quite long. Rule 19 reduces length. Rule 1, 3, 4, 6, 8, 9, 10, 11, 14, 16, 20 change characters or slightly increase length (Rule 16 increases by 1, Rule 20 increases by 2). Rule 2, 5, 7, 12, 13, 15, 17, 18, 19 decrease length. Rule 19 triggers when length > 15. This suggests the string will eventually become short.\n\nLet me run the script and see what happens. I'll include a limit on iterations just in case.\n\nOne detail: Rule 2: \"remove the first occurrence found after the first character\".\nIf string is `bcabca`, `s.find('ca', 1)` is index 4. `s[:4] + s[6:]` is `bcab`. Correct.\n\nLet me re-check Rule 11: \"If the string suffix is 'cc', replace it with 'b' and prepend 'a' to the start.\"\nMy code: `s = 'a' + s[:-2] + 'b'`. Correct.\n\nWait, looking at the string `aaaababccc...`\nIs Rule 1 checked first? Yes.\nDoes Rule 1 keep applying until all 'abc' are gone? No, only one replacement, then restart from Rule 1.\n\nLet's refine the code to be absolutely sure about \"after the first character\" and \"prefix/suffix\".\n\nActually, the rule 2 definition \"If the string contains 'ca' (not at the start), remove the first occurrence found after the first character\" is slightly ambiguous. \"not at the start\" could mean the 'c' is not at index 0, or the 'ca' sequence doesn't start at index 0. My `s.find('ca', 1)` covers both: it finds 'ca' starting at index 1, 2, ...\nWait, if the string is `acca`, `s.find('ca', 1)` returns 2. That's correct.\nIf the string is `ca...`, index 0 is 'c', index 1 is 'a'. `s.find('ca', 1)` will not find this one. This also matches \"not at the start\".\n\nLet's run the code.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def transform(s):\\n    seen = [s]\\n    it = 0\\n    while it < 100000:\\n        it += 1\\n        new_s = s\\n        applied = False\\n        \\n        # 1. abc -> cab (first occurrence)\\n        if 'abc' in s:\\n            new_s = s.replace('abc', 'cab', 1)\\n            applied = True\\n        # 2. ca (not at start) -> remove\\n        if not applied:\\n            idx = s.find('ca', 1)\\n            if idx != -1:\\n                new_s = s[:idx] + s[idx+2:]\\n                applied = True\\n        # 3. cb (prefix) -> aa... (delete last char)\\n        if not applied and s.startswith('cb'):\\n            new_s = 'aa' + s[2:]\\n            if len(new_s) > 0:\\n                new_s = new_s[:-1]\\n            applied = True\\n        # 4. ac (prefix) -> zz...\\n        if not applied and s.startswith('ac'):\\n            new_s = 'zz' + s[2:]\\n            applied = True\\n        # 5. aa (prefix) -> remove first\\n        if not applied and s.startswith('aa'):\\n            new_s = s[1:]\\n            applied = True\\n        # 6. ab (prefix) -> ca...\\n        if not applied and s.startswith('ab'):\\n            new_s = 'ca' + s[2:]\\n            applied = True\\n        # 7. bca -> delete\\n        if not applied and 'bca' in s:\\n            new_s = s.replace('bca', '', 1)\\n            applied = True\\n        # 8. ba (suffix) -> ab\\n        if not applied and s.endswith('ba'):\\n            new_s = s[:-2] + 'ab'\\n            applied = True\\n        # 9. ac (suffix) -> cb\\n        if not applied and s.endswith('ac'):\\n            new_s = s[:-2] + 'cb'\\n            applied = True\\n        # 10. aa (suffix) -> cc\\n        if not applied and s.endswith('aa'):\\n            new_s = s[:-2] + 'cc'\\n            applied = True\\n        # 11. cc (suffix) -> prepend a, replace cc with b\\n        if not applied and s.endswith('cc'):\\n            new_s = 'a' + s[:-2] + 'b'\\n            applied = True\\n        # 12. cc (prefix) -> remove\\n        if not applied and s.startswith('cc'):\\n            new_s = s[2:]\\n            applied = True\\n        # 13. bc (prefix) -> remove bc, append aa\\n        if not applied and s.startswith('bc'):\\n            new_s = s[2:] + 'aa'\\n            applied = True\\n        # 14. acb -> reverse (bca)\\n        if not applied and 'acb' in s:\\n            new_s = s.replace('acb', 'bca', 1)\\n            applied = True\\n        # 15. bb (prefix) -> remove second char\\n        if not applied and s.startswith('bb') and len(s) >= 2:\\n            new_s = s[0] + s[2:]\\n            applied = True\\n        # 16. ca (prefix) -> replace with bb, append c\\n        if not applied and s.startswith('ca'):\\n            new_s = 'bb' + s[2:] + 'c'\\n            applied = True\\n        # 17. bb (suffix) -> delete\\n        if not applied and s.endswith('bb'):\\n            new_s = s[:-2]\\n            applied = True\\n        # 18. ca (suffix) -> remove last\\n        if not applied and s.endswith('ca'):\\n            new_s = s[:-1]\\n            applied = True\\n        # 19. len > 15 -> remove middle\\n        if not applied and len(s) > 15:\\n            mid = (len(s) - 1) // 2\\n            new_s = s[:mid] + s[mid+1:]\\n            applied = True\\n        # 20. even b's -> append ab\\n        if not applied and s.count('b') > 0 and s.count('b') % 2 == 0:\\n            new_s = s + 'ab'\\n            applied = True\\n            \\n        if not applied:\\n            return s\\n        \\n        if new_s in seen:\\n            return s\\n        \\n        s = new_s\\n        seen.append(s)\\n    return s\\n\\nstart = \\\"aaaababcccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc\\\"\\nprint(transform(start))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.33s\n\nOutput:\nazzcbcbbbbaabab\n",
+      "raw_response": "thought\nThe Python script I wrote has a few potential issues or ambiguities.\n1.  Rule 2: \"If the string contains 'ca' (not at the start), remove the first occurrence found after the first character.\" My implementation `idx = s.find('ca', 1)` finds 'ca' starting at index 1 or later, which correctly excludes index 0.\n2.  Rule 19: \"If the string length is greater than 15, remove the middle character.\" Middle character of a string of length $L$. If $L$ is odd, it's index $(L-1)/2$. If $L$ is even, usually \"middle character\" needs clarification. In many programming contexts, for length $L$, the \"middle\" is $L//2$. Let's re-read. \"middle character\". For length 16, indices are 0-15. Middle would be 7 or 8. Let's use `(len(s) - 1) // 2` as I did, which for 16 is index 7.\n3.  State repetition: \"the repeated state is discarded ... and the state before the repeated state is considered as the final answer.\" My code does `return seen[-1]` when `s in seen`. This correctly returns the state before the repetition.\n4.  Rule priority: The code evaluates them in order `elif`. This matches \"Evaluate the following rules in order, and apply the first applicable rule\".\n\nWait, I should double check rule 2. `s.find('ca', 1)` finds 'ca' where the 'c' is at index 1 or later. If the string is 'aca', `s.find('ca', 1)` returns 1. This matches \"not at the start\" (not starting at index 0).\n\nLet's refine the script to handle potential large string lengths or infinite loops more safely, although the problem implies it terminates or cycles. Also, I should double-check the rules' implementations.\n\nRule 3: \"prefix is 'cb', replace it with 'aa' and delete the last character.\"\nMy code: `s = 'aa' + s[2:]`, then `s = s[:-1]`. Correct.\n\nRule 13: \"prefix is 'bc', delete the first two characters and append 'aa' to the end.\"\nMy code: `s = s[2:] + 'aa'`. Correct.\n\nRule 16: \"prefix is 'ca', replace it with 'bb' and append 'c' to the end.\"\nMy code: `s = 'bb' + s[2:] + 'c'`. Correct.\n\nRule 20: \"If the string conta",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1501,
+        "completion_tokens": 3684,
+        "total_tokens": 5185
+      },
+      "timestamp": "2026-01-31T19:10:42.964825+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I will implement a Python script to transform the string according to the 20 rules provided, carefully following the order and conditions of each rule, including the termination conditions for state repetition and final state determination.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def transform(s):\\n    seen_list = [s]\\n    seen_set = {s}\\n    while True:\\n        applied = False\\n        new_s = s\\n        # Rule 1\\n        if 'abc' in s:\\n            new_s = s.replace('abc', 'cab', 1)\\n            applied = True\\n        # Rule 2\\n        if not applied:\\n            idx = s.find('ca', 1)\\n            if idx != -1:\\n                new_s = s[:idx] + s[idx+2:]\\n                applied = True\\n        # Rule 3\\n        if not applied and s.startswith('cb'):\\n            new_s = 'aa' + s[2:]\\n            if len(new_s) > 0: new_s = new_s[:-1]\\n            applied = True\\n        # Rule 4\\n        if not applied and s.startswith('ac'):\\n            new_s = 'zz' + s[2:]\\n            applied = True\\n        # Rule 5\\n        if not applied and s.startswith('aa'):\\n            new_s = s[1:]\\n            applied = True\\n        # Rule 6\\n        if not applied and s.startswith('ab'):\\n            new_s = 'ca' + s[2:]\\n            applied = True\\n        # Rule 7\\n        if not applied and 'bca' in s:\\n            new_s = s.replace('bca', '', 1)\\n            applied = True\\n        # Rule 8\\n        if not applied and s.endswith('ba'):\\n            new_s = s[:-2] + 'ab'\\n            applied = True\\n        # Rule 9\\n        if not applied and s.endswith('ac'):\\n            new_s = s[:-2] + 'cb'\\n            applied = True\\n        # Rule 10\\n        if not applied and s.endswith('aa'):\\n            new_s = s[:-2] + 'cc'\\n            applied = True\\n        # Rule 11\\n        if not applied and s.endswith('cc'):\\n            new_s = 'a' + s[:-2] + 'b'\\n            applied = True\\n        # Rule 12\\n        if not applied and s.startswith('cc'):\\n            new_s = s[2:]\\n            applied = True\\n        # Rule 13\\n        if not applied and s.startswith('bc'):\\n            new_s = s[2:] + 'aa'\\n            applied = True\\n        # Rule 14\\n        if not applied and 'acb' in s:\\n            new_s = s.replace('acb', 'bca', 1)\\n            applied = True\\n        # Rule 15\\n        if not applied and s.startswith('bb') and len(s) >= 2:\\n            new_s = s[0] + s[2:]\\n            applied = True\\n        # Rule 16\\n        if not applied and s.startswith('ca'):\\n            new_s = 'bb' + s[2:] + 'c'\\n            applied = True\\n        # Rule 17\\n        if not applied and s.endswith('bb'):\\n            new_s = s[:-2]\\n            applied = True\\n        # Rule 18\\n        if not applied and s.endswith('ca'):\\n            new_s = s[:-1]\\n            applied = True\\n        # Rule 19\\n        if not applied and len(s) > 15:\\n            mid = (len(s) - 1) // 2\\n            new_s = s[:mid] + s[mid+1:]\\n            applied = True\\n        # Rule 20\\n        if not applied and s.count('b') > 0 and s.count('b') % 2 == 0:\\n            new_s = s + 'ab'\\n            applied = True\\n        \\n        if not applied:\\n            return s\\n        if new_s in seen_set:\\n            return s\\n        s = new_s\\n        seen_list.append(s)\\n        seen_set.add(s)\\n\\nstart_str = \\\"aaaababcccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc\\\"\\nprint(transform(start_str))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.28s\n\nOutput:\nazzcbcbbbbaabab\n",
+      "raw_response": "Thought: I will implement a Python script to transform the string according to the 20 rules provided, carefully following the order and conditions of each rule, including the termination conditions for state repetition and final state determination.\nAction: execute_python\nAction Input: {\"code\": \"def transform(s):\\n    seen_list = [s]\\n    seen_set = {s}\\n    while True:\\n        applied = False\\n        new_s = s\\n        # Rule 1\\n        if 'abc' in s:\\n            new_s = s.replace('abc', 'cab', 1)\\n            applied = True\\n        # Rule 2\\n        if not applied:\\n            idx = s.find('ca', 1)\\n            if idx != -1:\\n                new_s = s[:idx] + s[idx+2:]\\n                applied = True\\n        # Rule 3\\n        if not applied and s.startswith('cb'):\\n            new_s = 'aa' + s[2:]\\n            if len(new_s) > 0: new_s = new_s[:-1]\\n            applied = True\\n        # Rule 4\\n        if not applied and s.startswith('ac'):\\n            new_s = 'zz' + s[2:]\\n            applied = True\\n        # Rule 5\\n        if not applied and s.startswith('aa'):\\n            new_s = s[1:]\\n            applied = True\\n        # Rule 6\\n        if not applied and s.startswith('ab'):\\n            new_s = 'ca' + s[2:]\\n            applied = True\\n        # Rule 7\\n        if not applied and 'bca' in s:\\n            new_s = s.replace('bca', '', 1)\\n            applied = True\\n        # Rule 8\\n        if not applied and s.endswith('ba'):\\n            new_s = s[:-2] + 'ab'\\n            applied = True\\n        # Rule 9\\n        if not applied and s.endswith('ac'):\\n            new_s = s[:-2] + 'cb'\\n            applied = True\\n        # Rule 10\\n        if not applied and s.endswith('aa'):\\n            new_s = s[:-2] + 'cc'\\n            applied = True\\n        # Rule 11\\n        if not applied and s.endswith('cc'):\\n            new_s = 'a' + s[:-2] + 'b'\\n            applied = True\\n        # Rule 12\\n        if not applied and s.startswith('cc'):\\n            n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 4053,
+        "completion_tokens": 4657,
+        "total_tokens": 8710
+      },
+      "timestamp": "2026-01-31T19:11:08.213772+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "The logic was implemented in Python, and the final state after the transformation rules was determined to be 'azzcbcbbbbaabab' by the script.",
+      "action": "finish",
+      "action_input": "\\boxed{azzcbcbbbbaabab}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The logic was implemented in Python, and the final state after the transformation rules was determined to be 'azzcbcbbbbaabab' by the script.\nAction: finish\nAction Input: \\boxed{azzcbcbbbbaabab}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 5298,
+        "completion_tokens": 1032,
+        "total_tokens": 6330
+      },
+      "timestamp": "2026-01-31T19:11:14.998198+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{azzcbcbbbbaabab}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.004834400000000001,
+  "total_time": 51.89910054206848,
+  "task": {
+    "task_id": "reasoning-gym:rg:string_manipulation:256:000586",
+    "question": "Your job is to repeatedly transform a string according to a set of rules until no further transformations can be performed, or a state is repeated.\n\nEvaluate the following rules in order, and apply the first applicable rule to the string:\n1. If the string contains 'abc', replace the first occurrence with 'cab'.\n2. If the string contains 'ca' (not at the start), remove the first occurrence found after the first character.\n3. If the string prefix is 'cb', replace it with 'aa' and delete the last character.\n4. If the string starts with 'ac', replace the first two characters with 'zz'.\n5. If the string prefix is 'aa', remove the first character.\n6. If the string prefix is 'ab', replace it with 'ca'.\n7. If the string contains 'bca', delete the first occurrence entirely.\n8. If the string ends with 'ba', replace it with 'ab'.\n9. If the string suffix is 'ac', replace it with 'cb'.\n10. If the string ends with 'aa', replace it with 'cc'.\n11. If the string suffix is 'cc', replace it with 'b' and prepend 'a' to the start.\n12. If the string starts with 'cc', remove the first two characters.\n13. If the string prefix is 'bc', delete the first two characters and append 'aa' to the end.\n14. If the string contains 'acb', replace the first occurrence with its reverse ('bca').\n15. If the string starts with 'bb', remove the second character.\n16. If the string prefix is 'ca', replace it with 'bb' and append 'c' to the end.\n17. If the string suffix is 'bb', delete the last two characters.\n18. If the string ends with 'ca', remove the last character.\n19. If the string length is greater than 15, remove the middle character.\n20. If the string contains an even number of 'b's (and at least one 'b'), append 'ab' at the end.\n\nOnce you have applied a rule, repeat the process with the new string until no further transformations can be performed (i.e. the string doesn't change), or a state is repeated.\nIf a state is repeated, the process is terminated, and the repeated state is discarded (i.e. is not considered as the final answer) and the state before the repeated state is considered as the final answer.\n\nYour output should be the final transformed string after applying all the rules.\n\nTransform the following string according to the above list of rules:\naaaababcccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "azzcbabbcbbbaab",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "string_manipulation",
+      "rg_index": 586,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "string_manipulation",
+      "source_index": 586,
+      "string": "aaaababcccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+      "solution": "azzcbabbcbbbaab",
+      "states": [
+        "aaaababcccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaabcabccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacababccbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacabcabcbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccababcbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccabcabbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccabccbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbcccabcbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbabcbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaaabcacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbaabcabccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacababccbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacabcabcbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbaccababcbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbaccabcabbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbabcccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcabccbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbccabcbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccabccbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbcccabcbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaaababcbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaaabcabbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaabccbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabacabcbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccabccbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaacccabcbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaaabcabaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacaccccccabcabbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbabcaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbababccabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbabcabcabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbcababcabbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbcabcababbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbabcaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbcabcbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcabccaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbccabcaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbabcacabacbcbcaaccaccaccacbbcabaacc",
+        "aaacccababbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcacbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbccccabbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbcaaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbcaccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccacccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaccaaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbacaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbcabbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbcaaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaacabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaabacacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaabacabbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbacccababbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbcccabbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbccccabbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbacacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbacccacabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbacccabaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaacaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaacababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbacaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabaccabbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaaccccabbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaacababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaacacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaacccccccababbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbcabaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccacacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccacbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbcabbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbccabababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbcabaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbccabbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbcccabaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbcabacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbacabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbcaaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccaccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbacccaccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccacbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbcabaacc",
+        "aaaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaacc",
+        "aaccbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaacc",
+        "accbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaacc",
+        "zzcbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaacc",
+        "azzcbabbacbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcacbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbacbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcacbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbabaacbbbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbababcabbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbabcababbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbcabababbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbacbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbcabaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabacbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabbcabaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbacbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcacbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabacbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcacbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbcbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbccbaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbccaccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbcbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbcbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccbaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbccaaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbcaaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccbaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaccaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaacabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaabaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbaababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbababbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbbabbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbabbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbabbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbabbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbaccbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbacbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbbcaacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbbacccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbbcccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbcccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbbccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbccccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabbcccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbabcccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbcabccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbccabcbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbcccabbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbccbbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbcbbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbbbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaccbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbacbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbbcaaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbbaabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbbabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbabbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbbbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaababaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaabbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaabaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaaaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbacccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbcccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbccbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbcbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbcbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbabaaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbabaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbabaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbaaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbaababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbababaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbbabaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbbabaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbabaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbabaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbbaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcbaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbcaaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbbaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbaccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabbccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaabccccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbacabcccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaccabccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbacccabcccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaccccabccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbacccccabcbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaccccccabbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbacccccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaccccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbacccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbaccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbcbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbcbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccbabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccccabbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbcccbbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbcccbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccbbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbccbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbcbaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbcaaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbaabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccabaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbcbaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbcaccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbccbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbabbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabcbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbacabbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbabbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbabababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbababbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbbabbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbabbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbabbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbcbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcbaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbcaabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccbabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacccabbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaaccbbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaaccbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaaacbcbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaabcacbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbacabacbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbabacbbccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbabbcabccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbabbccabcbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbabbcccabbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbabbccbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbabccbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbcabcbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbccabbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbcbbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbbbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccbaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcccaabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbccabbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbcbbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbbbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbccbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbcbabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbcabbcbaccccbbbaab",
+        "azzcbabbbcbccbcbbbcbaccccbbbaab",
+        "azzcbabbbcbccbcbbcbaccccbbbaab",
+        "azzcbabbbcbccbcbcbaccccbbbaab",
+        "azzcbabbbcbccbbcbaccccbbbaab",
+        "azzcbabbbcbccbcbaccccbbbaab",
+        "azzcbabbbcbcccbaccccbbbaab",
+        "azzcbabbbcbccbaccccbbbaab",
+        "azzcbabbbcbcbaccccbbbaab",
+        "azzcbabbbcbcaccccbbbaab",
+        "azzcbabbbcbccccbbbaab",
+        "azzcbabbbcccccbbbaab",
+        "azzcbabbbccccbbbaab",
+        "azzcbabbbcccbbbaab",
+        "azzcbabbbccbbbaab",
+        "azzcbabbccbbbaab",
+        "azzcbabbcbbbaab"
+      ],
+      "selected_rules": [
+        "If the string contains 'abc', replace the first occurrence with 'cab'.",
+        "If the string contains 'ca' (not at the start), remove the first occurrence found after the first character.",
+        "If the string prefix is 'cb', replace it with 'aa' and delete the last character.",
+        "If the string starts with 'ac', replace the first two characters with 'zz'.",
+        "If the string prefix is 'aa', remove the first character.",
+        "If the string prefix is 'ab', replace it with 'ca'.",
+        "If the string contains 'bca', delete the first occurrence entirely.",
+        "If the string ends with 'ba', replace it with 'ab'.",
+        "If the string suffix is 'ac', replace it with 'cb'.",
+        "If the string ends with 'aa', replace it with 'cc'.",
+        "If the string suffix is 'cc', replace it with 'b' and prepend 'a' to the start.",
+        "If the string starts with 'cc', remove the first two characters.",
+        "If the string prefix is 'bc', delete the first two characters and append 'aa' to the end.",
+        "If the string contains 'acb', replace the first occurrence with its reverse ('bca').",
+        "If the string starts with 'bb', remove the second character.",
+        "If the string prefix is 'ca', replace it with 'bb' and append 'c' to the end.",
+        "If the string suffix is 'bb', delete the last two characters.",
+        "If the string ends with 'ca', remove the last character.",
+        "If the string length is greater than 15, remove the middle character.",
+        "If the string contains an even number of 'b's (and at least one 'b'), append 'ab' at the end."
+      ],
+      "string_length": 336,
+      "num_rules": 20,
+      "difficulty": {
+        "string_length": [
+          100,
+          500
+        ],
+        "num_rules": [
+          15,
+          20
+        ]
+      }
+    }
+  }
+}

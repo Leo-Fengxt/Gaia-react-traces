@@ -1,0 +1,2199 @@
+{
+  "task_id": "reasoning-gym:rg:course_schedule:256:000197",
+  "question": "There are a total of 70 courses you have to take, labeled from 0 to 69.\n\nYou are given the following list of prerequisites, where prerequisites[i] = (a_i, b_i) indicates that you must first take course b_i if you want to take course a_i:\n[(57, 6), (4, 18), (49, 45), (64, 62), (51, 61), (34, 53), (40, 60), (24, 3), (60, 20), (31, 44), (54, 26), (23, 46), (51, 18), (6, 62), (25, 59), (23, 18), (5, 15), (46, 1), (49, 5), (34, 39), (15, 28), (4, 1), (15, 59), (7, 67), (30, 20), (58, 48), (59, 18), (42, 24), (13, 42), (6, 30), (69, 62), (62, 28), (26, 28), (2, 30), (64, 44), (19, 5), (36, 33), (45, 62), (1, 24), (25, 27), (49, 59), (53, 18), (59, 16), (31, 65), (68, 3), (56, 6), (22, 23), (24, 67), (48, 23), (18, 20), (66, 31), (53, 15), (14, 27), (58, 53), (6, 59), (38, 32), (57, 68), (11, 67), (12, 20), (67, 20), (34, 63), (67, 38), (66, 10), (44, 49), (16, 30), (10, 24), (0, 10), (50, 5), (25, 62), (0, 42), (50, 58), (49, 48), (15, 24), (61, 9), (34, 64), (34, 3), (1, 62), (56, 34), (13, 3), (8, 18), (56, 69), (52, 17), (10, 6), (37, 30), (2, 16), (33, 52), (56, 62), (55, 9), (59, 3), (39, 18), (38, 3), (11, 16), (45, 67), (47, 17), (28, 32), (29, 16), (19, 17), (35, 53), (36, 57), (51, 29), (22, 56), (19, 44), (56, 41), (31, 15), (1, 42), (35, 64), (62, 15), (10, 18), (67, 3), (24, 32), (52, 28), (69, 43), (48, 67), (14, 22), (63, 30), (33, 67), (6, 8), (23, 65), (60, 31), (13, 26), (5, 59), (0, 17), (23, 38), (37, 65), (58, 45), (41, 59), (18, 3), (43, 61), (44, 8), (49, 61), (29, 46), (8, 62), (26, 20), (45, 16), (64, 53), (30, 32), (52, 20), (53, 24), (65, 20), (38, 30), (12, 39), (0, 38), (43, 13), (47, 3), (21, 63), (40, 45), (58, 24), (20, 32), (13, 17), (2, 57), (14, 16), (22, 32), (63, 62), (0, 41), (42, 17), (39, 3), (1, 25), (48, 1), (53, 3), (21, 60), (16, 20), (22, 17), (33, 6), (52, 44), (9, 45), (5, 9), (37, 46), (54, 16), (29, 13), (28, 30), (7, 5), (39, 13), (13, 16), (15, 20), (57, 31), (23, 11), (17, 18), (39, 67), (7, 20), (66, 53), (60, 49), (48, 52), (2, 31), (60, 51), (53, 32), (3, 20), (24, 18), (44, 16), (8, 59), (9, 59), (10, 38), (11, 42), (5, 53), (48, 8), (27, 3), (55, 38), (11, 59), (63, 13), (3, 30), (46, 62), (39, 20), (52, 63), (69, 15), (47, 59), (68, 45), (16, 38), (58, 29), (18, 16), (38, 20), (57, 28), (43, 67), (21, 62), (68, 16), (65, 64), (27, 24), (55, 7), (17, 67), (68, 26), (61, 20), (66, 64), (4, 42), (29, 25), (45, 26), (26, 38), (65, 45), (11, 3), (42, 53), (66, 33), (41, 15), (19, 25), (37, 3), (48, 5), (21, 10), (17, 24), (21, 31), (19, 45), (67, 26), (57, 16), (16, 26), (31, 6), (35, 62), (9, 3), (25, 26), (27, 28), (61, 25), (17, 16), (25, 11), (7, 27), (47, 26), (46, 6), (1, 5), (40, 41), (36, 25), (27, 42), (46, 47), (19, 35), (55, 3), (62, 18), (33, 68), (47, 8), (28, 38), (31, 32), (6, 3), (61, 47), (15, 32), (63, 67), (18, 26), (28, 20), (63, 17), (54, 17), (67, 19), (49, 39), (12, 32), (40, 48), (61, 13), (50, 21), (22, 62), (69, 1), (41, 5), (51, 65), (5, 63), (59, 38), (40, 11), (37, 39), (9, 62), (64, 61), (8, 15), (18, 38), (55, 12), (54, 42), (14, 44), (44, 42), (43, 45), (41, 20), (35, 24), (26, 30), (65, 63), (54, 62), (17, 30), (24, 38), (50, 46), (12, 16), (3, 32), (62, 32), (36, 45), (4, 35), (10, 30), (42, 26), (46, 25), (44, 5), (67, 28)]\n\nReturn True if you can finish all courses considering the prerequisites, or False otherwise.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will write a Python script to check for cycles in the directed graph of prerequisites using Kahn's algorithm or a DFS-based cycle detection.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def can_finish(num_courses, prerequisites):\\n    from collections import deque, defaultdict\\n    \\n    adj = defaultdict(list)\\n    in_degree = [0] * num_courses\\n    \\n    for dest, src in prerequisites:\\n        adj[src].append(dest)\\n        in_degree[dest] += 1\\n        \\n    queue = deque([i for i in range(num_courses) if in_degree[i] == 0])\\n    count = 0\\n    \\n    while queue:\\n        u = queue.popleft()\\n        count += 1\\n        for v in adj[u]:\\n            in_degree[v] -= 1\\n            if in_degree[v] == 0:\\n                queue.append(v)\\n                \\n    return count == num_courses\\n\\nprerequisites = [(57, 6), (4, 18), (49, 45), (64, 62), (51, 61), (34, 53), (40, 60), (24, 3), (60, 20), (31, 44), (54, 26), (23, 46), (51, 18), (6, 62), (25, 59), (23, 18), (5, 15), (46, 1), (49, 5), (34, 39), (15, 28), (4, 1), (15, 59), (7, 67), (30, 20), (58, 48), (59, 18), (42, 24), (13, 42), (6, 30), (69, 62), (62, 28), (26, 28), (2, 30), (64, 44), (19, 5), (36, 33), (45, 62), (1, 24), (25, 27), (49, 59), (53, 18), (59, 16), (31, 65), (68, 3), (56, 6), (22, 23), (24, 67), (48, 23), (18, 20), (66, 31), (53, 15), (14, 27), (58, 53), (6, 59), (38, 32), (57, 68), (11, 67), (12, 20), (67, 20), (34, 63), (67, 38), (66, 10), (44, 49), (16, 30), (10, 24), (0, 10), (50, 5), (25, 62), (0, 42), (50, 58), (49, 48), (15, 24), (61, 9), (34, 64), (34, 3), (1, 62), (56, 34), (13, 3), (8, 18), (56, 69), (52, 17), (10, 6), (37, 30), (2, 16), (33, 52), (56, 62), (55, 9), (59, 3), (39, 18), (38, 3), (11, 16), (45, 67), (47, 17), (28, 32), (29, 16), (19, 17), (35, 53), (36, 57), (51, 29), (22, 56), (19, 44), (56, 41), (31, 15), (1, 42), (35, 64), (62, 15), (10, 18), (67, 3), (24, 32), (52, 28), (69, 43), (48, 67), (14, 22), (63, 30), (33, 67), (6, 8), (23, 65), (60, 31), (13, 26), (5, 59), (0, 17), (23, 38), (37, 65), (58, 45), (41, 59), (18, 3), (43, 61), (44, 8), (49, 61), (29, 46), (8, 62), (26, 20), (45, 16), (64, 53), (30, 32), (52, 20), (53, 24), (65, 20), (38, 30), (12, 39), (0, 38), (43, 13), (47, 3), (21, 63), (40, 45), (58, 24), (20, 32), (13, 17), (2, 57), (14, 16), (22, 32), (63, 62), (0, 41), (42, 17), (39, 3), (1, 25), (48, 1), (53, 3), (21, 60), (16, 20), (22, 17), (33, 6), (52, 44), (9, 45), (5, 9), (37, 46), (54, 16), (29, 13), (28, 30), (7, 5), (39, 13), (13, 16), (15, 20), (57, 31), (23, 11), (17, 18), (39, 67), (7, 20), (66, 53), (60, 49), (48, 52), (2, 31), (60, 51), (53, 32), (3, 20), (24, 18), (44, 16), (8, 59), (9, 59), (10, 38), (11, 42), (5, 53), (48, 8), (27, 3), (55, 38), (11, 59), (63, 13), (3, 30), (46, 62), (39, 20), (52, 63), (69, 15), (47, 59), (68, 45), (16, 38), (58, 29), (18, 16), (38, 20), (57, 28), (43, 67), (21, 62), (68, 16), (65, 64), (27, 24), (55, 7), (17, 67), (68, 26), (61, 20), (66, 64), (4, 42), (29, 25), (45, 26), (26, 38), (65, 45), (11, 3), (42, 53), (66, 33), (41, 15), (19, 25), (37, 3), (48, 5), (21, 10), (17, 24), (21, 31), (19, 45), (67, 26), (57, 16), (16, 26), (31, 6), (35, 62), (9, 3), (25, 26), (27, 28), (61, 25), (17, 16), (25, 11), (7, 27), (47, 26), (46, 6), (1, 5), (40, 41), (36, 25), (27, 42), (46, 47), (19, 35), (55, 3), (62, 18), (33, 68), (47, 8), (28, 38), (31, 32), (6, 3), (61, 47), (15, 32), (63, 67), (18, 26), (28, 20), (63, 17), (54, 17), (67, 19), (49, 39), (12, 32), (40, 48), (61, 13), (50, 21), (22, 62), (69, 1), (41, 5), (51, 65), (5, 63), (59, 38), (40, 11), (37, 39), (9, 62), (64, 61), (8, 15), (18, 38), (55, 12), (54, 42), (14, 44), (44, 42), (43, 45), (41, 20), (35, 24), (26, 30), (65, 63), (54, 62), (17, 30), (24, 38), (50, 46), (12, 16), (3, 32), (62, 32), (36, 45), (4, 35), (10, 30), (42, 26), (46, 25), (44, 5), (67, 28)]\\n\\nprint(can_finish(70, prerequisites))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.35s\n\nOutput:\nFalse\n",
+      "raw_response": "Thought: I will write a Python script to check for cycles in the directed graph of prerequisites using Kahn's algorithm or a DFS-based cycle detection.\nAction: execute_python\nAction Input: {\"code\": \"def can_finish(num_courses, prerequisites):\\n    from collections import deque, defaultdict\\n    \\n    adj = defaultdict(list)\\n    in_degree = [0] * num_courses\\n    \\n    for dest, src in prerequisites:\\n        adj[src].append(dest)\\n        in_degree[dest] += 1\\n        \\n    queue = deque([i for i in range(num_courses) if in_degree[i] == 0])\\n    count = 0\\n    \\n    while queue:\\n        u = queue.popleft()\\n        count += 1\\n        for v in adj[u]:\\n            in_degree[v] -= 1\\n            if in_degree[v] == 0:\\n                queue.append(v)\\n                \\n    return count == num_courses\\n\\nprerequisites = [(57, 6), (4, 18), (49, 45), (64, 62), (51, 61), (34, 53), (40, 60), (24, 3), (60, 20), (31, 44), (54, 26), (23, 46), (51, 18), (6, 62), (25, 59), (23, 18), (5, 15), (46, 1), (49, 5), (34, 39), (15, 28), (4, 1), (15, 59), (7, 67), (30, 20), (58, 48), (59, 18), (42, 24), (13, 42), (6, 30), (69, 62), (62, 28), (26, 28), (2, 30), (64, 44), (19, 5), (36, 33), (45, 62), (1, 24), (25, 27), (49, 59), (53, 18), (59, 16), (31, 65), (68, 3), (56, 6), (22, 23), (24, 67), (48, 23), (18, 20), (66, 31), (53, 15), (14, 27), (58, 53), (6, 59), (38, 32), (57, 68), (11, 67), (12, 20), (67, 20), (34, 63), (67, 38), (66, 10), (44, 49), (16, 30), (10, 24), (0, 10), (50, 5), (25, 62), (0, 42), (50, 58), (49, 48), (15, 24), (61, 9), (34, 64), (34, 3), (1, 62), (56, 34), (13, 3), (8, 18), (56, 69), (52, 17), (10, 6), (37, 30), (2, 16), (33, 52), (56, 62), (55, 9), (59, 3), (39, 18), (38, 3), (11, 16), (45, 67), (47, 17), (28, 32), (29, 16), (19, 17), (35, 53), (36, 57), (51, 29), (22, 56), (19, 44), (56, 41), (31, 15), (1, 42), (35, 64), (62, 15), (10, 18), (67, 3), (24, 32), (52, 28), (69, 43), (48, 67), (14, 22), (63, 30), (33, 67), (6, 8), (23, 65), (60, 31), (13, 26), (5",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 3277,
+        "completion_tokens": 2839,
+        "total_tokens": 6116
+      },
+      "timestamp": "2026-02-01T11:39:14.652932+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The previous Python script checked for cycles in the directed graph of course prerequisites and returned False, meaning a cycle exists.",
+      "action": "finish",
+      "action_input": "\\boxed{False}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The previous Python script checked for cycles in the directed graph of course prerequisites and returned False, meaning a cycle exists.\nAction: finish\nAction Input: \\boxed{False}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 5974,
+        "completion_tokens": 79,
+        "total_tokens": 6053
+      },
+      "timestamp": "2026-02-01T11:39:16.815486+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{False}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0020923,
+  "total_time": 16.43539023399353,
+  "task": {
+    "task_id": "reasoning-gym:rg:course_schedule:256:000197",
+    "question": "There are a total of 70 courses you have to take, labeled from 0 to 69.\n\nYou are given the following list of prerequisites, where prerequisites[i] = (a_i, b_i) indicates that you must first take course b_i if you want to take course a_i:\n[(57, 6), (4, 18), (49, 45), (64, 62), (51, 61), (34, 53), (40, 60), (24, 3), (60, 20), (31, 44), (54, 26), (23, 46), (51, 18), (6, 62), (25, 59), (23, 18), (5, 15), (46, 1), (49, 5), (34, 39), (15, 28), (4, 1), (15, 59), (7, 67), (30, 20), (58, 48), (59, 18), (42, 24), (13, 42), (6, 30), (69, 62), (62, 28), (26, 28), (2, 30), (64, 44), (19, 5), (36, 33), (45, 62), (1, 24), (25, 27), (49, 59), (53, 18), (59, 16), (31, 65), (68, 3), (56, 6), (22, 23), (24, 67), (48, 23), (18, 20), (66, 31), (53, 15), (14, 27), (58, 53), (6, 59), (38, 32), (57, 68), (11, 67), (12, 20), (67, 20), (34, 63), (67, 38), (66, 10), (44, 49), (16, 30), (10, 24), (0, 10), (50, 5), (25, 62), (0, 42), (50, 58), (49, 48), (15, 24), (61, 9), (34, 64), (34, 3), (1, 62), (56, 34), (13, 3), (8, 18), (56, 69), (52, 17), (10, 6), (37, 30), (2, 16), (33, 52), (56, 62), (55, 9), (59, 3), (39, 18), (38, 3), (11, 16), (45, 67), (47, 17), (28, 32), (29, 16), (19, 17), (35, 53), (36, 57), (51, 29), (22, 56), (19, 44), (56, 41), (31, 15), (1, 42), (35, 64), (62, 15), (10, 18), (67, 3), (24, 32), (52, 28), (69, 43), (48, 67), (14, 22), (63, 30), (33, 67), (6, 8), (23, 65), (60, 31), (13, 26), (5, 59), (0, 17), (23, 38), (37, 65), (58, 45), (41, 59), (18, 3), (43, 61), (44, 8), (49, 61), (29, 46), (8, 62), (26, 20), (45, 16), (64, 53), (30, 32), (52, 20), (53, 24), (65, 20), (38, 30), (12, 39), (0, 38), (43, 13), (47, 3), (21, 63), (40, 45), (58, 24), (20, 32), (13, 17), (2, 57), (14, 16), (22, 32), (63, 62), (0, 41), (42, 17), (39, 3), (1, 25), (48, 1), (53, 3), (21, 60), (16, 20), (22, 17), (33, 6), (52, 44), (9, 45), (5, 9), (37, 46), (54, 16), (29, 13), (28, 30), (7, 5), (39, 13), (13, 16), (15, 20), (57, 31), (23, 11), (17, 18), (39, 67), (7, 20), (66, 53), (60, 49), (48, 52), (2, 31), (60, 51), (53, 32), (3, 20), (24, 18), (44, 16), (8, 59), (9, 59), (10, 38), (11, 42), (5, 53), (48, 8), (27, 3), (55, 38), (11, 59), (63, 13), (3, 30), (46, 62), (39, 20), (52, 63), (69, 15), (47, 59), (68, 45), (16, 38), (58, 29), (18, 16), (38, 20), (57, 28), (43, 67), (21, 62), (68, 16), (65, 64), (27, 24), (55, 7), (17, 67), (68, 26), (61, 20), (66, 64), (4, 42), (29, 25), (45, 26), (26, 38), (65, 45), (11, 3), (42, 53), (66, 33), (41, 15), (19, 25), (37, 3), (48, 5), (21, 10), (17, 24), (21, 31), (19, 45), (67, 26), (57, 16), (16, 26), (31, 6), (35, 62), (9, 3), (25, 26), (27, 28), (61, 25), (17, 16), (25, 11), (7, 27), (47, 26), (46, 6), (1, 5), (40, 41), (36, 25), (27, 42), (46, 47), (19, 35), (55, 3), (62, 18), (33, 68), (47, 8), (28, 38), (31, 32), (6, 3), (61, 47), (15, 32), (63, 67), (18, 26), (28, 20), (63, 17), (54, 17), (67, 19), (49, 39), (12, 32), (40, 48), (61, 13), (50, 21), (22, 62), (69, 1), (41, 5), (51, 65), (5, 63), (59, 38), (40, 11), (37, 39), (9, 62), (64, 61), (8, 15), (18, 38), (55, 12), (54, 42), (14, 44), (44, 42), (43, 45), (41, 20), (35, 24), (26, 30), (65, 63), (54, 62), (17, 30), (24, 38), (50, 46), (12, 16), (3, 32), (62, 32), (36, 45), (4, 35), (10, 30), (42, 26), (46, 25), (44, 5), (67, 28)]\n\nReturn True if you can finish all courses considering the prerequisites, or False otherwise.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "False",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "course_schedule",
+      "rg_index": 197,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "course_schedule",
+      "source_index": 197,
+      "courses": [
+        32,
+        20,
+        30,
+        3,
+        38,
+        28,
+        26,
+        67,
+        16,
+        18,
+        24,
+        59,
+        15,
+        62,
+        8,
+        45,
+        17,
+        53,
+        42,
+        9,
+        13,
+        63,
+        6,
+        10,
+        5,
+        27,
+        44,
+        41,
+        47,
+        52,
+        11,
+        25,
+        39,
+        1,
+        61,
+        49,
+        7,
+        46,
+        64,
+        43,
+        12,
+        65,
+        68,
+        54,
+        29,
+        31,
+        33,
+        34,
+        23,
+        57,
+        55,
+        0,
+        48,
+        51,
+        60,
+        21,
+        58,
+        69,
+        56,
+        22,
+        35,
+        36,
+        4,
+        40,
+        50,
+        37,
+        2,
+        66,
+        14,
+        19
+      ],
+      "prerequisites": [
+        [
+          57,
+          6
+        ],
+        [
+          4,
+          18
+        ],
+        [
+          49,
+          45
+        ],
+        [
+          64,
+          62
+        ],
+        [
+          51,
+          61
+        ],
+        [
+          34,
+          53
+        ],
+        [
+          40,
+          60
+        ],
+        [
+          24,
+          3
+        ],
+        [
+          60,
+          20
+        ],
+        [
+          31,
+          44
+        ],
+        [
+          54,
+          26
+        ],
+        [
+          23,
+          46
+        ],
+        [
+          51,
+          18
+        ],
+        [
+          6,
+          62
+        ],
+        [
+          25,
+          59
+        ],
+        [
+          23,
+          18
+        ],
+        [
+          5,
+          15
+        ],
+        [
+          46,
+          1
+        ],
+        [
+          49,
+          5
+        ],
+        [
+          34,
+          39
+        ],
+        [
+          15,
+          28
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          15,
+          59
+        ],
+        [
+          7,
+          67
+        ],
+        [
+          30,
+          20
+        ],
+        [
+          58,
+          48
+        ],
+        [
+          59,
+          18
+        ],
+        [
+          42,
+          24
+        ],
+        [
+          13,
+          42
+        ],
+        [
+          6,
+          30
+        ],
+        [
+          69,
+          62
+        ],
+        [
+          62,
+          28
+        ],
+        [
+          26,
+          28
+        ],
+        [
+          2,
+          30
+        ],
+        [
+          64,
+          44
+        ],
+        [
+          19,
+          5
+        ],
+        [
+          36,
+          33
+        ],
+        [
+          45,
+          62
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          25,
+          27
+        ],
+        [
+          49,
+          59
+        ],
+        [
+          53,
+          18
+        ],
+        [
+          59,
+          16
+        ],
+        [
+          31,
+          65
+        ],
+        [
+          68,
+          3
+        ],
+        [
+          56,
+          6
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          67
+        ],
+        [
+          48,
+          23
+        ],
+        [
+          18,
+          20
+        ],
+        [
+          66,
+          31
+        ],
+        [
+          53,
+          15
+        ],
+        [
+          14,
+          27
+        ],
+        [
+          58,
+          53
+        ],
+        [
+          6,
+          59
+        ],
+        [
+          38,
+          32
+        ],
+        [
+          57,
+          68
+        ],
+        [
+          11,
+          67
+        ],
+        [
+          12,
+          20
+        ],
+        [
+          67,
+          20
+        ],
+        [
+          34,
+          63
+        ],
+        [
+          67,
+          38
+        ],
+        [
+          66,
+          10
+        ],
+        [
+          44,
+          49
+        ],
+        [
+          16,
+          30
+        ],
+        [
+          10,
+          24
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          50,
+          5
+        ],
+        [
+          25,
+          62
+        ],
+        [
+          0,
+          42
+        ],
+        [
+          50,
+          58
+        ],
+        [
+          49,
+          48
+        ],
+        [
+          15,
+          24
+        ],
+        [
+          61,
+          9
+        ],
+        [
+          34,
+          64
+        ],
+        [
+          34,
+          3
+        ],
+        [
+          1,
+          62
+        ],
+        [
+          56,
+          34
+        ],
+        [
+          13,
+          3
+        ],
+        [
+          8,
+          18
+        ],
+        [
+          56,
+          69
+        ],
+        [
+          52,
+          17
+        ],
+        [
+          10,
+          6
+        ],
+        [
+          37,
+          30
+        ],
+        [
+          2,
+          16
+        ],
+        [
+          33,
+          52
+        ],
+        [
+          56,
+          62
+        ],
+        [
+          55,
+          9
+        ],
+        [
+          59,
+          3
+        ],
+        [
+          39,
+          18
+        ],
+        [
+          38,
+          3
+        ],
+        [
+          11,
+          16
+        ],
+        [
+          45,
+          67
+        ],
+        [
+          47,
+          17
+        ],
+        [
+          28,
+          32
+        ],
+        [
+          29,
+          16
+        ],
+        [
+          19,
+          17
+        ],
+        [
+          35,
+          53
+        ],
+        [
+          36,
+          57
+        ],
+        [
+          51,
+          29
+        ],
+        [
+          22,
+          56
+        ],
+        [
+          19,
+          44
+        ],
+        [
+          56,
+          41
+        ],
+        [
+          31,
+          15
+        ],
+        [
+          1,
+          42
+        ],
+        [
+          35,
+          64
+        ],
+        [
+          62,
+          15
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          67,
+          3
+        ],
+        [
+          24,
+          32
+        ],
+        [
+          52,
+          28
+        ],
+        [
+          69,
+          43
+        ],
+        [
+          48,
+          67
+        ],
+        [
+          14,
+          22
+        ],
+        [
+          63,
+          30
+        ],
+        [
+          33,
+          67
+        ],
+        [
+          6,
+          8
+        ],
+        [
+          23,
+          65
+        ],
+        [
+          60,
+          31
+        ],
+        [
+          13,
+          26
+        ],
+        [
+          5,
+          59
+        ],
+        [
+          0,
+          17
+        ],
+        [
+          23,
+          38
+        ],
+        [
+          37,
+          65
+        ],
+        [
+          58,
+          45
+        ],
+        [
+          41,
+          59
+        ],
+        [
+          18,
+          3
+        ],
+        [
+          43,
+          61
+        ],
+        [
+          44,
+          8
+        ],
+        [
+          49,
+          61
+        ],
+        [
+          29,
+          46
+        ],
+        [
+          8,
+          62
+        ],
+        [
+          26,
+          20
+        ],
+        [
+          45,
+          16
+        ],
+        [
+          64,
+          53
+        ],
+        [
+          30,
+          32
+        ],
+        [
+          52,
+          20
+        ],
+        [
+          53,
+          24
+        ],
+        [
+          65,
+          20
+        ],
+        [
+          38,
+          30
+        ],
+        [
+          12,
+          39
+        ],
+        [
+          0,
+          38
+        ],
+        [
+          43,
+          13
+        ],
+        [
+          47,
+          3
+        ],
+        [
+          21,
+          63
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          58,
+          24
+        ],
+        [
+          20,
+          32
+        ],
+        [
+          13,
+          17
+        ],
+        [
+          2,
+          57
+        ],
+        [
+          14,
+          16
+        ],
+        [
+          22,
+          32
+        ],
+        [
+          63,
+          62
+        ],
+        [
+          0,
+          41
+        ],
+        [
+          42,
+          17
+        ],
+        [
+          39,
+          3
+        ],
+        [
+          1,
+          25
+        ],
+        [
+          48,
+          1
+        ],
+        [
+          53,
+          3
+        ],
+        [
+          21,
+          60
+        ],
+        [
+          16,
+          20
+        ],
+        [
+          22,
+          17
+        ],
+        [
+          33,
+          6
+        ],
+        [
+          52,
+          44
+        ],
+        [
+          9,
+          45
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          37,
+          46
+        ],
+        [
+          54,
+          16
+        ],
+        [
+          29,
+          13
+        ],
+        [
+          28,
+          30
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          39,
+          13
+        ],
+        [
+          13,
+          16
+        ],
+        [
+          15,
+          20
+        ],
+        [
+          57,
+          31
+        ],
+        [
+          23,
+          11
+        ],
+        [
+          17,
+          18
+        ],
+        [
+          39,
+          67
+        ],
+        [
+          7,
+          20
+        ],
+        [
+          66,
+          53
+        ],
+        [
+          60,
+          49
+        ],
+        [
+          48,
+          52
+        ],
+        [
+          2,
+          31
+        ],
+        [
+          60,
+          51
+        ],
+        [
+          53,
+          32
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          24,
+          18
+        ],
+        [
+          44,
+          16
+        ],
+        [
+          8,
+          59
+        ],
+        [
+          9,
+          59
+        ],
+        [
+          10,
+          38
+        ],
+        [
+          11,
+          42
+        ],
+        [
+          5,
+          53
+        ],
+        [
+          48,
+          8
+        ],
+        [
+          27,
+          3
+        ],
+        [
+          55,
+          38
+        ],
+        [
+          11,
+          59
+        ],
+        [
+          63,
+          13
+        ],
+        [
+          3,
+          30
+        ],
+        [
+          46,
+          62
+        ],
+        [
+          39,
+          20
+        ],
+        [
+          52,
+          63
+        ],
+        [
+          69,
+          15
+        ],
+        [
+          47,
+          59
+        ],
+        [
+          68,
+          45
+        ],
+        [
+          16,
+          38
+        ],
+        [
+          58,
+          29
+        ],
+        [
+          18,
+          16
+        ],
+        [
+          38,
+          20
+        ],
+        [
+          57,
+          28
+        ],
+        [
+          43,
+          67
+        ],
+        [
+          21,
+          62
+        ],
+        [
+          68,
+          16
+        ],
+        [
+          65,
+          64
+        ],
+        [
+          27,
+          24
+        ],
+        [
+          55,
+          7
+        ],
+        [
+          17,
+          67
+        ],
+        [
+          68,
+          26
+        ],
+        [
+          61,
+          20
+        ],
+        [
+          66,
+          64
+        ],
+        [
+          4,
+          42
+        ],
+        [
+          29,
+          25
+        ],
+        [
+          45,
+          26
+        ],
+        [
+          26,
+          38
+        ],
+        [
+          65,
+          45
+        ],
+        [
+          11,
+          3
+        ],
+        [
+          42,
+          53
+        ],
+        [
+          66,
+          33
+        ],
+        [
+          41,
+          15
+        ],
+        [
+          19,
+          25
+        ],
+        [
+          37,
+          3
+        ],
+        [
+          48,
+          5
+        ],
+        [
+          21,
+          10
+        ],
+        [
+          17,
+          24
+        ],
+        [
+          21,
+          31
+        ],
+        [
+          19,
+          45
+        ],
+        [
+          67,
+          26
+        ],
+        [
+          57,
+          16
+        ],
+        [
+          16,
+          26
+        ],
+        [
+          31,
+          6
+        ],
+        [
+          35,
+          62
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          25,
+          26
+        ],
+        [
+          27,
+          28
+        ],
+        [
+          61,
+          25
+        ],
+        [
+          17,
+          16
+        ],
+        [
+          25,
+          11
+        ],
+        [
+          7,
+          27
+        ],
+        [
+          47,
+          26
+        ],
+        [
+          46,
+          6
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          36,
+          25
+        ],
+        [
+          27,
+          42
+        ],
+        [
+          46,
+          47
+        ],
+        [
+          19,
+          35
+        ],
+        [
+          55,
+          3
+        ],
+        [
+          62,
+          18
+        ],
+        [
+          33,
+          68
+        ],
+        [
+          47,
+          8
+        ],
+        [
+          28,
+          38
+        ],
+        [
+          31,
+          32
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          61,
+          47
+        ],
+        [
+          15,
+          32
+        ],
+        [
+          63,
+          67
+        ],
+        [
+          18,
+          26
+        ],
+        [
+          28,
+          20
+        ],
+        [
+          63,
+          17
+        ],
+        [
+          54,
+          17
+        ],
+        [
+          67,
+          19
+        ],
+        [
+          49,
+          39
+        ],
+        [
+          12,
+          32
+        ],
+        [
+          40,
+          48
+        ],
+        [
+          61,
+          13
+        ],
+        [
+          50,
+          21
+        ],
+        [
+          22,
+          62
+        ],
+        [
+          69,
+          1
+        ],
+        [
+          41,
+          5
+        ],
+        [
+          51,
+          65
+        ],
+        [
+          5,
+          63
+        ],
+        [
+          59,
+          38
+        ],
+        [
+          40,
+          11
+        ],
+        [
+          37,
+          39
+        ],
+        [
+          9,
+          62
+        ],
+        [
+          64,
+          61
+        ],
+        [
+          8,
+          15
+        ],
+        [
+          18,
+          38
+        ],
+        [
+          55,
+          12
+        ],
+        [
+          54,
+          42
+        ],
+        [
+          14,
+          44
+        ],
+        [
+          44,
+          42
+        ],
+        [
+          43,
+          45
+        ],
+        [
+          41,
+          20
+        ],
+        [
+          35,
+          24
+        ],
+        [
+          26,
+          30
+        ],
+        [
+          65,
+          63
+        ],
+        [
+          54,
+          62
+        ],
+        [
+          17,
+          30
+        ],
+        [
+          24,
+          38
+        ],
+        [
+          50,
+          46
+        ],
+        [
+          12,
+          16
+        ],
+        [
+          3,
+          32
+        ],
+        [
+          62,
+          32
+        ],
+        [
+          36,
+          45
+        ],
+        [
+          4,
+          35
+        ],
+        [
+          10,
+          30
+        ],
+        [
+          42,
+          26
+        ],
+        [
+          46,
+          25
+        ],
+        [
+          44,
+          5
+        ],
+        [
+          67,
+          28
+        ]
+      ],
+      "solution": false,
+      "solvable": false,
+      "difficulty": {
+        "num_courses": [
+          50,
+          100
+        ],
+        "num_prerequisites": [
+          4,
+          5
+        ],
+        "cycle_length": [
+          5,
+          6
+        ]
+      }
+    }
+  }
+}

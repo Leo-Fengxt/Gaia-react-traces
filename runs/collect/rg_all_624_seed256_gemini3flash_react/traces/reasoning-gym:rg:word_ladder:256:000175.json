@@ -1,0 +1,891 @@
+{
+  "task_id": "reasoning-gym:rg:word_ladder:256:000175",
+  "question": "Transform the word ladder 'WEIR' to 'DOWN' by changing one letter at a time.\nProvide your answer as a comma-separated sequence of uppercase letters without spaces.\nEach step must be a valid English word.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I need to find the shortest path between 'WEIR' and 'DOWN' using a word ladder algorithm. I will use Python and a common word list to solve this.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import collections\\n\\ndef find_path(start, end):\\n    words = set()\\n    # Try reading from a common dictionary file or use a small subset for testing\\n    try:\\n        with open('/usr/share/dict/words', 'r') as f:\\n            words = {line.strip().upper() for line in f if len(line.strip()) == 4}\\n    except FileNotFoundError:\\n        # Fallback list if the dictionary isn't available\\n        words = {start, end}\\n\\n    if end not in words:\\n        words.add(end)\\n\\n    queue = collections.deque([[start]])\\n    visited = {start}\\n\\n    while queue:\\n        path = queue.popleft()\\n        current = path[-1]\\n        if current == end:\\n            return path\\n\\n        for i in range(len(current)):\\n            for char in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':\\n                next_word = current[:i] + char + current[i+1:]\\n                if next_word in words and next_word not in visited:\\n                    visited.add(next_word)\\n                    queue.append(path + [next_word])\\n    return None\\n\\nprint(find_path('WEIR', 'DOWN'))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.35s\n\nOutput:\nNone\n",
+      "raw_response": "Thought: I need to find the shortest path between 'WEIR' and 'DOWN' using a word ladder algorithm. I will use Python and a common word list to solve this.\nAction: execute_python\nAction Input: {\"code\": \"import collections\\n\\ndef find_path(start, end):\\n    words = set()\\n    # Try reading from a common dictionary file or use a small subset for testing\\n    try:\\n        with open('/usr/share/dict/words', 'r') as f:\\n            words = {line.strip().upper() for line in f if len(line.strip()) == 4}\\n    except FileNotFoundError:\\n        # Fallback list if the dictionary isn't available\\n        words = {start, end}\\n\\n    if end not in words:\\n        words.add(end)\\n\\n    queue = collections.deque([[start]])\\n    visited = {start}\\n\\n    while queue:\\n        path = queue.popleft()\\n        current = path[-1]\\n        if current == end:\\n            return path\\n\\n        for i in range(len(current)):\\n            for char in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':\\n                next_word = current[:i] + char + current[i+1:]\\n                if next_word in words and next_word not in visited:\\n                    visited.add(next_word)\\n                    queue.append(path + [next_word])\\n    return None\\n\\nprint(find_path('WEIR', 'DOWN'))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 835,
+        "completion_tokens": 448,
+        "total_tokens": 1283
+      },
+      "timestamp": "2026-01-31T18:29:18.118482+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The previous attempt failed to find a path, likely due to a limited dictionary. I will search for common 4-letter word lists or a specific word ladder solver online to find a valid path between WEIR and DOWN.",
+      "action": "web_search",
+      "action_input": "{\"query\": \"word ladder WEIR to DOWN\"}",
+      "observation": "EXA requestId: a1b8413e3c7dfec26b25e5ed97563580 | EXA costDollars: 0.039\n\nFound 10 results:\n\n[1] Weaver solution for does, down\n    URL: https://punihaole.com/weaver-solver/solution/does/down/\n    SUMMARY: The webpage provides a solution for the word ladder puzzle transitioning from \"does\" to \"down\" in three moves. While it specifically addresses the \"does\" to \"down\" transition, it does not directly cover the transition from \"weir\" to \"down.\" For the query regarding \"weir\" to \"down,\" you may need to explore additional steps or different words, as the page focuses on the specific ladder involving \"does.\"\n    HIGHLIGHTS:\n      - Weaver solution for does, down\n\n# How to solve Weaver does → down in 3 moves.\n\nThere are many possible solutions to this word ladder. This particular ladder is guaranteed to be the shorted possible solution using official weaver words.\n\nd\n\no\n\ne\n\ns\n\nd\n\no\n\nw\n\ns\n\nd\n\no\n\nw\n\nn\n    SUBPAGES:\n      • Tom \n                             Punihaole\n        URL: https://punihaole.com/\n        Summary: The website for Tom Punihaole features various web projects, including a tool called \"Weaversolver\" designed to solve word ladders, such as transitioning from the word \"WEIR\" to \"DOWN.\" The Weaversolv...\n\n[2] A Prolog solver for the Weaver (word ladder) puzzle - GitHub Gist\n    URL: https://gist.github.com/afvanwoudenberg/9bc4db382a477098574278fc06641cc4\n    Published: 2023-06-01T15:37:50.000Z\n    Author: afvanwoudenberg\n    SUMMARY: The provided Prolog code is a solver for the Weaver (word ladder) puzzle, which aims to find a sequence of words that transforms a starting word into a goal word by changing one letter at a time. The specific example you are interested in is transforming \"WEIR\" to \"DOWN\". \n\nThe code defines a predicate `weaver(Start, Goal, Solution)` that takes a starting word and a goal word, and computes a solution using the A* search algorithm. It includes helper predicates to count different elements between two lists, which is essential for determining the validity of each step in the word transformation process.\n\nFor your specific query regarding the transformation from \"WEIR\" to \"DOWN\", you would need to run this Prolog code with \"WEIR\" as the starting point and \"DOWN\" as the goal to find the sequence of words that connects them. The solver will generate the necessary steps based on the rules defined in the code. \n\nYou can access the full code [here](https://gist.github.com/afvanwoudenberg/9bc4db382a) for implementation and testing.\n    HIGHLIGHTS:\n      - - Embed\nEmbed this gist in your website.\n- Share\nCopy sharable link for this gist.\n- Clone via HTTPS\nClone using the web URL.\n- Learn more about clone URLs \n\nClone this repository at <script src=\"https://gist.github.com/afvanwoudenberg/9bc4db382a477098574278fc06641cc4.js\"></script>\n\nSave afvanwoudenberg/9bc4db382a477098574278fc06641cc4 to your computer and use it in GitHub Desktop.\n\n Download ZIP \n\nA Prolog solver for the Weaver (word ladder) puzzle\n\n Raw \n\n **weaver.pl**\n      - | | |\n| --- | --- |\n| | % A Prolog solver for the Weaver (word ladder) puzzle |\n| | % https://wordwormdormdork.com/ |\n| | |\n| | :\\- dynamicgoal/1. |\n| | |\n| | weaver(Start, Goal, Solution) :- |\n| | retractall(goal(\\_)), |\n| | assert(goal(Goal)), |\n| | a\\_star(Start, Solution). |\n| | |\n| | % Helper predicates |\n| | count\\_different\\_elements(\\[\\], \\[\\], 0). |\n| | count\\_different\\_elements(\\[X\\|Xs\\], \\[Y\\|Ys\\], N) :- |\n| | X\\\\=Y, |\n| | count\\_different\\_elements(Xs, Ys, M), |\n| | N is M+1. |\n| | ...\n      - This file contains hidden or bidirectional Unicode text that may be interpreted or compiled differently than what appears below. To review, open the file in an editor that reveals hidden Unicode characters.\n Learn more about bidirectional Unicode characters \n\n Show hidden characters\n      - | | cycle\\_check(State, Gval, \\[(State, OldGval) \\| Rest\\]) :- |\n| | Gval Y, !. |\n| | |\n| | % wordlist taken from Weaver's JavaScript source code |\n| | words(\\[ |\n| | aahs, aals, abas, abba, abbe, abed, abet, able, ably, abos, abri, abut, abye, abys, aced, aces, ache, achy, acid, |\n| | acme, acne, acre, acta, acts, acyl, adds, adit, ados, adze, aeon, aero, aery, afar, agar, agas, aged, agee, ager, |\n| | ages, agha, agin, agio, agly, agma, agog, agon, ague, ahed, ahem, ahis, ahoy, aide, aids, ail...\n      - - Star0(0) You must be signed in to star a gist\n- Fork0(0) You must be signed in to fork a gist\n\n- Embed\n\n\n\n\n\n\n\n- Embed\nEmbed this gist in your website.\n- Share\nCopy sharable link for this gist.\n- Clone via HTTPS\nClone using the web URL.\n- Learn more about clone URLs \n\nClone this repository at <script src=\"https://gist.github.com/afvanwoudenberg/9bc4db382a477098574278fc06641cc4.js\"></script>\n\n- Save afvanwoudenberg/9bc4db382a477098574278fc06641cc4 to your computer and use it in GitHub Desktop.\n\n...\n\n[3] Scott Stro-solves's post - Facebook\n    URL: https://www.facebook.com/strosolves/posts/solving-todays-weaver-weaver-is-just-like-the-classic-word-ladder-puzzleyou-",
+      "raw_response": "Thought: The previous attempt failed to find a path, likely due to a limited dictionary. I will search for common 4-letter word lists or a specific word ladder solver online to find a valid path between WEIR and DOWN.\nAction: web_search\nAction Input: {\"query\": \"word ladder WEIR to DOWN\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1213,
+        "completion_tokens": 181,
+        "total_tokens": 1394
+      },
+      "timestamp": "2026-01-31T18:29:20.411825+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "",
+      "action": "",
+      "action_input": "",
+      "observation": "Parse error: Could not parse Thought/Action/Action Input block",
+      "raw_response": "\n",
+      "parse_error": "Could not parse Thought/Action/Action Input block",
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1096,
+        "completion_tokens": 286,
+        "total_tokens": 1382
+      },
+      "timestamp": "2026-01-31T18:30:32.232317+00:00"
+    }
+  ],
+  "final_answer": null,
+  "success": false,
+  "error": "Could not parse Thought/Action/Action Input block",
+  "total_cost": 0.0436568,
+  "total_time": 77.57293391227722,
+  "task": {
+    "task_id": "reasoning-gym:rg:word_ladder:256:000175",
+    "question": "Transform the word ladder 'WEIR' to 'DOWN' by changing one letter at a time.\nProvide your answer as a comma-separated sequence of uppercase letters without spaces.\nEach step must be a valid English word.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "WEIR,WEAR,WEAN,MEAN,MOAN,MOWN,DOWN",
+    "source": "reasoning-gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "word_ladder",
+      "rg_index": 175,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "word_ladder",
+      "source_index": 175,
+      "start_word": "WEIR",
+      "end_word": "DOWN",
+      "word_length": 4,
+      "chain_length": 7,
+      "difficulty": {
+        "word_length": [
+          4,
+          5
+        ]
+      }
+    }
+  }
+}
