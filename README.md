@@ -10,10 +10,13 @@ This repo supports:
 - **`--sources gaia`**
 - **`--sources reasoning-gym`**
 
+Supported backends:
+- Openrouter
+
 Supported tools:
 - Web search and web contents via **EXA**
 - Code sandbox (python) via **E2B**
-- Browser tools via **Browserbase** (not recommended)
+- Browser tools via **Browserbase** (not recommended) (set allowed-tools to "all" to exclude)
 
 ### Install
 
