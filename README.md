@@ -26,7 +26,7 @@ From the repo root:
 cd Gaia-react-traces
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -e ".[e2b]"
 ```
 
 Optional extras:
