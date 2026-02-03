@@ -5,8 +5,6 @@ Standalone **ReAct trace collection** code for:
 - **BBH (modified)** (MCQ → open-ended “GAIA-style”, with `\\boxed{}` answer instruction)
 - **Reasoning Gym** (procedural task generator)
 
-It intentionally excludes other sources (GPQA/MMLU-Pro/XBench/BrowseComp/ART/OSWorld).
-
 ### Install
 
 From the repo root:
