@@ -1,0 +1,1052 @@
+{
+  "task_id": "rg:survo:256:000104",
+  "question": "You have a 7*7 matrix with some positions already filled with numbers and others marked with 0. The matrix is:\n7 0 0 0 2 6 32\n8 0 2 8 0 1 29\n0 3 0 0 3 0 25\n0 0 0 0 0 0 43\n0 0 0 0 0 0 32\n0 3 4 0 0 0 30\n44 25 25 42 29 26 191\nThe last number in each row and column represents the sum of all other numbers in that row or column. You need to fill in the 0 positions using the numbers [9, 7, 6, 9, 8, 6, 9, 6, 5, 1, 1, 5, 4, 7, 4, 3, 3, 8, 2, 8, 9, 6, 2, 9, 7] to satisfy these conditions. Each number can only be used once.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will use a Python script to solve the matrix puzzle by finding the correct placement for the 25 given numbers in the 25 empty cells such that all row and column sums are satisfied.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from itertools import permutations\\n\\ndef solve():\\n    # Matrix representation (6x6 for the numbers, row/col 7 are sums)\\n    # 0 represents empty slots to be filled\\n    grid = [\\n        [7, 0, 0, 0, 2, 6],\\n        [8, 0, 2, 8, 0, 1],\\n        [0, 3, 0, 0, 3, 0],\\n        [0, 0, 0, 0, 0, 0],\\n        [0, 0, 0, 0, 0, 0],\\n        [0, 3, 4, 0, 0, 0]\\n    ]\\n    row_sums = [32, 29, 25, 43, 32, 30]\\n    col_sums = [44, 25, 25, 42, 29, 26]\\n    \\n    available_nums = [9, 7, 6, 9, 8, 6, 9, 6, 5, 1, 1, 5, 4, 7, 4, 3, 3, 8, 2, 8, 9, 6, 2, 9, 7]\\n    available_nums.sort(reverse=True)\\n    \\n    empty_cells = []\\n    for r in range(6):\\n        for c in range(6):\\n            if grid[r][c] == 0:\\n                empty_cells.append((r, c))\\n                \\n    def backtrack(cell_idx, current_nums):\\n        if cell_idx == len(empty_cells):\\n            return True\\n            \\n        r, c = empty_cells[cell_idx]\\n        \\n        # Try unique numbers from available pool\\n        tried = set()\\n        for i in range(len(current_nums)):\\n            val = current_nums[i]\\n            if val in tried:\\n                continue\\n            tried.add(val)\\n            \\n            # Optimization: check row/col sum constraints\\n            # If it's the last zero in a row, it MUST match the target\\n            # Find how many zeros left in row r\\n            zeros_in_row = [idx for idx in range(cell_idx, len(empty_cells)) if empty_cells[idx][0] == r]\\n            zeros_in_col = [idx for idx in range(cell_idx, len(empty_cells)) if empty_cells[idx][1] == c]\\n            \\n            # Current sum check\\n            row_val_sum = sum(grid[r][col] for col in range(6))\\n            col_val_sum = sum(grid[row][c] for row in range(6))\\n            \\n            if row_val_sum + val > row_sums[r]: continue\\n            if col_val_sum + val > col_sums[c]: continue\\n            \\n            if len(zeros_in_row) == 1:\\n                if row_val_sum + val != row_sums[r]: continue\\n            if len(zeros_in_col) == 1:\\n                if col_val_sum + val != col_sums[c]: continue\\n\\n            grid[r][c] = val\\n            if backtrack(cell_idx + 1, current_nums[:i] + current_nums[i+1:]):\\n                return True\\n            grid[r][c] = 0\\n            \\n        return False\\n\\n    if backtrack(0, available_nums):\\n        return grid\\n    return None\\n\\nresult = solve()\\nif result:\\n    for row in result:\\n        print(row)\"}",
+      "observation": "Code executed successfully.\nExecution time: 40.52s\n\nOutput:\n[7, 9, 7, 1, 2, 6]\n[8, 6, 2, 8, 4, 1]\n[8, 3, 3, 7, 3, 1]\n[9, 2, 6, 9, 9, 8]\n[7, 2, 3, 9, 5, 6]\n[5, 3, 4, 8, 6, 4]\n",
+      "raw_response": "Thought: I will use a Python script to solve the matrix puzzle by finding the correct placement for the 25 given numbers in the 25 empty cells such that all row and column sums are satisfied.\nAction: execute_python\nAction Input: {\"code\": \"from itertools import permutations\\n\\ndef solve():\\n    # Matrix representation (6x6 for the numbers, row/col 7 are sums)\\n    # 0 represents empty slots to be filled\\n    grid = [\\n        [7, 0, 0, 0, 2, 6],\\n        [8, 0, 2, 8, 0, 1],\\n        [0, 3, 0, 0, 3, 0],\\n        [0, 0, 0, 0, 0, 0],\\n        [0, 0, 0, 0, 0, 0],\\n        [0, 3, 4, 0, 0, 0]\\n    ]\\n    row_sums = [32, 29, 25, 43, 32, 30]\\n    col_sums = [44, 25, 25, 42, 29, 26]\\n    \\n    available_nums = [9, 7, 6, 9, 8, 6, 9, 6, 5, 1, 1, 5, 4, 7, 4, 3, 3, 8, 2, 8, 9, 6, 2, 9, 7]\\n    available_nums.sort(reverse=True)\\n    \\n    empty_cells = []\\n    for r in range(6):\\n        for c in range(6):\\n            if grid[r][c] == 0:\\n                empty_cells.append((r, c))\\n                \\n    def backtrack(cell_idx, current_nums):\\n        if cell_idx == len(empty_cells):\\n            return True\\n            \\n        r, c = empty_cells[cell_idx]\\n        \\n        # Try unique numbers from available pool\\n        tried = set()\\n        for i in range(len(current_nums)):\\n            val = current_nums[i]\\n            if val in tried:\\n                continue\\n            tried.add(val)\\n            \\n            # Optimization: check row/col sum constraints\\n            # If it's the last zero in a row, it MUST match the target\\n            # Find how many zeros left in row r\\n            zeros_in_row = [idx for idx in range(cell_idx, len(empty_cells)) if empty_cells[idx][0] == r]\\n            zeros_in_col = [idx for idx in range(cell_idx, len(empty_cells)) if empty_cells[idx][1] == c]\\n            \\n            # Current sum check\\n            row_val_sum = sum(grid[r][col] for col in range(6))\\n            col_val_sum = sum(grid[row][c] for row in range(6))\\n     ",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1049,
+        "completion_tokens": 1366,
+        "total_tokens": 2415
+      },
+      "timestamp": "2026-02-02T23:35:46.506130+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The previous Python script successfully found a solution that satisfies all row and column sums using the provided pool of numbers. I will now verify the numbers used against the original pool and format the final 7x7 matrix.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"original_pool = [9, 7, 6, 9, 8, 6, 9, 6, 5, 1, 1, 5, 4, 7, 4, 3, 3, 8, 2, 8, 9, 6, 2, 9, 7]\\nsolved_grid = [\\n    [7, 9, 7, 1, 2, 6],\\n    [8, 6, 2, 8, 4, 1],\\n    [8, 3, 3, 7, 3, 1],\\n    [9, 2, 6, 9, 9, 8],\\n    [7, 2, 3, 9, 5, 6],\\n    [5, 3, 4, 8, 6, 4]\\n]\\nfixed_positions = [\\n    (0, 0), (0, 4), (0, 5),\\n    (1, 0), (1, 2), (1, 3), (1, 5),\\n    (2, 1), (2, 4),\\n    (5, 1), (5, 2)\\n]\\n\\nused_pool_nums = []\\nfor r in range(6):\\n    for c in range(6):\\n        if (r, c) not in fixed_positions:\\n            used_pool_nums.append(solved_grid[r][c])\\n\\nprint(f\\\"Pool: {sorted(original_pool)}\\\")\\nprint(f\\\"Used: {sorted(used_pool_nums)}\\\")\\nprint(f\\\"Match: {sorted(original_pool) == sorted(used_pool_nums)}\\\")\\n\\n# Construct the 7x7 matrix\\nmatrix_7x7 = [row + [sum(row)] for row in solved_grid]\\ncol_sums = [sum(matrix_7x7[r][c] for r in range(6)) for c in range(6)]\\ncol_sums.append(sum(col_sums))\\nmatrix_7x7.append(col_sums)\\n\\nfor row in matrix_7x7:\\n    print(row)\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\nPool: [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 9]\nUsed: [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 9]\nMatch: True\n[7, 9, 7, 1, 2, 6, 32]\n[8, 6, 2, 8, 4, 1, 29]\n[8, 3, 3, 7, 3, 1, 25]\n[9, 2, 6, 9, 9, 8, 43]\n[7, 2, 3, 9, 5, 6, 32]\n[5, 3, 4, 8, 6, 4, 30]\n[44, 25, 25, 42, 29, 26, 191]\n",
+      "raw_response": "Thought: The previous Python script successfully found a solution that satisfies all row and column sums using the provided pool of numbers. I will now verify the numbers used against the original pool and format the final 7x7 matrix.\nAction: execute_python\nAction Input: {\"code\": \"original_pool = [9, 7, 6, 9, 8, 6, 9, 6, 5, 1, 1, 5, 4, 7, 4, 3, 3, 8, 2, 8, 9, 6, 2, 9, 7]\\nsolved_grid = [\\n    [7, 9, 7, 1, 2, 6],\\n    [8, 6, 2, 8, 4, 1],\\n    [8, 3, 3, 7, 3, 1],\\n    [9, 2, 6, 9, 9, 8],\\n    [7, 2, 3, 9, 5, 6],\\n    [5, 3, 4, 8, 6, 4]\\n]\\nfixed_positions = [\\n    (0, 0), (0, 4), (0, 5),\\n    (1, 0), (1, 2), (1, 3), (1, 5),\\n    (2, 1), (2, 4),\\n    (5, 1), (5, 2)\\n]\\n\\nused_pool_nums = []\\nfor r in range(6):\\n    for c in range(6):\\n        if (r, c) not in fixed_positions:\\n            used_pool_nums.append(solved_grid[r][c])\\n\\nprint(f\\\"Pool: {sorted(original_pool)}\\\")\\nprint(f\\\"Used: {sorted(used_pool_nums)}\\\")\\nprint(f\\\"Match: {sorted(original_pool) == sorted(used_pool_nums)}\\\")\\n\\n# Construct the 7x7 matrix\\nmatrix_7x7 = [row + [sum(row)] for row in solved_grid]\\ncol_sums = [sum(matrix_7x7[r][c] for r in range(6)) for c in range(6)]\\ncol_sums.append(sum(col_sums))\\nmatrix_7x7.append(col_sums)\\n\\nfor row in matrix_7x7:\\n    print(row)\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 2148,
+        "completion_tokens": 581,
+        "total_tokens": 2729
+      },
+      "timestamp": "2026-02-02T23:36:31.100251+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "The solution found by the Python script matches all constraints: the row and column sums are correct, and all numbers from the provided pool were used exactly once. I will now format the 7x7 matrix as the final answer.",
+      "action": "finish",
+      "action_input": "\\boxed{7 9 7 1 2 6 32\\n8 6 2 8 4 1 29\\n8 3 3 7 3 1 25\\n9 2 6 9 9 8 43\\n7 2 3 9 5 6 32\\n5 3 4 8 6 4 30\\n44 25 25 42 29 26 191}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The solution found by the Python script matches all constraints: the row and column sums are correct, and all numbers from the provided pool were used exactly once. I will now format the 7x7 matrix as the final answer.\nAction: finish\nAction Input: \\boxed{7 9 7 1 2 6 32\\n8 6 2 8 4 1 29\\n8 3 3 7 3 1 25\\n9 2 6 9 9 8 43\\n7 2 3 9 5 6 32\\n5 3 4 8 6 4 30\\n44 25 25 42 29 26 191}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3077,
+        "completion_tokens": 178,
+        "total_tokens": 3255
+      },
+      "timestamp": "2026-02-02T23:36:32.845320+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{7 9 7 1 2 6 32\\n8 6 2 8 4 1 29\\n8 3 3 7 3 1 25\\n9 2 6 9 9 8 43\\n7 2 3 9 5 6 32\\n5 3 4 8 6 4 30\\n44 25 25 42 29 26 191}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0014774000000000002,
+  "total_time": 54.91817617416382,
+  "task": {
+    "task_id": "rg:survo:256:000104",
+    "question": "You have a 7*7 matrix with some positions already filled with numbers and others marked with 0. The matrix is:\n7 0 0 0 2 6 32\n8 0 2 8 0 1 29\n0 3 0 0 3 0 25\n0 0 0 0 0 0 43\n0 0 0 0 0 0 32\n0 3 4 0 0 0 30\n44 25 25 42 29 26 191\nThe last number in each row and column represents the sum of all other numbers in that row or column. You need to fill in the 0 positions using the numbers [9, 7, 6, 9, 8, 6, 9, 6, 5, 1, 1, 5, 4, 7, 4, 3, 3, 8, 2, 8, 9, 6, 2, 9, 7] to satisfy these conditions. Each number can only be used once.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "7 7 1 9 2 6 32\n8 2 2 8 8 1 29\n5 3 3 4 3 7 25\n9 9 9 8 6 2 43\n9 1 6 5 7 4 32\n6 3 4 8 3 6 30\n44 25 25 42 29 26 191",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "survo",
+      "rg_index": 104,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "survo",
+      "source_idx": 104,
+      "puzzle": [
+        [
+          7,
+          0,
+          0,
+          0,
+          2,
+          6,
+          32
+        ],
+        [
+          8,
+          0,
+          2,
+          8,
+          0,
+          1,
+          29
+        ],
+        [
+          0,
+          3,
+          0,
+          0,
+          3,
+          0,
+          25
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          43
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          32
+        ],
+        [
+          0,
+          3,
+          4,
+          0,
+          0,
+          0,
+          30
+        ],
+        [
+          44,
+          25,
+          25,
+          42,
+          29,
+          26,
+          191
+        ]
+      ],
+      "solution": [
+        [
+          7,
+          7,
+          1,
+          9,
+          2,
+          6,
+          32
+        ],
+        [
+          8,
+          2,
+          2,
+          8,
+          8,
+          1,
+          29
+        ],
+        [
+          5,
+          3,
+          3,
+          4,
+          3,
+          7,
+          25
+        ],
+        [
+          9,
+          9,
+          9,
+          8,
+          6,
+          2,
+          43
+        ],
+        [
+          9,
+          1,
+          6,
+          5,
+          7,
+          4,
+          32
+        ],
+        [
+          6,
+          3,
+          4,
+          8,
+          3,
+          6,
+          30
+        ],
+        [
+          44,
+          25,
+          25,
+          42,
+          29,
+          26,
+          191
+        ]
+      ],
+      "candidate_numbers": [
+        9,
+        7,
+        6,
+        9,
+        8,
+        6,
+        9,
+        6,
+        5,
+        1,
+        1,
+        5,
+        4,
+        7,
+        4,
+        3,
+        3,
+        8,
+        2,
+        8,
+        9,
+        6,
+        2,
+        9,
+        7
+      ],
+      "board_size": 7,
+      "num_empty": 25,
+      "min_num": 1,
+      "max_num": 9,
+      "difficulty": {
+        "board_size": [
+          7,
+          7
+        ],
+        "empty": [
+          25,
+          25
+        ]
+      }
+    }
+  }
+}

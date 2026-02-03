@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gaia-react-data-collector"
+version = "0.1.0"
+description = "Standalone ReAct trace collector for GAIA, modified BBH, and Reasoning Gym."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.0.0",
+  "tqdm",
+  "aiohttp",
+  "python-dotenv",
+  "datasets",
+  "huggingface_hub",
+  "pyyaml",
+]
+
+[project.scripts]
+gaia-react-collect-traces = "gaia_react.collect_traces:run"
+
+[project.optional-dependencies]
+e2b = ["e2b-code-interpreter"]
+browser = ["playwright", "httpx"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

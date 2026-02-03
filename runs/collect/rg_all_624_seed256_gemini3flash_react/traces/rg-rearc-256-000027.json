@@ -1,0 +1,1248 @@
+{
+  "task_id": "rg:rearc:256:000027",
+  "question": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1:\n\nInput:\n2 2 2 9 2 2 2 2 2\n2 2 2 2 2 2 2 2 2\n9 2 2 2 2 2 2 2 9\n2 2 2 2 2 2 2 2 2\n2 4 2 2 2 2 2 2 2\n2 2 2 2 2 2 2 2 2\n2 2 2 2 2 2 2 2 2\n2 2 4 2 2 2 2 2 2\n2 2 2 2 4 2 2 2 1\n2 2 2 2 2 5 2 2 2\n2 2 2 9 2 2 2 2 2\nOutput:\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n9 9 9 9 9 9 9 9 9\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n\nExample 2:\n\nInput:\n4 4 4 4 9 5 4 4 3 4 4 0\n4 4 4 4 4 4 4 4 4 4 2 4\n4 4 4 4 4 4 4 4 4 4 4 4\n4 4 4 4 4 4 4 1 4 4 4 4\n3 4 4 4 4 4 4 4 4 4 4 3\n4 4 4 4 4 4 4 4 4 4 4 6\n4 4 1 4 4 4 4 4 4 4 4 4\n3 4 4 4 4 4 4 4 4 4 4 3\n2 9 4 4 4 4 4 4 4 4 4 4\n4 4 4 4 4 4 4 4 4 4 4 4\n4 4 4 4 4 4 4 4 3 2 4 4\nOutput:\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n3 3 3 3 3 3 3 3 3 3 3 3\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n3 3 3 3 3 3 3 3 3 3 3 3\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n\nExample 3:\n\nInput:\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 1 3 3 3 3 3 6 3 3\n3 3 3 3 3 3 3 3 6 3 3\n3 3 3 1 3 3 3 3 3 3 3\n8 3 3 3 3 3 3 3 3 3 8\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\nOutput:\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n8 8 8 8 8 8 8 8 8 8 8\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n\nExample 4:\n\nInput:\n0 0 0 0 5 0 0 0 0 0 0\n0 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n1 0 7 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 2 0 0 0 0 0 1 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n5 0 0 0 0 0 0 0 0 0 5\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 0 0\n3 0 0 0 5 0 0 0 0 0 0\nOutput:\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n5 5 5 5 5 5 5 5 5 5 5\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n\nExample 5:\n\nInput:\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 7 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 8 5 5 8 5 3 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 3\n5 5 6 0 5 5 5 5 5 5 8 5\nOutput:\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nYour final answer should just be the text output grid itself.\n\nInput:\n6 8 6 8 6 6 6 6 6 6 6 6\n6 6 6 6 6 6 6 6 7 6 6 6\n6 6 6 6 6 6 6 6 6 6 6 6\n8 1 6 6 6 6 6 6 6 6 2 8\n6 6 6 6 6 6 6 6 6 6 6 4\n6 6 6 6 6 9 6 6 6 6 6 6\n6 6 6 6 6 6 6 6 6 6 6 6\n6 6 6 6 6 6 6 6 6 4 6 6\n6 5 6 6 6 6 6 6 5 6 6 6\n6 6 2 6 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 0 6 6\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will analyze the examples to find the common rule. In each example, there's a background color and multiple other colors. One color seems to be chosen to form a cross (row and column) or a specific line pattern. I will use Python to count color frequencies and identify the locations of different colors to find the rule.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def analyze_grid(input_grid, output_grid):\\n    input_rows = input_grid.strip().split('\\\\n')\\n    output_rows = output_grid.strip().split('\\\\n')\\n    in_grid = [row.split() for row in input_rows]\\n    out_grid = [row.split() for row in output_rows]\\n    \\n    # Background color (most frequent in input)\\n    from collections import Counter\\n    flat_in = [c for row in in_grid for c in row]\\n    bg_color = Counter(flat_in).most_common(1)[0][0]\\n    \\n    # Changed colors\\n    changed_coords = []\\n    for r in range(len(in_grid)):\\n        for c in range(len(in_grid[0])):\\n            if in_grid[r][c] != out_grid[r][c]:\\n                changed_coords.append(((r, c), in_grid[r][c], out_grid[r][c]))\\n    \\n    # Output grid color for non-background\\n    out_colors = set(c for row in out_grid for c in row if c != bg_color)\\n    \\n    # Special input colors and their counts/positions\\n    special_in = {}\\n    for r in range(len(in_grid)):\\n        for c in range(len(in_grid[0])):\\n            val = in_grid[r][c]\\n            if val != bg_color:\\n                if val not in special_in: special_in[val] = []\\n                special_in[val].append((r, c))\\n    \\n    return {\\\"bg\\\": bg_color, \\\"out_colors\\\": list(out_colors), \\\"special_in\\\": special_in}\\n\\nex1_in = \\\"2 2 2 9 2 2 2 2 2\\\\n2 2 2 2 2 2 2 2 2\\\\n9 2 2 2 2 2 2 2 9\\\\n2 2 2 2 2 2 2 2 2\\\\n2 4 2 2 2 2 2 2 2\\\\n2 2 2 2 2 2 2 2 2\\\\n2 2 2 2 2 2 2 2 2\\\\n2 2 4 2 2 2 2 2 2\\\\n2 2 2 2 4 2 2 2 1\\\\n2 2 2 2 2 5 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\"\\nex1_out = \\\"2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n9 9 9 9 9 9 9 9 9\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\"\\nprint(\\\"Ex 1:\\\", analyze_grid(ex1_in, ex1_out))\\n\\nex2_in = \\\"4 4 4 4 9 5 4 4 3 4 4 0\\\\n4 4 4 4 4 4 4 4 4 4 2 4\\\\n4 4 4 4 4 4 4 4 4 4 4 4\\\\n4 4 4 4 4 4 4 1 4 4 4 4\\\\n3 4 4 4 4 4 4 4 4 4 4 3\\\\n4 4 4 4 4 4 4 4 4 4 4 6\\\\n4 4 1 4 4 4 4 4 4 4 4 4\\\\n3 4 4 4 4 4 4 4 4 4 4 3\\\\n2 9 4 4 4 4 4 4 4 4 4 4\\\\n4 4 4 4 4 4 4 4 4 4 4 4\\\\n4 4 4 4 4 4 4 4 3 2 4 4\\\"\\nex2_out = \\\"4 4 4 4 4 4 4 4 3 4 4 4\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n3 3 3 3 3 3 3 3 3 3 3 3\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n3 3 3 3 3 3 3 3 3 3 3 3\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\\n4 4 4 4 4 4 4 4 3 4 4 4\\\"\\nprint(\\\"Ex 2:\\\", analyze_grid(ex2_in, ex2_out))\\n\\nex3_in = \\\"3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 1 3 3 3 3 3 6 3 3\\\\n3 3 3 3 3 3 3 3 6 3 3\\\\n3 3 3 1 3 3 3 3 3 3 3\\\\n8 3 3 3 3 3 3 3 3 3 8\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\"\\nex3_out = \\\"3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n8 8 8 8 8 8 8 8 8 8 8\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\\n3 3 3 3 3 3 3 3 3 3 3\\\"\\nprint(\\\"Ex 3:\\\", analyze_grid(ex3_in, ex3_out))\\n\\nex4_in = \\\"0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 3 0 0 0 0 0 0 0 0\\\\n0 0 0 0 0 0 0 0 0 0 0\\\\n1 0 7 0 0 0 0 0 0 0 0\\\\n0 0 0 0 0 0 0 0 0 0 0\\\\n0 2 0 0 0 0 0 1 0 0 0\\\\n0 0 0 0 0 0 0 0 0 0 0\\\\n5 0 0 0 0 0 0 0 0 0 5\\\\n0 0 0 0 0 0 0 0 0 0 0\\\\n0 0 0 0 0 0 0 0 4 0 0\\\\n3 0 0 0 5 0 0 0 0 0 0\\\"\\nex4_out = \\\"0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n5 5 5 5 5 5 5 5 5 5 5\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\\n0 0 0 0 5 0 0 0 0 0 0\\\"\\nprint(\\\"Ex 4:\\\", analyze_grid(ex4_in, ex4_out))\\n\\nex5_in = \\\"5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 5 5 5 7 5 5 5 5 5 5\\\\n5 5 5 5 5 5 5 5 5 5 5 5\\\\n5 5 8 5 5 8 5 3 5 5 5 5\\\\n5 5 5 5 5 5 5 5 5 5 5 5\\\\n5 5 5 5 5 5 5 5 5 5 5 5\\\\n5 5 5 5 5 5 5 5 5 5 5 5\\\\n5 5 5 5 5 5 5 5 5 5 5 3\\\\n5 5 6 0 5 5 5 5 5 5 8 5\\\"\\nex5_out = \\\"5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\\n5 5 6 5 5 5 5 5 5 5 5 5\\\"\\nprint(\\\"Ex 5:\\\", analyze_grid(ex5_in, ex5_out))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.30s\n\nOutput:\nEx 1: {'bg': '2', 'out_colors': ['9'], 'special_in': {'9': [(0, 3), (2, 0), (2, 8), (10, 3)], '4': [(4, 1), (7, 2), (8, 4)], '1': [(8, 8)], '5': [(9, 5)]}}\nEx 2: {'bg': '4', 'out_colors': ['3'], 'special_in': {'9': [(0, 4), (8, 1)], '5': [(0, 5)], '3': [(0, 8), (4, 0), (4, 11), (7, 0), (7, 11), (10, 8)], '0': [(0, 11)], '2': [(1, 10), (8, 0), (10, 9)], '1': [(3, 7), (6, 2)], '6': [(5, 11)]}}\nEx 3: {'bg': '3', 'out_colors': ['8'], 'special_in': {'1': [(4, 2), (6, 3)], '6': [(4, 8), (5, 8)], '8': [(7, 0), (7, 10)]}}\nEx 4: {'bg': '0', 'out_colors': ['5'], 'special_in': {'5': [(0, 4), (7, 0), (7, 10), (10, 4)], '3': [(1, 2), (10, 0)], '1': [(3, 0), (5, 7)], '7': [(3, 2)], '2': [(5, 1)], '4': [(9, 8)]}}\nEx 5: {'bg': '5', 'out_colors': ['6'], 'special_in': {'6': [(0, 2), (8, 2)], '7': [(1, 5)], '8': [(3, 2), (3, 5), (8, 10)], '3': [(3, 7), (7, 11)], '0': [(8, 3)]}}\n",
+      "raw_response": "Thought: I will analyze the examples to find the common rule. In each example, there's a background color and multiple other colors. One color seems to be chosen to form a cross (row and column) or a specific line pattern. I will use Python to count color frequencies and identify the locations of different colors to find the rule.\nAction: execute_python\nAction Input: {\"code\": \"def analyze_grid(input_grid, output_grid):\\n    input_rows = input_grid.strip().split('\\\\n')\\n    output_rows = output_grid.strip().split('\\\\n')\\n    in_grid = [row.split() for row in input_rows]\\n    out_grid = [row.split() for row in output_rows]\\n    \\n    # Background color (most frequent in input)\\n    from collections import Counter\\n    flat_in = [c for row in in_grid for c in row]\\n    bg_color = Counter(flat_in).most_common(1)[0][0]\\n    \\n    # Changed colors\\n    changed_coords = []\\n    for r in range(len(in_grid)):\\n        for c in range(len(in_grid[0])):\\n            if in_grid[r][c] != out_grid[r][c]:\\n                changed_coords.append(((r, c), in_grid[r][c], out_grid[r][c]))\\n    \\n    # Output grid color for non-background\\n    out_colors = set(c for row in out_grid for c in row if c != bg_color)\\n    \\n    # Special input colors and their counts/positions\\n    special_in = {}\\n    for r in range(len(in_grid)):\\n        for c in range(len(in_grid[0])):\\n            val = in_grid[r][c]\\n            if val != bg_color:\\n                if val not in special_in: special_in[val] = []\\n                special_in[val].append((r, c))\\n    \\n    return {\\\"bg\\\": bg_color, \\\"out_colors\\\": list(out_colors), \\\"special_in\\\": special_in}\\n\\nex1_in = \\\"2 2 2 9 2 2 2 2 2\\\\n2 2 2 2 2 2 2 2 2\\\\n9 2 2 2 2 2 2 2 9\\\\n2 2 2 2 2 2 2 2 2\\\\n2 4 2 2 2 2 2 2 2\\\\n2 2 2 2 2 2 2 2 2\\\\n2 2 2 2 2 2 2 2 2\\\\n2 2 4 2 2 2 2 2 2\\\\n2 2 2 2 4 2 2 2 1\\\\n2 2 2 2 2 5 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\"\\nex1_out = \\\"2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n9 9 9 9 9 9 9 9 9\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9 2 2 2 2 2\\\\n2 2 2 9",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3485,
+        "completion_tokens": 3149,
+        "total_tokens": 6634
+      },
+      "timestamp": "2026-02-02T23:32:59.119311+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I will analyze the special color patterns. In each example, the color that forms the output line(s) appears more than once and forms a bounding box or specific alignment. I'll check which special color satisfies the condition of having multiple occurrences and forming the lines.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def check_pattern(special_in, out_colors):\\n    for color, coords in special_in.items():\\n        if color in out_colors:\\n            rows = sorted(set(r for r, c in coords))\\n            cols = sorted(set(c for r, c in coords))\\n            print(f\\\"Color {color}: Rows {rows}, Cols {cols}, Coords {coords}\\\")\\n\\nprint(\\\"Ex 1:\\\")\\ncheck_pattern({'9': [(0, 3), (2, 0), (2, 8), (10, 3)], '4': [(4, 1), (7, 2), (8, 4)], '1': [(8, 8)], '5': [(9, 5)]}, ['9'])\\nprint(\\\"Ex 2:\\\")\\ncheck_pattern({'9': [(0, 4), (8, 1)], '5': [(0, 5)], '3': [(0, 8), (4, 0), (4, 11), (7, 0), (7, 11), (10, 8)], '0': [(0, 11)], '2': [(1, 10), (8, 0), (10, 9)], '1': [(3, 7), (6, 2)], '6': [(5, 11)]}, ['3'])\\nprint(\\\"Ex 3:\\\")\\ncheck_pattern({'1': [(4, 2), (6, 3)], '6': [(4, 8), (5, 8)], '8': [(7, 0), (7, 10)]}, ['8'])\\nprint(\\\"Ex 4:\\\")\\ncheck_pattern({'5': [(0, 4), (7, 0), (7, 10), (10, 4)], '3': [(1, 2), (10, 0)], '1': [(3, 0), (5, 7)], '7': [(3, 2)], '2': [(5, 1)], '4': [(9, 8)]}, ['5'])\\nprint(\\\"Ex 5:\\\")\\ncheck_pattern({'6': [(0, 2), (8, 2)], '7': [(1, 5)], '8': [(3, 2), (3, 5), (8, 10)], '3': [(3, 7), (7, 11)], '0': [(8, 3)]}, ['6'])\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.07s\n\nOutput:\nEx 1:\nColor 9: Rows [0, 2, 10], Cols [0, 3, 8], Coords [(0, 3), (2, 0), (2, 8), (10, 3)]\nEx 2:\nColor 3: Rows [0, 4, 7, 10], Cols [0, 8, 11], Coords [(0, 8), (4, 0), (4, 11), (7, 0), (7, 11), (10, 8)]\nEx 3:\nColor 8: Rows [7], Cols [0, 10], Coords [(7, 0), (7, 10)]\nEx 4:\nColor 5: Rows [0, 7, 10], Cols [0, 4, 10], Coords [(0, 4), (7, 0), (7, 10), (10, 4)]\nEx 5:\nColor 6: Rows [0, 8], Cols [2], Coords [(0, 2), (8, 2)]\n",
+      "raw_response": "Thought: I will analyze the special color patterns. In each example, the color that forms the output line(s) appears more than once and forms a bounding box or specific alignment. I'll check which special color satisfies the condition of having multiple occurrences and forming the lines.\nAction: execute_python\nAction Input: {\"code\": \"def check_pattern(special_in, out_colors):\\n    for color, coords in special_in.items():\\n        if color in out_colors:\\n            rows = sorted(set(r for r, c in coords))\\n            cols = sorted(set(c for r, c in coords))\\n            print(f\\\"Color {color}: Rows {rows}, Cols {cols}, Coords {coords}\\\")\\n\\nprint(\\\"Ex 1:\\\")\\ncheck_pattern({'9': [(0, 3), (2, 0), (2, 8), (10, 3)], '4': [(4, 1), (7, 2), (8, 4)], '1': [(8, 8)], '5': [(9, 5)]}, ['9'])\\nprint(\\\"Ex 2:\\\")\\ncheck_pattern({'9': [(0, 4), (8, 1)], '5': [(0, 5)], '3': [(0, 8), (4, 0), (4, 11), (7, 0), (7, 11), (10, 8)], '0': [(0, 11)], '2': [(1, 10), (8, 0), (10, 9)], '1': [(3, 7), (6, 2)], '6': [(5, 11)]}, ['3'])\\nprint(\\\"Ex 3:\\\")\\ncheck_pattern({'1': [(4, 2), (6, 3)], '6': [(4, 8), (5, 8)], '8': [(7, 0), (7, 10)]}, ['8'])\\nprint(\\\"Ex 4:\\\")\\ncheck_pattern({'5': [(0, 4), (7, 0), (7, 10), (10, 4)], '3': [(1, 2), (10, 0)], '1': [(3, 0), (5, 7)], '7': [(3, 2)], '2': [(5, 1)], '4': [(9, 8)]}, ['5'])\\nprint(\\\"Ex 5:\\\")\\ncheck_pattern({'6': [(0, 2), (8, 2)], '7': [(1, 5)], '8': [(3, 2), (3, 5), (8, 10)], '3': [(3, 7), (7, 11)], '0': [(8, 3)]}, ['6'])\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 7148,
+        "completion_tokens": 656,
+        "total_tokens": 7804
+      },
+      "timestamp": "2026-02-02T23:33:04.102833+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "I will analyze the test input to identify the background color and the coordinates of all special colors. Then, I will apply the rule: the color that appears in a symmetrical pattern or marks the boundaries of the cross/lines will be used to fill those lines.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def analyze_test(input_grid):\\n    rows = input_grid.strip().split('\\\\n')\\n    grid = [row.split() for row in rows]\\n    from collections import Counter\\n    flat = [c for row in grid for c in row]\\n    bg = Counter(flat).most_common(1)[0][0]\\n    special = {}\\n    for r in range(len(grid)):\\n        for c in range(len(grid[0])):\\n            if grid[r][c] != bg:\\n                val = grid[r][c]\\n                if val not in special: special[val] = []\\n                special[val].append((r, c))\\n    return bg, special\\n\\ntest_in = \\\"6 8 6 8 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 7 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n8 1 6 6 6 6 6 6 6 6 2 8\\\\n6 6 6 6 6 6 6 6 6 6 6 4\\\\n6 6 6 6 6 9 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 4 6 6\\\\n6 5 6 6 6 6 6 6 5 6 6 6\\\\n6 6 2 6 6 6 6 6 6 6 6 6\\\\n6 8 6 8 6 6 6 6 6 0 6 6\\\"\\nbg, special = analyze_test(test_in)\\nprint(f\\\"BG: {bg}\\\")\\nfor color, coords in special.items():\\n    rows = sorted(set(r for r, c in coords))\\n    cols = sorted(set(c for r, c in coords))\\n    print(f\\\"Color {color}: Rows {rows}, Cols {cols}, Coords {coords}\\\")\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.07s\n\nOutput:\nBG: 6\nColor 8: Rows [0, 3, 10], Cols [0, 1, 3, 11], Coords [(0, 1), (0, 3), (3, 0), (3, 11), (10, 1), (10, 3)]\nColor 7: Rows [1], Cols [8], Coords [(1, 8)]\nColor 1: Rows [3], Cols [1], Coords [(3, 1)]\nColor 2: Rows [3, 9], Cols [2, 10], Coords [(3, 10), (9, 2)]\nColor 4: Rows [4, 7], Cols [9, 11], Coords [(4, 11), (7, 9)]\nColor 9: Rows [5], Cols [5], Coords [(5, 5)]\nColor 5: Rows [8], Cols [1, 8], Coords [(8, 1), (8, 8)]\nColor 0: Rows [10], Cols [9], Coords [(10, 9)]\n",
+      "raw_response": "Thought: I will analyze the test input to identify the background color and the coordinates of all special colors. Then, I will apply the rule: the color that appears in a symmetrical pattern or marks the boundaries of the cross/lines will be used to fill those lines.\n\nAction: execute_python\nAction Input: {\"code\": \"def analyze_test(input_grid):\\n    rows = input_grid.strip().split('\\\\n')\\n    grid = [row.split() for row in rows]\\n    from collections import Counter\\n    flat = [c for row in grid for c in row]\\n    bg = Counter(flat).most_common(1)[0][0]\\n    special = {}\\n    for r in range(len(grid)):\\n        for c in range(len(grid[0])):\\n            if grid[r][c] != bg:\\n                val = grid[r][c]\\n                if val not in special: special[val] = []\\n                special[val].append((r, c))\\n    return bg, special\\n\\ntest_in = \\\"6 8 6 8 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 7 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n8 1 6 6 6 6 6 6 6 6 2 8\\\\n6 6 6 6 6 6 6 6 6 6 6 4\\\\n6 6 6 6 6 9 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 4 6 6\\\\n6 5 6 6 6 6 6 6 5 6 6 6\\\\n6 6 2 6 6 6 6 6 6 6 6 6\\\\n6 8 6 8 6 6 6 6 6 0 6 6\\\"\\nbg, special = analyze_test(test_in)\\nprint(f\\\"BG: {bg}\\\")\\nfor color, coords in special.items():\\n    rows = sorted(set(r for r, c in coords))\\n    cols = sorted(set(c for r, c in coords))\\n    print(f\\\"Color {color}: Rows {rows}, Cols {cols}, Coords {coords}\\\")\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 8090,
+        "completion_tokens": 609,
+        "total_tokens": 8699
+      },
+      "timestamp": "2026-02-02T23:33:08.396490+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "I have identified that color 8 is the \"special color\" because it has a symmetrical arrangement of coordinates: rows [0, 3, 10] and columns [0, 1, 3, 11], which mirror the patterns seen in the examples. The rule is to fill the rows and columns that contain two or more occurrences of the special color, creating a cross or a grid-like pattern of that color.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def generate_output(input_grid, special_color, bg_color):\\n    rows = input_grid.strip().split('\\\\n')\\n    grid = [row.split() for row in rows]\\n    h, w = len(grid), len(grid[0])\\n    # Identify which rows and columns to fill\\n    row_counts = {}\\n    col_counts = {}\\n    coords = []\\n    for r in range(h):\\n        for c in range(w):\\n            if grid[r][c] == special_color:\\n                row_counts[r] = row_counts.get(r, 0) + 1\\n                col_counts[c] = col_counts.get(c, 0) + 1\\n                coords.append((r, c))\\n    \\n    out_grid = [[bg_color for _ in range(w)] for _ in range(h)]\\n    fill_rows = [r for r, count in row_counts.items() if count >= 2]\\n    fill_cols = [c for c, count in col_counts.items() if count >= 2]\\n    \\n    for r in range(h):\\n        for c in range(w):\\n            if r in fill_rows or c in fill_cols:\\n                out_grid[r][c] = special_color\\n            else:\\n                out_grid[r][c] = bg_color\\n    \\n    # Preserve the original special color dots if they were there?\\n    # Looking at Example 1: (0,3) and (10,3) are kept. Row 2 is filled. Col 3 is filled.\\n    # Example 2: Rows 4 and 7 filled. Col 8 filled.\\n    # Actually, the rule is: fill the row if it has 2+ special dots. Fill the col if it has 2+ special dots.\\n    return \\\"\\\\n\\\".join([\\\" \\\".join(row) for row in out_grid])\\n\\ntest_in = \\\"6 8 6 8 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 7 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n8 1 6 6 6 6 6 6 6 6 2 8\\\\n6 6 6 6 6 6 6 6 6 6 6 4\\\\n6 6 6 6 6 9 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 4 6 6\\\\n6 5 6 6 6 6 6 6 5 6 6 6\\\\n6 6 2 6 6 6 6 6 6 6 6 6\\\\n6 8 6 8 6 6 6 6 6 0 6 6\\\"\\nprint(generate_output(test_in, '8', '6'))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.12s\n\nOutput:\n8 8 8 8 8 8 8 8 8 8 8 8\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n8 8 8 8 8 8 8 8 8 8 8 8\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n8 8 8 8 8 8 8 8 8 8 8 8\n",
+      "raw_response": "Thought: I have identified that color 8 is the \"special color\" because it has a symmetrical arrangement of coordinates: rows [0, 3, 10] and columns [0, 1, 3, 11], which mirror the patterns seen in the examples. The rule is to fill the rows and columns that contain two or more occurrences of the special color, creating a cross or a grid-like pattern of that color.\n\nAction: execute_python\nAction Input: {\"code\": \"def generate_output(input_grid, special_color, bg_color):\\n    rows = input_grid.strip().split('\\\\n')\\n    grid = [row.split() for row in rows]\\n    h, w = len(grid), len(grid[0])\\n    # Identify which rows and columns to fill\\n    row_counts = {}\\n    col_counts = {}\\n    coords = []\\n    for r in range(h):\\n        for c in range(w):\\n            if grid[r][c] == special_color:\\n                row_counts[r] = row_counts.get(r, 0) + 1\\n                col_counts[c] = col_counts.get(c, 0) + 1\\n                coords.append((r, c))\\n    \\n    out_grid = [[bg_color for _ in range(w)] for _ in range(h)]\\n    fill_rows = [r for r, count in row_counts.items() if count >= 2]\\n    fill_cols = [c for c, count in col_counts.items() if count >= 2]\\n    \\n    for r in range(h):\\n        for c in range(w):\\n            if r in fill_rows or c in fill_cols:\\n                out_grid[r][c] = special_color\\n            else:\\n                out_grid[r][c] = bg_color\\n    \\n    # Preserve the original special color dots if they were there?\\n    # Looking at Example 1: (0,3) and (10,3) are kept. Row 2 is filled. Col 3 is filled.\\n    # Example 2: Rows 4 and 7 filled. Col 8 filled.\\n    # Actually, the rule is: fill the row if it has 2+ special dots. Fill the col if it has 2+ special dots.\\n    return \\\"\\\\n\\\".join([\\\" \\\".join(row) for row in out_grid])\\n\\ntest_in = \\\"6 8 6 8 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 7 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n8 1 6 6 6 6 6 6 6 6 2 8\\\\n6 6 6 6 6 6 6 6 6 6 6 4\\\\n6 6 6 6 6 9 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 6 6 6\\\\n6 6 6 6 6 6 6 6 6 4 6 6\\\\n6 5 6",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 8981,
+        "completion_tokens": 869,
+        "total_tokens": 9850
+      },
+      "timestamp": "2026-02-02T23:33:13.883073+00:00"
+    },
+    {
+      "step_num": 5,
+      "thought": "I have determined the rule: the special color (8 in the test case) forms a grid by filling any row or column that contains at least two instances of that color in the input. For the test input, rows 0, 3, 10 and columns 1, 3 each contain two 8s, so they are filled with 8, while all other cells become the background color 6.",
+      "action": "finish",
+      "action_input": "\\boxed{8 8 8 8 8 8 8 8 8 8 8 8\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n8 8 8 8 8 8 8 8 8 8 8 8\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n8 8 8 8 8 8 8 8 8 8 8 8}",
+      "observation": "FINISH",
+      "raw_response": "Thought: I have determined the rule: the special color (8 in the test case) forms a grid by filling any row or column that contains at least two instances of that color in the input. For the test input, rows 0, 3, 10 and columns 1, 3 each contain two 8s, so they are filled with 8, while all other cells become the background color 6.\n\nAction: finish\nAction Input: \\boxed{8 8 8 8 8 8 8 8 8 8 8 8\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n8 8 8 8 8 8 8 8 8 8 8 8\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n8 8 8 8 8 8 8 8 8 8 8 8}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 10134,
+        "completion_tokens": 374,
+        "total_tokens": 10508
+      },
+      "timestamp": "2026-02-02T23:33:17.195910+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{8 8 8 8 8 8 8 8 8 8 8 8\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n8 8 8 8 8 8 8 8 8 8 8 8\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n6 8 6 8 6 6 6 6 6 6 6 6\\n8 8 8 8 8 8 8 8 8 8 8 8}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0060466,
+  "total_time": 34.86040019989014,
+  "task": {
+    "task_id": "rg:rearc:256:000027",
+    "question": "Find the common rule that maps an input grid to an output grid, given the examples below.\n\nExample 1:\n\nInput:\n2 2 2 9 2 2 2 2 2\n2 2 2 2 2 2 2 2 2\n9 2 2 2 2 2 2 2 9\n2 2 2 2 2 2 2 2 2\n2 4 2 2 2 2 2 2 2\n2 2 2 2 2 2 2 2 2\n2 2 2 2 2 2 2 2 2\n2 2 4 2 2 2 2 2 2\n2 2 2 2 4 2 2 2 1\n2 2 2 2 2 5 2 2 2\n2 2 2 9 2 2 2 2 2\nOutput:\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n9 9 9 9 9 9 9 9 9\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n2 2 2 9 2 2 2 2 2\n\nExample 2:\n\nInput:\n4 4 4 4 9 5 4 4 3 4 4 0\n4 4 4 4 4 4 4 4 4 4 2 4\n4 4 4 4 4 4 4 4 4 4 4 4\n4 4 4 4 4 4 4 1 4 4 4 4\n3 4 4 4 4 4 4 4 4 4 4 3\n4 4 4 4 4 4 4 4 4 4 4 6\n4 4 1 4 4 4 4 4 4 4 4 4\n3 4 4 4 4 4 4 4 4 4 4 3\n2 9 4 4 4 4 4 4 4 4 4 4\n4 4 4 4 4 4 4 4 4 4 4 4\n4 4 4 4 4 4 4 4 3 2 4 4\nOutput:\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n3 3 3 3 3 3 3 3 3 3 3 3\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n3 3 3 3 3 3 3 3 3 3 3 3\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n4 4 4 4 4 4 4 4 3 4 4 4\n\nExample 3:\n\nInput:\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 1 3 3 3 3 3 6 3 3\n3 3 3 3 3 3 3 3 6 3 3\n3 3 3 1 3 3 3 3 3 3 3\n8 3 3 3 3 3 3 3 3 3 8\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\nOutput:\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n8 8 8 8 8 8 8 8 8 8 8\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n3 3 3 3 3 3 3 3 3 3 3\n\nExample 4:\n\nInput:\n0 0 0 0 5 0 0 0 0 0 0\n0 0 3 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n1 0 7 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n0 2 0 0 0 0 0 1 0 0 0\n0 0 0 0 0 0 0 0 0 0 0\n5 0 0 0 0 0 0 0 0 0 5\n0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 4 0 0\n3 0 0 0 5 0 0 0 0 0 0\nOutput:\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n5 5 5 5 5 5 5 5 5 5 5\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n0 0 0 0 5 0 0 0 0 0 0\n\nExample 5:\n\nInput:\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 7 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 8 5 5 8 5 3 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 5\n5 5 5 5 5 5 5 5 5 5 5 3\n5 5 6 0 5 5 5 5 5 5 8 5\nOutput:\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n5 5 6 5 5 5 5 5 5 5 5 5\n\n\nBelow is a test input grid. Predict the corresponding output grid by applying the rule you found.\nYour final answer should just be the text output grid itself.\n\nInput:\n6 8 6 8 6 6 6 6 6 6 6 6\n6 6 6 6 6 6 6 6 7 6 6 6\n6 6 6 6 6 6 6 6 6 6 6 6\n8 1 6 6 6 6 6 6 6 6 2 8\n6 6 6 6 6 6 6 6 6 6 6 4\n6 6 6 6 6 9 6 6 6 6 6 6\n6 6 6 6 6 6 6 6 6 6 6 6\n6 6 6 6 6 6 6 6 6 4 6 6\n6 5 6 6 6 6 6 6 5 6 6 6\n6 6 2 6 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 0 6 6\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n8 8 8 8 8 8 8 8 8 8 8 8\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6\n6 8 6 8 6 6 6 6 6 6 6 6",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "rearc",
+      "rg_index": 27,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "rearc",
+      "source_index": 27,
+      "input": [
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          7,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          8,
+          1,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          2,
+          8
+        ],
+        [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          4
+        ],
+        [
+          6,
+          6,
+          6,
+          6,
+          6,
+          9,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          4,
+          6,
+          6
+        ],
+        [
+          6,
+          5,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          5,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          6,
+          2,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          0,
+          6,
+          6
+        ]
+      ],
+      "output": [
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        [
+          6,
+          8,
+          6,
+          8,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ]
+      ],
+      "task_id": "6cdd2623",
+      "rng": 0.17423058636434782,
+      "pso": 0.38045454545454543,
+      "difficulty": {
+        "rng_difficulty_weights": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "pso_difficulty_weights": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,994 @@
+{
+  "task_id": "rg:countdown:256:000364",
+  "question": "Calculate 3883997 using all of these numbers: 287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287.\nEach number may be used at most once.\n\nFinal answer format instructions:\n1. Provide your solution as a arithmetic expression (no '=' sign).\n2. Do not include the target number in the expression.\n3. Use '*' for multiplication.\n4. Use '/' for division.\n5. Do not include any other text or formatting.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I need to find an arithmetic expression using the given numbers (287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287) to equal 3883997. I will use a Python script to search for a combination using meet-in-the-middle or a recursive search.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import itertools\\n\\ndef find_expression(target, numbers):\\n    # This is a large set of numbers for a simple brute force, but let's see if a simple combination works.\\n    # target = 3883997\\n    # numbers = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    # Try to see if it's a product or sum of products\\n    import math\\n    # Factorize 3883997\\n    factors = []\\n    n = 3883997\\n    d = 2\\n    while d * d <= n:\\n        while n % d == 0:\\n            factors.append(d)\\n            n //= d\\n        d += 1\\n    if n > 1: factors.append(n)\\n    return factors\\n\\nprint(find_expression(3883997, [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.29s\n\nOutput:\n[13, 109, 2741]\n",
+      "raw_response": "Thought: I need to find an arithmetic expression using the given numbers (287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287) to equal 3883997. I will use a Python script to search for a combination using meet-in-the-middle or a recursive search.\nAction: execute_python\nAction Input: {\"code\": \"import itertools\\n\\ndef find_expression(target, numbers):\\n    # This is a large set of numbers for a simple brute force, but let's see if a simple combination works.\\n    # target = 3883997\\n    # numbers = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    # Try to see if it's a product or sum of products\\n    import math\\n    # Factorize 3883997\\n    factors = []\\n    n = 3883997\\n    d = 2\\n    while d * d <= n:\\n        while n % d == 0:\\n            factors.append(d)\\n            n //= d\\n        d += 1\\n    if n > 1: factors.append(n)\\n    return factors\\n\\nprint(find_expression(3883997, [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 951,
+        "completion_tokens": 488,
+        "total_tokens": 1439
+      },
+      "timestamp": "2026-02-02T23:47:31.330135+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The previous search for 2741 using the remaining numbers failed because I only considered sum/diff of single numbers. I should allow more complex expressions or try different splits for 1417. Let's use a more comprehensive search for the expression. 1417 * 2741 is the goal. I can also try (287+287+286+284+273) * 2741. Let's find 2741 first.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import itertools\\n\\ndef solve():\\n    nums = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    target = 2741\\n    \\n    # Try (a * b) + c + d ...\\n    for i, j in itertools.combinations(range(len(nums)), 2):\\n        a, b = nums[i], nums[j]\\n        rem = [nums[k] for k in range(len(nums)) if k != i and k != j]\\n        # Try a * b + sum(subset of rem) - sum(other subset of rem)\\n        prod = a * b\\n        # We need sum(subset1) - sum(subset2) = 2741 - prod\\n        diff_target = target - prod\\n        \\n        # Power set of rem is 2^8 = 256, very small\\n        for r in range(len(rem) + 1):\\n            for subset in itertools.combinations(rem, r):\\n                s1 = sum(subset)\\n                rest = [x for x in rem if x not in subset] # Simple case, no overlap issues if we use indices\\n                # However, there are duplicate numbers, so let's use indices\\n                pass\\n        \\n    # Let's just use a recursive search with a few operations\\n    def find_expr(current_nums, target):\\n        if len(current_nums) == 1:\\n            if abs(current_nums[0][0] - target) < 1e-6:\\n                return current_nums[0][1]\\n            return None\\n        \\n        for i, j in itertools.combinations(range(len(current_nums)), 2):\\n            a, a_ex = current_nums[i]\\n            b, b_ex = current_nums[j]\\n            next_nums = [current_nums[k] for k in range(len(current_nums)) if k != i and k != j]\\n            \\n            # Try +, -, *\\n            for val, op in [(a + b, f\\\"({a_ex}+{b_ex})\\\"), (a - b, f\\\"({a_ex}-{b_ex})\\\"), (b - a, f\\\"({b_ex}-{a_ex})\\\"), (a * b, f\\\"({a_ex}*{b_ex})\\\")]:\\n                if find_expr(next_nums + [(val, op)], target):\\n                    return find_expr(next_nums + [(val, op)], target)\\n        return None\\n\\n    # Try to find 2741 with 5 numbers first to keep it fast\\n    for subset_indices in itertools.combinations(range(len(nums)), 5):\\n        subset = [(nums[i], str(nums[i])) for i in subset_indices]\\n        res = find_expr(subset, 2741)\\n        if res:\\n            return res\\n    return \\\"Not found\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 8.72s\n\nOutput:\nNot found\n",
+      "raw_response": "thought\nThe previous search for 2741 using the remaining numbers failed because I only considered sum/diff of single numbers. I should allow more complex expressions or try different splits for 1417. Let's use a more comprehensive search for the expression. 1417 * 2741 is the goal. I can also try (287+287+286+284+273) * 2741. Let's find 2741 first.\n\nAction: execute_python\nAction Input: {\"code\": \"import itertools\\n\\ndef solve():\\n    nums = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    target = 2741\\n    \\n    # Try (a * b) + c + d ...\\n    for i, j in itertools.combinations(range(len(nums)), 2):\\n        a, b = nums[i], nums[j]\\n        rem = [nums[k] for k in range(len(nums)) if k != i and k != j]\\n        # Try a * b + sum(subset of rem) - sum(other subset of rem)\\n        prod = a * b\\n        # We need sum(subset1) - sum(subset2) = 2741 - prod\\n        diff_target = target - prod\\n        \\n        # Power set of rem is 2^8 = 256, very small\\n        for r in range(len(rem) + 1):\\n            for subset in itertools.combinations(rem, r):\\n                s1 = sum(subset)\\n                rest = [x for x in rem if x not in subset] # Simple case, no overlap issues if we use indices\\n                # However, there are duplicate numbers, so let's use indices\\n                pass\\n        \\n    # Let's just use a recursive search with a few operations\\n    def find_expr(current_nums, target):\\n        if len(current_nums) == 1:\\n            if abs(current_nums[0][0] - target) < 1e-6:\\n                return current_nums[0][1]\\n            return None\\n        \\n        for i, j in itertools.combinations(range(len(current_nums)), 2):\\n            a, a_ex = current_nums[i]\\n            b, b_ex = current_nums[j]\\n            next_nums = [current_nums[k] for k in range(len(current_nums)) if k != i and k != j]\\n            \\n            # Try +, -, *\\n            for val, op in [(a + b, f\\\"({a_ex}+{b_ex})\\\"), (a - b, f\\\"({a_ex}-{b_ex})\\\"), (b - a, f\\\"({b_ex}-",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1484,
+        "completion_tokens": 2905,
+        "total_tokens": 4389
+      },
+      "timestamp": "2026-02-02T23:47:48.810141+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "The target number is 3883997, which factors into 13 * 109 * 2741. I will try a different strategy: search for the target directly using a randomized greedy approach and small-scale recursive searches on subsets, as the full space is too large.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import random\\n\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    target = 3883997\\n    \\n    def get_expr(n_list):\\n        if len(n_list) == 1:\\n            return n_list[0]\\n        \\n        for _ in range(100000):\\n            # Pick two random elements\\n            idx1, idx2 = random.sample(range(len(n_list)), 2)\\n            a_val, a_ex = n_list[idx1]\\n            b_val, b_ex = n_list[idx2]\\n            \\n            op = random.choice(['+', '-', '*'])\\n            if op == '+':\\n                res = (a_val + b_val, f\\\"({a_ex}+{b_ex})\\\")\\n            elif op == '-':\\n                res = (a_val - b_val, f\\\"({a_ex}-{b_ex})\\\")\\n            else:\\n                res = (a_val * b_val, f\\\"({a_ex}*{b_ex})\\\")\\n            \\n            new_list = [n_list[i] for i in range(len(n_list)) if i != idx1 and i != idx2]\\n            new_list.append(res)\\n            \\n            # This is a single path. Let's try to reach target with a smaller subset or similar\\n            # Actually, let's just use a more structured search for a * b + c type expressions\\n    \\n    # Try simple: (sum of subset) * (sum of subset) + (sum of subset)\\n    # Or factors. 3883997 / 287 = 13533.09... No.\\n    # 3883997 = 13 * 298769\\n    # 3883997 = 1417 * 2741\\n    # Let's try to find 1417 and 2741 again.\\n    # 1417 = 287 + 287 + 286 + 284 + 273. (Used 5 nums)\\n    # Remaining: 203, 252, 239, 277, 243, 203, 203, 222, 223, 241\\n    # Target: 2741\\n    # 2741 = 203 * 13 + ...? \\n    # Let's try 241 * 11 + 90? No.\\n    # Let's use the 10 remaining numbers to find 2741 with a bit more depth.\\n    \\n    nums_rem = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    memo = {}\\n    def search(current_nums):\\n        state = tuple(sorted([x[0] for x in current_nums]))\\n        if state in memo: return None\\n        \\n        for i in range(len(current_nums)):\\n            if current_nums[i][0] == 2741:\\n                return current_nums[i][1]\\n        \\n        if len(current_nums) <= 5: # Limit depth\\n            return None\\n            \\n        for i, j in itertools.combinations(range(len(current_nums)), 2):\\n            a, a_ex = current_nums[i]\\n            b, b_ex = current_nums[j]\\n            rest = [current_nums[k] for k in range(len(current_nums)) if k != i and k != j]\\n            for val, op_str in [(a+b, f\\\"({a_ex}+{b_ex})\\\"), (a-b, f\\\"({a_ex}-{b_ex})\\\"), (b-a, f\\\"({b_ex}-{a_ex})\\\"), (a*b, f\\\"({a_ex}*{b_ex})\\\")]:\\n                res = search(rest + [(val, op_str)])\\n                if res: return res\\n        memo[state] = False\\n        return None\\n\\nimport itertools\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\nNone\n",
+      "raw_response": "Thought: The target number is 3883997, which factors into 13 * 109 * 2741. I will try a different strategy: search for the target directly using a randomized greedy approach and small-scale recursive searches on subsets, as the full space is too large.\nAction: execute_python\nAction Input: {\"code\": \"import random\\n\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    target = 3883997\\n    \\n    def get_expr(n_list):\\n        if len(n_list) == 1:\\n            return n_list[0]\\n        \\n        for _ in range(100000):\\n            # Pick two random elements\\n            idx1, idx2 = random.sample(range(len(n_list)), 2)\\n            a_val, a_ex = n_list[idx1]\\n            b_val, b_ex = n_list[idx2]\\n            \\n            op = random.choice(['+', '-', '*'])\\n            if op == '+':\\n                res = (a_val + b_val, f\\\"({a_ex}+{b_ex})\\\")\\n            elif op == '-':\\n                res = (a_val - b_val, f\\\"({a_ex}-{b_ex})\\\")\\n            else:\\n                res = (a_val * b_val, f\\\"({a_ex}*{b_ex})\\\")\\n            \\n            new_list = [n_list[i] for i in range(len(n_list)) if i != idx1 and i != idx2]\\n            new_list.append(res)\\n            \\n            # This is a single path. Let's try to reach target with a smaller subset or similar\\n            # Actually, let's just use a more structured search for a * b + c type expressions\\n    \\n    # Try simple: (sum of subset) * (sum of subset) + (sum of subset)\\n    # Or factors. 3883997 / 287 = 13533.09... No.\\n    # 3883997 = 13 * 298769\\n    # 3883997 = 1417 * 2741\\n    # Let's try to find 1417 and 2741 again.\\n    # 1417 = 287 + 287 + 286 + 284 + 273. (Used 5 nums)\\n    # Remaining: 203, 252, 239, 277, 243, 203, 203, 222, 223, 241\\n    # Target: 2741\\n    # 2741 = 203 * 13 + ...? \\n    # Let's try 241 * 11 + 90? No.\\n    # Let's use the 10 remaining numbers to find 2741 with a bit more depth.\\n    \\n    nums_rem = [203, 252, 239, 277, 243, 203, ",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 2368,
+        "completion_tokens": 1202,
+        "total_tokens": 3570
+      },
+      "timestamp": "2026-02-02T23:48:05.378036+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "My previous attempt to find 2741 with a subset of the numbers was too shallow. I will now try to construct the expression $1417 \\times 2741$ more carefully, specifically by attempting to reach 2741 using the remaining 10 numbers with a more efficient search or finding a different factorization for 3883997.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import itertools\\ndef solve():\\n    nums = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    target = 2741\\n    # 2741 / 200 is about 13.7. Let's try to build it as a sum of products or similar.\\n    # Try to find target using a simpler BFS or DFS with limited depth.\\n    def find(current_nums):\\n        # Use a dictionary to store the best way to get a value\\n        possible = { (val, ex): None for val, ex in current_nums }\\n        # Try combinations of 2, 3, 4, 5 numbers\\n        for r in range(2, 6):\\n            for subset_indices in itertools.combinations(range(len(nums)), r):\\n                subset = [nums[i] for i in subset_indices]\\n                # For each subset, find all possible results\\n                def get_all_results(vals):\\n                    if len(vals) == 1:\\n                        return {vals[0]: str(vals[0])}\\n                    res = {}\\n                    for i in range(1, len(vals)):\\n                        for left_subset in itertools.combinations(vals, i):\\n                            right_subset = list(vals)\\n                            for x in left_subset: right_subset.remove(x)\\n                            left_res = get_all_results(left_subset)\\n                            right_res = get_all_results(tuple(right_subset))\\n                            for lv, le in left_res.items():\\n                                for rv, re in right_res.items():\\n                                    res[lv + rv] = f\\\"({le}+{re})\\\"\\n                                    res[lv - rv] = f\\\"({le}-{re})\\\"\\n                                    res[rv - lv] = f\\\"({re}-{le})\\\"\\n                                    res[lv * rv] = f\\\"({le}*{re})\\\"\\n                    return res\\n                results = get_all_results(tuple(subset))\\n                if target in results:\\n                    return results[target]\\n        return None\\n    return find([(n, str(n)) for n in nums])\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 2.90s\n\nOutput:\nNone\n",
+      "raw_response": "Thought: My previous attempt to find 2741 with a subset of the numbers was too shallow. I will now try to construct the expression $1417 \\times 2741$ more carefully, specifically by attempting to reach 2741 using the remaining 10 numbers with a more efficient search or finding a different factorization for 3883997.\nAction: execute_python\nAction Input: {\"code\": \"import itertools\\ndef solve():\\n    nums = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    target = 2741\\n    # 2741 / 200 is about 13.7. Let's try to build it as a sum of products or similar.\\n    # Try to find target using a simpler BFS or DFS with limited depth.\\n    def find(current_nums):\\n        # Use a dictionary to store the best way to get a value\\n        possible = { (val, ex): None for val, ex in current_nums }\\n        # Try combinations of 2, 3, 4, 5 numbers\\n        for r in range(2, 6):\\n            for subset_indices in itertools.combinations(range(len(nums)), r):\\n                subset = [nums[i] for i in subset_indices]\\n                # For each subset, find all possible results\\n                def get_all_results(vals):\\n                    if len(vals) == 1:\\n                        return {vals[0]: str(vals[0])}\\n                    res = {}\\n                    for i in range(1, len(vals)):\\n                        for left_subset in itertools.combinations(vals, i):\\n                            right_subset = list(vals)\\n                            for x in left_subset: right_subset.remove(x)\\n                            left_res = get_all_results(left_subset)\\n                            right_res = get_all_results(tuple(right_subset))\\n                            for lv, le in left_res.items():\\n                                for rv, re in right_res.items():\\n                                    res[lv + rv] = f\\\"({le}+{re})\\\"\\n                                    res[lv - rv] = f\\\"({le}-{re})\\\"\\n                                    res[rv - lv] = f\\\"({re}-{le})\\\"\\n        ",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3592,
+        "completion_tokens": 639,
+        "total_tokens": 4231
+      },
+      "timestamp": "2026-02-02T23:48:10.286805+00:00"
+    },
+    {
+      "step_num": 5,
+      "thought": "I will try a different approach by searching for expressions that directly equal the target 3883997 using a more efficient, randomized construction strategy across all provided numbers.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import random\\nimport time\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    target = 3883997\\n    start_time = time.time()\\n    while time.time() - start_time < 5:\\n        random.shuffle(nums)\\n        stack = [(n, str(n)) for n in nums]\\n        while len(stack) > 1:\\n            i, j = random.sample(range(len(stack)), 2)\\n            if i < j: i, j = j, i\\n            a_v, a_e = stack.pop(i)\\n            b_v, b_e = stack.pop(j)\\n            op = random.choice(['+', '-', '*'])\\n            if op == '+': res = (a_v + b_v, f\\\"({a_e}+{b_e})\\\")\\n            elif op == '-': res = (a_v - b_v, f\\\"({a_e}-{b_e})\\\")\\n            else: res = (a_v * b_v, f\\\"({a_e}*{b_e})\\\")\\n            stack.append(res)\\n            if stack[-1][0] == target:\\n                return stack[-1][1]\\n    # Try building from 1417 * 2741 again with more combinations\\n    # 1417 = (287+287+286+284+273)\\n    # Target: 2741. Try 222*12 + ...?\\n    # 2741 = 203 * 13 + 102. No.\\n    # Let's try to reach 2741 by 241 * 11 + 90 or similar.\\n    # 2741 = 203 * 11 + 508. 508 = 252 + 256. \\n    # 2741 = 222 * 11 + 299.\\n    # Let's try 2741 = 277 * 10 - 29. \\n    # Actually, 2741 = 277 + 243 + 2221? No.\\n    # Try 2741 = 203*10 + 711. 711 = 239 + 252 + 220.\\n    # 711 = 239 + 252 + 220. 222 is close to 220. \\n    # 2741 = 203*10 + 239 + 252 + 247. No.\\n    # Let's use a simpler search for 2741: target = 2741, numbers = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    return \\\"None\\\"\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 5.07s\n\nOutput:\nNone\n",
+      "raw_response": "Thought: I will try a different approach by searching for expressions that directly equal the target 3883997 using a more efficient, randomized construction strategy across all provided numbers.\nAction: execute_python\nAction Input: {\"code\": \"import random\\nimport time\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    target = 3883997\\n    start_time = time.time()\\n    while time.time() - start_time < 5:\\n        random.shuffle(nums)\\n        stack = [(n, str(n)) for n in nums]\\n        while len(stack) > 1:\\n            i, j = random.sample(range(len(stack)), 2)\\n            if i < j: i, j = j, i\\n            a_v, a_e = stack.pop(i)\\n            b_v, b_e = stack.pop(j)\\n            op = random.choice(['+', '-', '*'])\\n            if op == '+': res = (a_v + b_v, f\\\"({a_e}+{b_e})\\\")\\n            elif op == '-': res = (a_v - b_v, f\\\"({a_e}-{b_e})\\\")\\n            else: res = (a_v * b_v, f\\\"({a_e}*{b_e})\\\")\\n            stack.append(res)\\n            if stack[-1][0] == target:\\n                return stack[-1][1]\\n    # Try building from 1417 * 2741 again with more combinations\\n    # 1417 = (287+287+286+284+273)\\n    # Target: 2741. Try 222*12 + ...?\\n    # 2741 = 203 * 13 + 102. No.\\n    # Let's try to reach 2741 by 241 * 11 + 90 or similar.\\n    # 2741 = 203 * 11 + 508. 508 = 252 + 256. \\n    # 2741 = 222 * 11 + 299.\\n    # Let's try 2741 = 277 * 10 - 29. \\n    # Actually, 2741 = 277 + 243 + 2221? No.\\n    # Try 2741 = 203*10 + 711. 711 = 239 + 252 + 220.\\n    # 711 = 239 + 252 + 220. 222 is close to 220. \\n    # 2741 = 203*10 + 239 + 252 + 247. No.\\n    # Let's use a simpler search for 2741: target = 2741, numbers = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    return \\\"None\\\"\\nprint(solve())\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 4253,
+        "completion_tokens": 862,
+        "total_tokens": 5115
+      },
+      "timestamp": "2026-02-02T23:48:19.094368+00:00"
+    },
+    {
+      "step_num": 6,
+      "thought": "I will perform a systematic search for the target value 3883997 using the meet-in-the-middle technique, splitting the 15 numbers into two groups and combining their results to find the exact target.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import itertools\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    target = 3883997\\n    def get_all(subset):\\n        if len(subset) == 1:\\n            return {subset[0]: str(subset[0])}\\n        res = {subset[0]: str(subset[0])}\\n        for i in range(1, len(subset)):\\n            for combo in itertools.combinations(subset, i):\\n                left = combo\\n                right = list(subset)\\n                for x in left: right.remove(x)\\n                left_res = get_all(tuple(left))\\n                right_res = get_all(tuple(right))\\n                for lv, le in left_res.items():\\n                    for rv, re in right_res.items():\\n                        res[lv + rv] = f\\\"({le}+{re})\\\"\\n                        res[lv - rv] = f\\\"({le}-{re})\\\"\\n                        res[lv * rv] = f\\\"({le}*{re})\\\"\\n        return res\\n    # Try simpler construction: 287 * 13533 + rem? No.\\n    # 3883997 / 287 / 287 = 47.15\\n    # 287 * 287 * (252 + 222) / 10? No.\\n    # Let's try 287 * 287 * 47 = 3871433.\\n    # 3883997 - 3871433 = 12564.\\n    # Let's try to find target = a * b + c where a, b, c are sums/products of subsets\\n    # Target is 3883997. Let's try to reach it using 3883997 = 13533 * 287 + 20.\\n    # 13533 / 287 is 47.15.\\n    # Let's look for (287 * 287 + a) * b + c\\n    # 287 * 287 = 82369. 3883997 / 82369 = 47.15.\\n    # (287 * 287 + 241) * 47? No.\\n    # Let's try a simpler approach: use 6 numbers for a product and 9 for the rest.\\n    for r in range(2, 6):\\n        for subset_indices in itertools.combinations(range(len(nums)), r):\\n            subset = [nums[i] for i in subset_indices]\\n            rem = [nums[i] for i in range(len(nums)) if i not in subset_indices]\\n            # ... this is still too much. Let's try small products.\\n    # 1417 * 2741 = 3883997.\\n    # 1417 = 287 + 287 + 286 + 284 + 273.\\n    # 2741 = 203 + 203 + 203 + 252 + 239 + 277 + 243 + 222 + 223 + 241 + ...?\\n    # Sum of rem = 203+252+239+277+243+203+203+222+223+241 = 2506.\\n    # 2506 is very close to 2741! 2741 - 2506 = 235.\\n    # Is any number 235? No, but we have 239, 241, 243.\\n    return sum(nums)\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\n3723\n",
+      "raw_response": "Thought: I will perform a systematic search for the target value 3883997 using the meet-in-the-middle technique, splitting the 15 numbers into two groups and combining their results to find the exact target.\nAction: execute_python\nAction Input: {\"code\": \"import itertools\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    target = 3883997\\n    def get_all(subset):\\n        if len(subset) == 1:\\n            return {subset[0]: str(subset[0])}\\n        res = {subset[0]: str(subset[0])}\\n        for i in range(1, len(subset)):\\n            for combo in itertools.combinations(subset, i):\\n                left = combo\\n                right = list(subset)\\n                for x in left: right.remove(x)\\n                left_res = get_all(tuple(left))\\n                right_res = get_all(tuple(right))\\n                for lv, le in left_res.items():\\n                    for rv, re in right_res.items():\\n                        res[lv + rv] = f\\\"({le}+{re})\\\"\\n                        res[lv - rv] = f\\\"({le}-{re})\\\"\\n                        res[lv * rv] = f\\\"({le}*{re})\\\"\\n        return res\\n    # Try simpler construction: 287 * 13533 + rem? No.\\n    # 3883997 / 287 / 287 = 47.15\\n    # 287 * 287 * (252 + 222) / 10? No.\\n    # Let's try 287 * 287 * 47 = 3871433.\\n    # 3883997 - 3871433 = 12564.\\n    # Let's try to find target = a * b + c where a, b, c are sums/products of subsets\\n    # Target is 3883997. Let's try to reach it using 3883997 = 13533 * 287 + 20.\\n    # 13533 / 287 is 47.15.\\n    # Let's look for (287 * 287 + a) * b + c\\n    # 287 * 287 = 82369. 3883997 / 82369 = 47.15.\\n    # (287 * 287 + 241) * 47? No.\\n    # Let's try a simpler approach: use 6 numbers for a product and 9 for the rest.\\n    for r in range(2, 6):\\n        for subset_indices in itertools.combinations(range(len(nums)), r):\\n            subset = [nums[i] for i in subset_indices]\\n            rem = [nums[i] for i in range(len(nums)) if i not",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 5137,
+        "completion_tokens": 1080,
+        "total_tokens": 6217
+      },
+      "timestamp": "2026-02-02T23:48:31.226704+00:00"
+    },
+    {
+      "step_num": 7,
+      "thought": "I will try to represent 3883997 using a sum and product strategy, specifically checking if the target can be reached by a combination of a subset sum multiplied by a large number plus a remainder. I will also attempt to find 2741 by slightly adjusting the sum of the remaining numbers.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import itertools\\n\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    # Target: 3883997 = 1417 * 2741\\n    # 1417 = 287 + 287 + 286 + 284 + 273\\n    rem = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    target_rem = 2741\\n    # sum(rem) = 2306 (wait, previous sum was wrong? 203+252+239+277+243+203+203+222+223+241 = 2306)\\n    # Let's re-calculate sum(rem): 203*3 + 252 + 239 + 277 + 243 + 222 + 223 + 241 = 609+252+239+277+243+222+223+241 = 2506. Yes, 2506.\\n    # 2741 - 2506 = 235.\\n    # We need to increase the sum by 235. We can change a + to a * or something similar.\\n    # Try to find target_rem = 2741 using rem = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    def find_target(current_nums, target):\\n        import collections\\n        dp = { (1 << i): {current_nums[i]: str(current_nums[i])} for i in range(len(current_nums)) }\\n        for size in range(2, len(current_nums) + 1):\\n            for subset_mask in range(1, 1 << len(current_nums)):\\n                if bin(subset_mask).count('1') != size: continue\\n                for left_mask in range(1, subset_mask):\\n                    if (left_mask & subset_mask) == left_mask:\\n                        right_mask = subset_mask ^ left_mask\\n                        if left_mask > right_mask: continue\\n                        if left_mask in dp and right_mask in dp:\\n                            if subset_mask not in dp: dp[subset_mask] = {}\\n                            for lv, le in dp[left_mask].items():\\n                                for rv, re in dp[right_mask].items():\\n                                    dp[subset_mask][lv + rv] = f\\\"({le}+{re})\\\"\\n                                    dp[subset_mask][lv - rv] = f\\\"({le}-{re})\\\"\\n                                    dp[subset_mask][rv - lv] = f\\\"({re}-{le})\\\"\\n                                    dp[subset_mask][lv * rv] = f\\\"({le}*{re})\\\"\\n                if subset_mask in dp and target in dp[subset_mask]:\\n                    return dp[subset_mask][target]\\n        return None\\n\\n    # 10 numbers is 1024 states, manageable.\\n    res = find_target(rem, 2741)\\n    if res:\\n        return f\\\"({res})*(287+287+286+284+273)\\\"\\n    return \\\"None\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 1.53s\n\nOutput:\n((277-(((252-203)-203)*(239-223))))*(287+287+286+284+273)\n",
+      "raw_response": "Thought: I will try to represent 3883997 using a sum and product strategy, specifically checking if the target can be reached by a combination of a subset sum multiplied by a large number plus a remainder. I will also attempt to find 2741 by slightly adjusting the sum of the remaining numbers.\nAction: execute_python\nAction Input: {\"code\": \"import itertools\\n\\ndef solve():\\n    nums = [287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287]\\n    # Target: 3883997 = 1417 * 2741\\n    # 1417 = 287 + 287 + 286 + 284 + 273\\n    rem = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    target_rem = 2741\\n    # sum(rem) = 2306 (wait, previous sum was wrong? 203+252+239+277+243+203+203+222+223+241 = 2306)\\n    # Let's re-calculate sum(rem): 203*3 + 252 + 239 + 277 + 243 + 222 + 223 + 241 = 609+252+239+277+243+222+223+241 = 2506. Yes, 2506.\\n    # 2741 - 2506 = 235.\\n    # We need to increase the sum by 235. We can change a + to a * or something similar.\\n    # Try to find target_rem = 2741 using rem = [203, 252, 239, 277, 243, 203, 203, 222, 223, 241]\\n    def find_target(current_nums, target):\\n        import collections\\n        dp = { (1 << i): {current_nums[i]: str(current_nums[i])} for i in range(len(current_nums)) }\\n        for size in range(2, len(current_nums) + 1):\\n            for subset_mask in range(1, 1 << len(current_nums)):\\n                if bin(subset_mask).count('1') != size: continue\\n                for left_mask in range(1, subset_mask):\\n                    if (left_mask & subset_mask) == left_mask:\\n                        right_mask = subset_mask ^ left_mask\\n                        if left_mask > right_mask: continue\\n                        if left_mask in dp and right_mask in dp:\\n                            if subset_mask not in dp: dp[subset_mask] = {}\\n                            for lv, le in dp[left_mask].items():\\n                                for rv, re in dp[right_mask].items():\\n                                  ",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 6242,
+        "completion_tokens": 1025,
+        "total_tokens": 7267
+      },
+      "timestamp": "2026-02-02T23:48:37.808179+00:00"
+    },
+    {
+      "step_num": 8,
+      "thought": "I found an expression for the target number 3883997 by factoring it into 1417 and 2741. I constructed 1417 as the sum (287+287+286+284+273) and used a subset of the remaining numbers to form 2741 as (277-(((252-203)-203)*(239-223))).",
+      "action": "finish",
+      "action_input": "\\boxed{(277-(((252-203)-203)*(239-223)))*(287+287+286+284+273)}",
+      "observation": "FINISH",
+      "raw_response": "Thought: I found an expression for the target number 3883997 by factoring it into 1417 and 2741. I constructed 1417 as the sum (287+287+286+284+273) and used a subset of the remaining numbers to form 2741 as (277-(((252-203)-203)*(239-223))).\n\nAction: finish\nAction Input: \\boxed{(277-(((252-203)-203)*(239-223)))*(287+287+286+284+273)}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 7336,
+        "completion_tokens": 165,
+        "total_tokens": 7501
+      },
+      "timestamp": "2026-02-02T23:48:40.900777+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{(277-(((252-203)-203)*(239-223)))*(287+287+286+284+273)}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0064827,
+  "total_time": 72.94448232650757,
+  "task": {
+    "task_id": "rg:countdown:256:000364",
+    "question": "Calculate 3883997 using all of these numbers: 287, 203, 286, 252, 239, 277, 243, 203, 203, 222, 223, 284, 241, 273, 287.\nEach number may be used at most once.\n\nFinal answer format instructions:\n1. Provide your solution as a arithmetic expression (no '=' sign).\n2. Do not include the target number in the expression.\n3. Use '*' for multiplication.\n4. Use '/' for division.\n5. Do not include any other text or formatting.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "277*287*(243*(284 - 223 - 241 + 222) - 239 - 252 + 203)/203 + 203 - 287 - 286 + 273",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "countdown",
+      "rg_index": 364,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "countdown",
+      "source_index": 364,
+      "numbers": [
+        287,
+        203,
+        286,
+        252,
+        239,
+        277,
+        243,
+        203,
+        203,
+        222,
+        223,
+        284,
+        241,
+        273,
+        287
+      ],
+      "target": 3883997,
+      "expression": "277*287*(243*(284 - 223 - 241 + 222) - 239 - 252 + 203)/203 + 203 - 287 - 286 + 273",
+      "difficulty": {
+        "numbers": [
+          12,
+          15
+        ],
+        "target": [
+          5000,
+          1000000000000
+        ],
+        "value": [
+          200,
+          300
+        ]
+      }
+    }
+  }
+}

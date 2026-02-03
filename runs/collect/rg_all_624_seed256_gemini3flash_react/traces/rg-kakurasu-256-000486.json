@@ -1,0 +1,1119 @@
+{
+  "task_id": "rg:kakurasu:256:000486",
+  "question": "Here's a 9 x 9 Kukurasu logic puzzle. You need to place 1s in the grid so that the weighted sums match the constraints. Row sums: [1, 11, 7, 16, 9, 25, 3, 5, 6]. Column sums: [9, 6, 7, 14, 8, 17, 7, 6, 9].\n1. Rules:\n  1. Each cell can be filled with either a 1 or an 0.\n  2. A 1 in the jth position of a row contributes j points to that row's sum.\n  3. A 1 in the ith position of a column contributes i points to that column's sum.\n  4. The weighted sum of each row must equal its constraint value.\n  5. The weighted sum of each column must equal its constraint value.\n2. Input:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will write a Python script using the `z3` library or a backtracking algorithm to solve the 9x9 Kukurasu puzzle by finding binary values for each cell that satisfy the given weighted row and column sum constraints.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from z3 import *\\n\\ndef solve_kukurasu():\\n    row_sums = [1, 11, 7, 16, 9, 25, 3, 5, 6]\\n    col_sums = [9, 6, 7, 14, 8, 17, 7, 6, 9]\\n    n = 9\\n\\n    # Variables\\n    grid = [[Int(f'x_{i}_{j}') for j in range(n)] for i in range(n)]\\n\\n    solver = Solver()\\n\\n    # Constraints: each cell is 0 or 1\\n    for i in range(n):\\n        for j in range(n):\\n            solver.add(Or(grid[i][j] == 0, grid[i][j] == 1))\\n\\n    # Row sum constraints\\n    for i in range(n):\\n        solver.add(Sum([grid[i][j] * (j + 1) for j in range(n)]) == row_sums[i])\\n\\n    # Column sum constraints\\n    for j in range(n):\\n        solver.add(Sum([grid[i][j] * (i + 1) for i in range(n)]) == col_sums[j])\\n\\n    if solver.check() == sat:\\n        m = solver.model()\\n        result = [[m.evaluate(grid[i][j]).as_long() for j in range(n)] for i in range(n)]\\n        return result\\n    else:\\n        return None\\n\\nsolution = solve_kukurasu()\\nif solution:\\n    for row in solution:\\n        print(' '.join(map(str, row)))\\nelse:\\n    print('No solution found')\"}",
+      "observation": "Code execution failed.\nExecution time: 0.48s\n\nOutput:\n(no output)\n\nError:\n---------------------------------------------------------------------------ModuleNotFoundError                       Traceback (most recent call last)Cell In[1], line 6\n      3 import os; os.environ['E2B_SANDBOX_ID'] = 'iqwk2ge46ytyyw2ub6urk'\n      4 import os; os.environ['E2B_TEMPLATE_ID'] = 'nlhz8vlwyupq845jsdg9'\n----> 6 from z3 import *\n      8 def solve_kukurasu():\n      9     row_sums = [1, 11, 7, 16, 9, 25, 3, 5, 6]\nModuleNotFoundError: No module named 'z3'",
+      "raw_response": "Thought: I will write a Python script using the `z3` library or a backtracking algorithm to solve the 9x9 Kukurasu puzzle by finding binary values for each cell that satisfy the given weighted row and column sum constraints.\nAction: execute_python\nAction Input: {\"code\": \"from z3 import *\\n\\ndef solve_kukurasu():\\n    row_sums = [1, 11, 7, 16, 9, 25, 3, 5, 6]\\n    col_sums = [9, 6, 7, 14, 8, 17, 7, 6, 9]\\n    n = 9\\n\\n    # Variables\\n    grid = [[Int(f'x_{i}_{j}') for j in range(n)] for i in range(n)]\\n\\n    solver = Solver()\\n\\n    # Constraints: each cell is 0 or 1\\n    for i in range(n):\\n        for j in range(n):\\n            solver.add(Or(grid[i][j] == 0, grid[i][j] == 1))\\n\\n    # Row sum constraints\\n    for i in range(n):\\n        solver.add(Sum([grid[i][j] * (j + 1) for j in range(n)]) == row_sums[i])\\n\\n    # Column sum constraints\\n    for j in range(n):\\n        solver.add(Sum([grid[i][j] * (i + 1) for i in range(n)]) == col_sums[j])\\n\\n    if solver.check() == sat:\\n        m = solver.model()\\n        result = [[m.evaluate(grid[i][j]).as_long() for j in range(n)] for i in range(n)]\\n        return result\\n    else:\\n        return None\\n\\nsolution = solve_kukurasu()\\nif solution:\\n    for row in solution:\\n        print(' '.join(map(str, row)))\\nelse:\\n    print('No solution found')\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1160,
+        "completion_tokens": 1010,
+        "total_tokens": 2170
+      },
+      "timestamp": "2026-02-02T23:52:50.068155+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "Since the `z3` library is not available, I will rewrite the script using a backtracking algorithm or a standard constraint satisfaction approach to solve the 9x9 Kukurasu puzzle and print the resulting grid.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve_kukurasu():\\n    row_sums = [1, 11, 7, 16, 9, 25, 3, 5, 6]\\n    col_sums = [9, 6, 7, 14, 8, 17, 7, 6, 9]\\n    n = 9\\n\\n    # Pre-calculate possible combinations for each row sum\\n    def get_combinations(target, n):\\n        results = []\\n        def backtrack(idx, current_sum, current_comb):\\n            if idx == n:\\n                if current_sum == target:\\n                    results.append(list(current_comb))\\n                return\\n            # Option 0\\n            current_comb.append(0)\\n            backtrack(idx + 1, current_sum, current_comb)\\n            current_comb.pop()\\n            # Option 1\\n            if current_sum + (idx + 1) <= target:\\n                current_comb.append(1)\\n                backtrack(idx + 1, current_sum + (idx + 1), current_comb)\\n                current_comb.pop()\\n\\n        backtrack(0, 0, [])\\n        return results\\n\\n    row_options = [get_combinations(rs, n) for rs in row_sums]\\n\\n    grid = [None] * n\\n    current_col_sums = [0] * n\\n\\n    def solve(row_idx):\\n        if row_idx == n:\\n            if all(current_col_sums[j] == col_sums[j] for j in range(n)):\\n                return True\\n            return False\\n\\n        for opt in row_options[row_idx]:\\n            # Check if this row option is compatible with column constraints\\n            valid = True\\n            for j in range(n):\\n                new_col_sum = current_col_sums[j] + opt[j] * (row_idx + 1)\\n                if new_col_sum > col_sums[j]:\\n                    valid = False\\n                    break\\n                # Heuristic: if remaining rows can't reach the target col sum\\n                remaining_max = sum(k + 1 for k in range(row_idx + 1, n))\\n                if new_col_sum + remaining_max < col_sums[j]:\\n                    valid = False\\n                    break\\n            \\n            if valid:\\n                grid[row_idx] = opt\\n                for j in range(n):\\n                    current_col_sums[j] += opt[j] * (row_idx + 1)\\n                if solve(row_idx + 1):\\n                    return True\\n                for j in range(n):\\n                    current_col_sums[j] -= opt[j] * (row_idx + 1)\\n        return False\\n\\n    if solve(0):\\n        return grid\\n    return None\\n\\nsolution = solve_kukurasu()\\nif solution:\\n    for row in solution:\\n        print(' '.join(map(str, row)))\\nelse:\\n    print('No solution found')\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\n1 0 0 0 0 0 0 0 0\n0 0 0 0 1 1 0 0 0\n0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 1 0 1\n0 0 0 0 0 0 0 0 1\n0 1 0 1 1 1 0 1 0\n0 0 1 0 0 0 0 0 0\n1 0 0 1 0 0 0 0 0\n0 0 0 0 0 1 0 0 0\n",
+      "raw_response": "Thought: Since the `z3` library is not available, I will rewrite the script using a backtracking algorithm or a standard constraint satisfaction approach to solve the 9x9 Kukurasu puzzle and print the resulting grid.\nAction: execute_python\nAction Input: {\"code\": \"def solve_kukurasu():\\n    row_sums = [1, 11, 7, 16, 9, 25, 3, 5, 6]\\n    col_sums = [9, 6, 7, 14, 8, 17, 7, 6, 9]\\n    n = 9\\n\\n    # Pre-calculate possible combinations for each row sum\\n    def get_combinations(target, n):\\n        results = []\\n        def backtrack(idx, current_sum, current_comb):\\n            if idx == n:\\n                if current_sum == target:\\n                    results.append(list(current_comb))\\n                return\\n            # Option 0\\n            current_comb.append(0)\\n            backtrack(idx + 1, current_sum, current_comb)\\n            current_comb.pop()\\n            # Option 1\\n            if current_sum + (idx + 1) <= target:\\n                current_comb.append(1)\\n                backtrack(idx + 1, current_sum + (idx + 1), current_comb)\\n                current_comb.pop()\\n\\n        backtrack(0, 0, [])\\n        return results\\n\\n    row_options = [get_combinations(rs, n) for rs in row_sums]\\n\\n    grid = [None] * n\\n    current_col_sums = [0] * n\\n\\n    def solve(row_idx):\\n        if row_idx == n:\\n            if all(current_col_sums[j] == col_sums[j] for j in range(n)):\\n                return True\\n            return False\\n\\n        for opt in row_options[row_idx]:\\n            # Check if this row option is compatible with column constraints\\n            valid = True\\n            for j in range(n):\\n                new_col_sum = current_col_sums[j] + opt[j] * (row_idx + 1)\\n                if new_col_sum > col_sums[j]:\\n                    valid = False\\n                    break\\n                # Heuristic: if remaining rows can't reach the target col sum\\n                remaining_max = sum(k + 1 for k in range(row_idx + 1, n))\\n                if new_co",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 1845,
+        "completion_tokens": 809,
+        "total_tokens": 2654
+      },
+      "timestamp": "2026-02-02T23:52:56.144870+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "The backtracking algorithm successfully found a solution to the 9x9 Kukurasu puzzle. I will now format this solution as required.",
+      "action": "finish",
+      "action_input": "\\boxed{1 0 0 0 0 0 0 0 0\n0 0 0 0 1 1 0 0 0\n0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 1 0 1\n0 0 0 0 0 0 0 0 1\n0 1 0 1 1 1 0 1 0\n0 0 1 0 0 0 0 0 0\n1 0 0 1 0 0 0 0 0\n0 0 0 0 0 1 0 0 0}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The backtracking algorithm successfully found a solution to the 9x9 Kukurasu puzzle. I will now format this solution as required.\nAction: finish\nAction Input: \\boxed{1 0 0 0 0 0 0 0 0\n0 0 0 0 1 1 0 0 0\n0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 1 0 1\n0 0 0 0 0 0 0 0 1\n0 1 0 1 1 1 0 1 0\n0 0 1 0 0 0 0 0 0\n1 0 0 1 0 0 0 0 0\n0 0 0 0 0 1 0 0 0}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 2836,
+        "completion_tokens": 203,
+        "total_tokens": 3039
+      },
+      "timestamp": "2026-02-02T23:52:57.955377+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{1 0 0 0 0 0 0 0 0\n0 0 0 0 1 1 0 0 0\n0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 1 0 1\n0 0 0 0 0 0 0 0 1\n0 1 0 1 1 1 0 1 0\n0 0 1 0 0 0 0 0 0\n1 0 0 1 0 0 0 0 0\n0 0 0 0 0 1 0 0 0}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0013929,
+  "total_time": 14.237864255905151,
+  "task": {
+    "task_id": "rg:kakurasu:256:000486",
+    "question": "Here's a 9 x 9 Kukurasu logic puzzle. You need to place 1s in the grid so that the weighted sums match the constraints. Row sums: [1, 11, 7, 16, 9, 25, 3, 5, 6]. Column sums: [9, 6, 7, 14, 8, 17, 7, 6, 9].\n1. Rules:\n  1. Each cell can be filled with either a 1 or an 0.\n  2. A 1 in the jth position of a row contributes j points to that row's sum.\n  3. A 1 in the ith position of a column contributes i points to that column's sum.\n  4. The weighted sum of each row must equal its constraint value.\n  5. The weighted sum of each column must equal its constraint value.\n2. Input:\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "1 0 0 0 0 0 0 0 0\n0 0 0 0 1 1 0 0 0\n0 0 0 0 0 0 1 0 0\n0 0 0 0 0 0 1 0 1\n0 0 0 0 0 0 0 0 1\n0 1 0 1 1 1 0 1 0\n0 0 1 0 0 0 0 0 0\n1 0 0 1 0 0 0 0 0\n0 0 0 0 0 1 0 0 0",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "kakurasu",
+      "rg_index": 486,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "kakurasu",
+      "source_idx": 486,
+      "n_rows": 9,
+      "n_cols": 9,
+      "p_ones": 0.2,
+      "puzzle": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "row_sums": [
+        1,
+        11,
+        7,
+        16,
+        9,
+        25,
+        3,
+        5,
+        6
+      ],
+      "col_sums": [
+        9,
+        6,
+        7,
+        14,
+        8,
+        17,
+        7,
+        6,
+        9
+      ],
+      "solution": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "difficulty": {
+        "rows": [
+          9,
+          9
+        ],
+        "cols": [
+          9,
+          9
+        ],
+        "p_ones": 0.2
+      }
+    }
+  }
+}

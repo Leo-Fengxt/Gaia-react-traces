@@ -1,0 +1,900 @@
+{
+  "task_id": "rg:ab:256:000593",
+  "question": "A::B is a system with 4 tokens: `A#`, `#A`, `B#` and `#B`.\n\nAn A::B program is a sequence of tokens. Example:\n\n    B# A# #B #A B#\n\nTo *compute* a program, we must rewrite neighbor tokens, using the rules:\n\n    A# #A ... becomes ... nothing\n    A# #B ... becomes ... #B A#\n    B# #A ... becomes ... #A B#\n    B# #B ... becomes ... nothing\n\nIn other words, whenever two neighbor tokens have their '#' facing each-other,\nthey must be rewritten according to the corresponding rule.\n\nNow, consider the following program:\n\n#B #B A# #B A# #A A# A# #A #A B# #B #A #A #B A# B# B# #A B# #B A# #A B# #B #B #A A# #A #A B# B# A# B# B# B# #B B# #A #A B# #B B# A# A# #B B# #A B# B# A# #A A# A# #A B# B# #B A# #A #B #A B# #B A# A# A# #A #B B# #B #A A# #A B# B# #A A# #A #A #B #A A# B# #B #B B# #A B# A# #A #A #A A# A# A# #A B# #B A#\n\nReturn the final state of the program.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def reduce_program(tokens):\\n    left_movers_at_front = []\\n    right_movers_stack = []\\n    for t in tokens:\\n        if t.startswith('#'):\\n            match_found = False\\n            for i in range(len(right_movers_stack) - 1, -1, -1):\\n                if (right_movers_stack[i] == 'A#' and t == '#A') or (right_movers_stack[i] == 'B#' and t == '#B'):\\n                    right_movers_stack.pop(i)\\n                    match_found = True\\n                    break\\n            if not match_found:\\n                left_movers_at_front.append(t)\\n        else:\\n            right_movers_stack.append(t)\\n    return left_movers_at_front + right_movers_stack\\n\\nprogram_str = \\\"#B #B A# #B A# #A A# A# #A #A B# #B #A #A #B A# B# B# #A B# #B A# #A B# #B #B #A A# #A #A B# B# A# B# B# B# #B B# #A #A B# #B B# A# A# #B B# #A B# B# A# #A A# A# #A B# B# #B A# #A #B #A B# #B A# A# A# #A #B B# #B #A A# #A B# B# #A A# #A #A #B #A A# B# #B #B B# #A B# A# #A #A #A A# A# A# #A B# #B A#\\\"\\ntokens = program_str.split()\\nresult = reduce_program(tokens)\\nprint(' '.join(result))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.30s\n\nOutput:\n#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#\n",
+      "raw_response": "Action: execute_python\nAction Input: {\"code\": \"def reduce_program(tokens):\\n    left_movers_at_front = []\\n    right_movers_stack = []\\n    for t in tokens:\\n        if t.startswith('#'):\\n            match_found = False\\n            for i in range(len(right_movers_stack) - 1, -1, -1):\\n                if (right_movers_stack[i] == 'A#' and t == '#A') or (right_movers_stack[i] == 'B#' and t == '#B'):\\n                    right_movers_stack.pop(i)\\n                    match_found = True\\n                    break\\n            if not match_found:\\n                left_movers_at_front.append(t)\\n        else:\\n            right_movers_stack.append(t)\\n    return left_movers_at_front + right_movers_stack\\n\\nprogram_str = \\\"#B #B A# #B A# #A A# A# #A #A B# #B #A #A #B A# B# B# #A B# #B A# #A B# #B #B #A A# #A #A B# B# A# B# B# B# #B B# #A #A B# #B B# A# A# #B B# #A B# B# A# #A A# A# #A B# B# #B A# #A #B #A B# #B A# A# A# #A #B B# #B #A A# #A B# B# #A A# #A #A #B #A A# B# #B #B B# #A B# A# #A #A #A A# A# A# #A B# #B A#\\\"\\ntokens = program_str.split()\\nresult = reduce_program(tokens)\\nprint(' '.join(result))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1151,
+        "completion_tokens": 2499,
+        "total_tokens": 3650
+      },
+      "timestamp": "2026-02-02T23:59:42.608348+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I need to find the specific content or context regarding the sequence provided to determine the correct next step.",
+      "action": "web_search",
+      "action_input": "{\"query\": \"#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#\"}",
+      "observation": "EXA requestId: 23336a714669f720f97f0b3859d283cd | EXA costDollars: 0.049\n\nFound 10 results:\n\n[1] The musical alphabet\n    URL: https://jsmusicschool.wordpress.com/2012/05/21/the-musical-alphabet/\n    Published: 2012-05-21T00:00:00.000Z\n    Author: jsmusicschool\n    SUMMARY: The webpage titled \"The Musical Alphabet\" explains the fundamental concepts of musical notes and their naming conventions. The musical alphabet consists of the letters A, B, C, D, E, F, and G, which represent the basic notes. In addition to these, there are sharps and flats, creating enharmonic notes—pairs of notes that sound the same but are named differently (e.g., A# and Bb).\n\nThe article emphasizes the importance of using the correct note names depending on the musical key. For example, in the F major scale, the note is referred to as Bb instead of A# to maintain one of each letter in the scale. Conversely, in the B major scale, A# is used to avoid confusion with the flat notes.\n\nThis explanation is particularly relevant for understanding why certain notes are named differently in various contexts, which is crucial for musicians when reading and composing music.\n    HIGHLIGHTS:\n      - these are the only letters for chords or notes that you’ll come across\n\nNow in-between these notes you have either sharps or flats:\n\nA, A#, B, C, C#, D, D#, E, F, F#, G, G#, A,\n\nA, Bb, B, C, Db, D, Eb, E, F, Gb, G, Ab, A\n\nAs you can see there are no sharps or flats in-between B and C and E and F\n\nThere are 5 sets of notes that sound the same but have different names:\n\n1.A#, Bb,\n\n2.C#, Db,\n\n3.D#, Eb\n\n4.F#, Gb\n\n5.G#, Ab\n\nThese are called ‘Enharmonic notes’\n\nNow depending on what ‘key’ you’re in de...\n      - RSS \n\n ← Intervals and the differences between your 7th chords \n\n Noel Gallagher strumming – AKA Broken arrow → \n\n## The musical alphabet\n\n21May\n\nHi there,\n\nThanks for reading my blogs so far and hope you’ve found them useful – feel free to ask questions in the comment section\n\nIn today’s blog the musical alphabet will be explained and why sometimes it’s important that a Bb is called a Bb and not an A#\n\nThe musical alphabet is made up of the first 7 letters of our alphabet :\n\nA,B,C,D,E,F AND G\n      - Using your TTSTTTS rule for the major scale (T= Tone which is 2 notes i.e. B to C# or G to A, S=Semitone which is 1 note i.e. E to F or G to G#)\n\nF major contains the notes:\n\nF, G, A, Bb, C, D, E\n\nThe reason we call it Bb in this key and not A# is that you always have one of every letter in the musical alphabet for a major or minor scale.\n\nSo the F major key can easily remembered as just having one ‘flat’ note\n\nLet’s look at B major:\n\nB, C#, D#, E, F#, G#, A#\n      - Posted by jsmusicschool on May 21, 2012 in Music Theory \n\nTags: Chords , flat notes , guitar , music tips , musical alphabet , notes , sharp notes , sharps and flats , theory \n\n ← Intervals and the differences between your 7th chords \n\n Noel Gallagher strumming – AKA Broken arrow → \n\n### Leave a comment Cancel reply \n\nΔ\n\n- Search\n\n- #### Twitter Updates \n\n Tweets by jsmusicschool \n- #### Recent Posts\n      - It makes more sense to call the 7th note in the scale A# and not Bb as otherwise you’d not only have 2 types of B note in the scale, but also be mixing up flats (b) and sharp (#) notes in the same key\n\nThis is one of the reasons we have both sharps and flats in music as it keeps things organised\n\nMany thanks for reading\n\nYou can find other music tips via my twitter feed @jsmusicschool\n\nROCK N ROLL\n\nJames\n\n### Share this:\n\n[2] Can someone explain me why we call Bb instead of A# in this ...\n    URL: https://www.facebook.com/groups/118464738839430/posts/929770357708860/\n    Published: 2022-01-26T00:00:00.000Z\n    SUMMARY: The webpage is a login page for Facebook, indicating that the user is temporarily blocked from accessing a specific feature due to rapid misuse. The page includes options to log in, recover an account, or create a new account. It also provides links to various Facebook services and languages. If you are looking for assistance with your Facebook account or need to understand the temporary block, please refer to the recovery options or contact Facebook support for further help.\n    HIGHLIGHTS:\n      - Meta © 2025\n      - # _Facebook_ \n\n| | |\n| --- | --- |\n| Email or phone | Password |\n| Forgot account? |\n\n Create new account \n\n## You’re Temporarily Blocked\n\n## You’re Temporarily Blocked\n\nIt looks like you were misusing this feature by going too fast. You’ve been temporarily blocked from using it.\n\n Back \n\n- English (US)\n- Español \n- Français (France) \n- 中文(简体) \n- العربية \n- Português (Brasil) \n- Italiano \n- 한국어 \n- Deutsch \n- हिन्दी \n- 日本語\n      - - Sign Up \n- Log In \n- Messenger \n- Facebook Lite \n- Video \n- Meta Pay \n- Meta Store \n- Meta Quest \n- Ray-Ban Meta \n- Meta AI \n- Meta AI more content \n- Instagram \n- Threads \n- Voting Information Center \n- Privacy Policy \n- Consumer Health Privacy \n- Privacy Center \n- About \n- Create ad \n- Create Page \n- Developers \n- Careers \n- Co",
+      "raw_response": "Thought: I need to find the specific content or context regarding the sequence provided to determine the correct next step.\nAction: web_search\nAction Input: {\"query\": \"#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 862,
+        "completion_tokens": 85,
+        "total_tokens": 947
+      },
+      "timestamp": "2026-02-02T23:59:56.554037+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "My previous reduction logic was slightly flawed because it didn't account for the \"commuting\" rule: `A# #B` becomes `#B A#` and `B# #A` becomes `#A B#`. This means that tokens only annihilate if they match exactly (`A#` with `#A` or `B#` with `#B`); otherwise, they swap positions.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    program_str = \\\"#B #B A# #B A# #A A# A# #A #A B# #B #A #A #B A# B# B# #A B# #B A# #A B# #B #B #A A# #A #A B# B# A# B# B# B# #B B# #A #A B# #B B# A# A# #B B# #A B# B# A# #A A# A# #A B# B# #B A# #A #B #A B# #B A# A# A# #A #B B# #B #A A# #A B# B# #A A# #A #A #B #A A# B# #B #B B# #A B# A# #A #A #A A# A# A# #A B# #B A#\\\"\\n    tokens = program_str.split()\\n    # Using a stack-based approach for the A::B system rewrite rules.\\n    # Rules: A# #A -> nothing; B# #B -> nothing; A# #B -> #B A#; B# #A -> #A B#\\n    # This implies all '#X' tokens move left and 'X#' move right.\\n    # When they meet:\\n    # - if same type (A# #A or B# #B), they annihilate.\\n    # - if different type (A# #B or B# #A), they pass through each other.\\n    \\n    left_movers = [] # will store #A and #B\\n    right_movers = [] # will store A# and B#\\n    \\n    for t in tokens:\\n        if t.startswith('#'):\\n            # This is a left mover (#A or #B)\\n            # It tries to pass through or annihilate with existing right movers\\n            annihilated = False\\n            # We look for the rightmost right mover it can reach\\n            # In this system, it must encounter the right movers in order.\\n            # If it matches the type of a right mover, it annihilates it.\\n            # Because it commutes with different types, it essentially interacts \\n            # with the first right-mover of its own type it sees? No.\\n            # It interacts with right-movers from left to right? \\n            # Actually, the standard string rewriting for this (the \\\"bubble sort\\\" behavior):\\n            # Left movers eventually end up on the left, right movers on the right.\\n            # Every #A will annihilate with exactly one A# if available.\\n            # Every #B will annihilate with exactly one B# if available.\\n            # Let's use a count-based approach since they commute.\\n            if t == '#A':\\n                if right_movers and 'A#' in right_movers:\\n                    # Find the last A# and remove it\\n                    for i in range(len(right_movers)-1, -1, -1):\\n                        if right_movers[i] == 'A#':\\n                            right_movers.pop(i)\\n                            annihilated = True\\n                            break\\n                if not annihilated:\\n                    left_movers.append(t)\\n            elif t == '#B':\\n                if right_movers and 'B#' in right_movers:\\n                    for i in range(len(right_movers)-1, -1, -1):\\n                        if right_movers[i] == 'B#':\\n                            right_movers.pop(i)\\n                            annihilated = True\\n                            break\\n                if not annihilated:\\n                    left_movers.append(t)\\n        else:\\n            # Right mover (A# or B#)\\n            right_movers.append(t)\\n            \\n    print(' '.join(left_movers + right_movers))\\n\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\n#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#\n",
+      "raw_response": "Thought: My previous reduction logic was slightly flawed because it didn't account for the \"commuting\" rule: `A# #B` becomes `#B A#` and `B# #A` becomes `#A B#`. This means that tokens only annihilate if they match exactly (`A#` with `#A` or `B#` with `#B`); otherwise, they swap positions.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    program_str = \\\"#B #B A# #B A# #A A# A# #A #A B# #B #A #A #B A# B# B# #A B# #B A# #A B# #B #B #A A# #A #A B# B# A# B# B# B# #B B# #A #A B# #B B# A# A# #B B# #A B# B# A# #A A# A# #A B# B# #B A# #A #B #A B# #B A# A# A# #A #B B# #B #A A# #A B# B# #A A# #A #A #B #A A# B# #B #B B# #A B# A# #A #A #A A# A# A# #A B# #B A#\\\"\\n    tokens = program_str.split()\\n    # Using a stack-based approach for the A::B system rewrite rules.\\n    # Rules: A# #A -> nothing; B# #B -> nothing; A# #B -> #B A#; B# #A -> #A B#\\n    # This implies all '#X' tokens move left and 'X#' move right.\\n    # When they meet:\\n    # - if same type (A# #A or B# #B), they annihilate.\\n    # - if different type (A# #B or B# #A), they pass through each other.\\n    \\n    left_movers = [] # will store #A and #B\\n    right_movers = [] # will store A# and B#\\n    \\n    for t in tokens:\\n        if t.startswith('#'):\\n            # This is a left mover (#A or #B)\\n            # It tries to pass through or annihilate with existing right movers\\n            annihilated = False\\n            # We look for the rightmost right mover it can reach\\n            # In this system, it must encounter the right movers in order.\\n            # If it matches the type of a right mover, it annihilates it.\\n            # Because it commutes with different types, it essentially interacts \\n            # with the first right-mover of its own type it sees? No.\\n            # It interacts with right-movers from left to right? \\n            # Actually, the standard string rewriting for this (the \\\"bubble sort\\\" behavior):\\n            # Left movers eventually end up on the left, right mov",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 11059,
+        "completion_tokens": 1001,
+        "total_tokens": 12060
+      },
+      "timestamp": "2026-02-03T00:00:23.767657+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "The program involves string rewriting rules where `#X` tokens move left and `X#` tokens move right. Tokens of the same type annihilate when they meet, while tokens of different types pass through each other. My simulation correctly accounts for these rules by tracking counts and order.",
+      "action": "finish",
+      "action_input": "\\boxed{#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The program involves string rewriting rules where `#X` tokens move left and `X#` tokens move right. Tokens of the same type annihilate when they meet, while tokens of different types pass through each other. My simulation correctly accounts for these rules by tracking counts and order.\n\nAction: finish\nAction Input: \\boxed{#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 12129,
+        "completion_tokens": 117,
+        "total_tokens": 12246
+      },
+      "timestamp": "2026-02-03T00:00:25.627690+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.054009800000000004,
+  "total_time": 57.75905728340149,
+  "task": {
+    "task_id": "rg:ab:256:000593",
+    "question": "A::B is a system with 4 tokens: `A#`, `#A`, `B#` and `#B`.\n\nAn A::B program is a sequence of tokens. Example:\n\n    B# A# #B #A B#\n\nTo *compute* a program, we must rewrite neighbor tokens, using the rules:\n\n    A# #A ... becomes ... nothing\n    A# #B ... becomes ... #B A#\n    B# #A ... becomes ... #A B#\n    B# #B ... becomes ... nothing\n\nIn other words, whenever two neighbor tokens have their '#' facing each-other,\nthey must be rewritten according to the corresponding rule.\n\nNow, consider the following program:\n\n#B #B A# #B A# #A A# A# #A #A B# #B #A #A #B A# B# B# #A B# #B A# #A B# #B #B #A A# #A #A B# B# A# B# B# B# #B B# #A #A B# #B B# A# A# #B B# #A B# B# A# #A A# A# #A B# B# #B A# #A #B #A B# #B A# A# A# #A #B B# #B #A A# #A B# B# #A A# #A #A #B #A A# B# #B #B B# #A B# A# #A #A #A A# A# A# #A B# #B A#\n\nReturn the final state of the program.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "#B #B #B #A #B #A #A #A #A #A #A B# B# B# B# B# B# B# B# B# B# A# A# A#",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "ab",
+      "rg_index": 593,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "ab",
+      "source_index": 593,
+      "difficulty": {
+        "length": 100
+      }
+    }
+  }
+}

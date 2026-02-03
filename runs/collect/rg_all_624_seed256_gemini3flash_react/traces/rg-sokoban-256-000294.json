@@ -1,0 +1,958 @@
+{
+  "task_id": "rg:sokoban:256:000294",
+  "question": "You are going to solve a 'sokoban' puzzle.\n\n* - The player\n% - The player on a goal\n@ - A box\nX - A goal\n$ - A box on a goal\n+ - A wall\n- - An empty position\n\nYour solution must be a string of characters, ex: LDURRUDL.\n\nHere is your puzzle:\n+ + + + + + + + + + + + + + + + + + +  \n+ + + + + + + + + + + + - + $ + + + +  \n+ + + + $ + - - + - * + - - + + + + +  \n+ + + + + + - - - - - + - @ X + + + +  \n+ + + + + + + @ + - - + - - - - - - +  \n+ + + + - - - X + - - - - - - - - - +  \n+ $ + + - - - - - - - - - - - - - - +  \n+ + + + - - - - - - - - - - - - - - +  \n+ + X @ - + - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - + - - - - - - - - +  \n+ X - - @ - - - - - - X - @ - - @ X +  \n+ - - + - - - - - - - - - - - - - - +  \n+ + - - - - - - - - - - - - - - + + +  \n+ + - - - - - + + - @ - - + + + + + +  \n+ + + + - - - + + - - X + + + + + + +  \n+ + + + + + + + + + + + + + + + + + +\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I need to solve this Sokoban puzzle. I will first parse the grid into a Python representation and then implement a Breadth-First Search (BFS) algorithm to find the shortest path to solve it.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import collections\\n\\ndef solve_sokoban(grid_str):\\n    grid = [list(line.replace(' ', '')) for line in grid_str.strip().split('\\\\n')]\\n    rows = len(grid)\\n    cols = len(grid[0])\\n\\n    player_pos = None\\n    boxes = frozenset()\\n    goals = frozenset()\\n    walls = frozenset()\\n\\n    for r in range(rows):\\n        for c in range(cols):\\n            char = grid[r][c]\\n            if char == '*':\\n                player_pos = (r, c)\\n            elif char == '%':\\n                player_pos = (r, c)\\n                goals |= {(r, c)}\\n            elif char == '@':\\n                boxes |= {(r, c)}\\n            elif char == '$':\\n                boxes |= {(r, c)}\\n                goals |= {(r, c)}\\n            elif char == 'X':\\n                goals |= {(r, c)}\\n            elif char == '+':\\n                walls |= {(r, c)}\\n\\n    start_state = (player_pos, boxes)\\n    queue = collections.deque([(start_state, \\\"\\\")])\\n    visited = {start_state}\\n\\n    while queue:\\n        (r, c), current_boxes = queue.popleft()\\n\\n        if current_boxes == goals:\\n            return \\\"\\\".join(queue[0][1] if not queue else \\\"found\\\") # Placeholder\\n\\n        # Check if all goals are filled\\n        if all(box in goals for box in current_boxes):\\n             # Wait, the above logic is slightly wrong. BFS needs to return path.\\n             pass\\n\\n    return \\\"No solution found\\\"\\n\\n# Redefining solve with proper path return and goal check\\ndef solve_bfs(grid_str):\\n    grid = [list(line.replace(' ', '')) for line in grid_str.strip().split('\\\\n')]\\n    rows, cols = len(grid), len(grid[0])\\n    player_pos, boxes, goals, walls = None, set(), set(), set()\\n    for r in range(rows):\\n        for c in range(cols):\\n            char = grid[r][c]\\n            if char == '*': player_pos = (r, c)\\n            elif char == '%': player_pos = (r, c); goals.add((r, c))\\n            elif char == '@': boxes.add((r, c))\\n            elif char == '$': boxes.add((r, c)); goals.add((r, c))\\n            elif char == 'X': goals.add((r, c))\\n            elif char == '+': walls.add((r, c))\\n    \\n    boxes = frozenset(boxes)\\n    goals = frozenset(goals)\\n    start_state = (player_pos, boxes)\\n    queue = collections.deque([(start_state, \\\"\\\")])\\n    visited = {start_state}\\n\\n    while queue:\\n        (r, c), current_boxes, path = queue.popleft()[0][0], queue[0][0][1], queue.popleft()[1] # This is wrong indexing\\n\\n# Let's rewrite the solver properly in a cleaner way\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [list(line.replace(' ', '')) for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            if grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            if grid[r][c] == '@': b.add((r, c))\\n            if grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            if grid[r][c] == 'X': g.add((r, c))\\n            if grid[r][c] == '+': w.add((r, c))\\n    \\n    b = frozenset(b)\\n    q = collections.deque([(p, b, \\\"\\\")])\\n    v = {(p, b)}\\n    \\n    while q:\\n        (r, c), cur_b, path = q.popleft()\\n        if cur_b == g:\\n            return path\\n        \\n        for dr, dc, move in [(0, 1, 'R'), (0, -1, 'L'), (1, 0, 'D'), (-1, 0, 'U')]:\\n            nr, nc = r + dr, c + dc\\n            if (nr, nc) in w: continue\\n            if (nr, nc) in cur_b:\\n                nnr, nnc = nr + dr, nc + dc\\n                if (nnr, nnc) in w or (nnr, nnc) in cur_b: continue\\n                new_b = set(cur_b)\\n                new_b.remove((nr, nc))\\n                new_b.add((nnr, nnc))\\n                new_b = frozenset(new_b)\\n                if ((nr, nc), new_b) not in v:\\n                    v.add(((nr, nc), new_b))\\n                    q.append(((nr, nc), new_b, path + move))\\n            else:\\n                if ((nr, nc), cur_b) not in v:\\n                    v.add(((nr, nc), cur_b))\\n                    q.append(((nr, nc), cur_b, path + move))\\n    return \\\"None\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code execution failed.\nExecution time: 25.13s\n\nOutput:\n(no output)",
+      "raw_response": "Thought: I need to solve this Sokoban puzzle. I will first parse the grid into a Python representation and then implement a Breadth-First Search (BFS) algorithm to find the shortest path to solve it.\nAction: execute_python\nAction Input: {\"code\": \"import collections\\n\\ndef solve_sokoban(grid_str):\\n    grid = [list(line.replace(' ', '')) for line in grid_str.strip().split('\\\\n')]\\n    rows = len(grid)\\n    cols = len(grid[0])\\n\\n    player_pos = None\\n    boxes = frozenset()\\n    goals = frozenset()\\n    walls = frozenset()\\n\\n    for r in range(rows):\\n        for c in range(cols):\\n            char = grid[r][c]\\n            if char == '*':\\n                player_pos = (r, c)\\n            elif char == '%':\\n                player_pos = (r, c)\\n                goals |= {(r, c)}\\n            elif char == '@':\\n                boxes |= {(r, c)}\\n            elif char == '$':\\n                boxes |= {(r, c)}\\n                goals |= {(r, c)}\\n            elif char == 'X':\\n                goals |= {(r, c)}\\n            elif char == '+':\\n                walls |= {(r, c)}\\n\\n    start_state = (player_pos, boxes)\\n    queue = collections.deque([(start_state, \\\"\\\")])\\n    visited = {start_state}\\n\\n    while queue:\\n        (r, c), current_boxes = queue.popleft()\\n\\n        if current_boxes == goals:\\n            return \\\"\\\".join(queue[0][1] if not queue else \\\"found\\\") # Placeholder\\n\\n        # Check if all goals are filled\\n        if all(box in goals for box in current_boxes):\\n             # Wait, the above logic is slightly wrong. BFS needs to return path.\\n             pass\\n\\n    return \\\"No solution found\\\"\\n\\n# Redefining solve with proper path return and goal check\\ndef solve_bfs(grid_str):\\n    grid = [list(line.replace(' ', '')) for line in grid_str.strip().split('\\\\n')]\\n    rows, cols = len(grid), len(grid[0])\\n    player_pos, boxes, goals, walls = None, set(), set(), set()\\n    for r in range(rows):\\n        for c in range(cols):\\n            char = gri",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1266,
+        "completion_tokens": 1802,
+        "total_tokens": 3068
+      },
+      "timestamp": "2026-02-02T23:43:42.808226+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The previous BFS solver likely timed out due to the large search space. I will optimize the search using A* with a heuristic (sum of distances from boxes to nearest goals) and implement a simple deadlock detection.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n    \\n    b = frozenset(b)\\n    g = frozenset(g)\\n    \\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(abs(bx[0]-gx[0]) + abs(bx[1]-gx[1]) for gx in g)\\n        return h\\n\\n    def is_deadlock(bx, boxes):\\n        if bx in g: return False\\n        r, c = bx\\n        # Simple corner deadlock\\n        adj_w = [(r-1, c) in w or (r+1, c) in w, (r, c-1) in w or (r, c+1) in w]\\n        if (r-1, c) in w and (r, c-1) in w: return True\\n        if (r-1, c) in w and (r, c+1) in w: return True\\n        if (r+1, c) in w and (r, c-1) in w: return True\\n        if (r+1, c) in w and (r, c+1) in w: return True\\n        return False\\n\\n    q = [(get_h(b), 0, p, b, \\\"\\\")]\\n    v = {(p, b)}\\n    \\n    while q:\\n        h, cost, (r, c), cur_b, path = heapq.heappop(q)\\n        if cur_b == g:\\n            return path\\n        \\n        for dr, dc, move in [(0, 1, 'R'), (0, -1, 'L'), (1, 0, 'D'), (-1, 0, 'U')]:\\n            nr, nc = r + dr, c + dc\\n            if (nr, nc) in w: continue\\n            if (nr, nc) in cur_b:\\n                nnr, nnc = nr + dr, nc + dc\\n                if (nnr, nnc) in w or (nnr, nnc) in cur_b: continue\\n                if is_deadlock((nnr, nnc), cur_b): continue\\n                new_b = set(cur_b)\\n                new_b.remove((nr, nc))\\n                new_b.add((nnr, nnc))\\n                new_b = frozenset(new_b)\\n                if ((nr, nc), new_b) not in v:\\n                    v.add(((nr, nc), new_b))\\n                    heapq.heappush(q, (cost + 1 + get_h(new_b), cost + 1, (nr, nc), new_b, path + move))\\n            else:\\n                if ((nr, nc), cur_b) not in v:\\n                    v.add(((nr, nc), cur_b))\\n                    heapq.heappush(q, (cost + 1 + get_h(cur_b), cost + 1, (nr, nc), cur_b, path + move))\\n    return \\\"None\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code execution failed.\nExecution time: 120.00s\n\n\nError:\nExecution timed out after 120s",
+      "raw_response": "Thought: The previous BFS solver likely timed out due to the large search space. I will optimize the search using A* with a heuristic (sum of distances from boxes to nearest goals) and implement a simple deadlock detection.\nAction: execute_python\nAction Input: {\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n    \\n    b = frozenset(b)\\n    g = frozenset(g)\\n    \\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(abs(bx[0]-gx[0]) + abs(bx[1]-gx[1]) for gx in g)\\n        return h\\n\\n    def is_deadlock(bx, boxes):\\n        if bx in g: return False\\n        r, c = bx\\n        # Simple corner deadlock\\n        adj_w = [(r-1, c) in w or (r+1, c) in w, (r, c-1) in w",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3103,
+        "completion_tokens": 1399,
+        "total_tokens": 4502
+      },
+      "timestamp": "2026-02-02T23:44:16.123647+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "The Sokoban puzzle is large, and my previous A* implementation timed out. I will refine the search by improving the heuristic and using a more efficient deadlock detection method to prune the state space.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n\\n    b, g = frozenset(b), frozenset(g)\\n\\n    def is_static_deadlock(r, c):\\n        if (r, c) in g: return False\\n        if ((r-1, c) in w or (r+1, c) in w) and ((r, c-1) in w or (r, c+1) in w): return True\\n        return False\\n\\n    deadlocks = set()\\n    for r in range(R):\\n        for c in range(C):\\n            if (r, c) not in w and is_static_deadlock(r, c):\\n                deadlocks.add((r, c))\\n\\n    dist = {}\\n    for goal in g:\\n        q = [(0, goal)]\\n        dist[goal] = {goal: 0}\\n        while q:\\n            d, (r, c) = heapq.heappop(q)\\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\\n                nr, nc = r + dr, c + dc\\n                if (nr, nc) not in w and (nr, nc) not in dist[goal]:\\n                    dist[goal][(nr, nc)] = d + 1\\n                    heapq.heappush(q, (d + 1, (nr, nc)))\\n\\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(dist[goal].get(bx, 1000) for goal in g)\\n        return h\\n\\n    q = [(get_h(b), 0, p, b, \\\"\\\")]\\n    visited = {(p, b): 0}\\n\\n    while q:\\n        f, cost, (r, c), cur_b, path = heapq.heappop(q)\\n        if cur_b == g: return path\\n        if cost > visited.get((r, c, cur_b), 1000000): continue\\n\\n        for dr, dc, move in [(0, 1, 'R'), (0, -1, 'L'), (1, 0, 'D'), (-1, 0, 'U')]:\\n            nr, nc = r + dr, c + dc\\n            if (nr, nc) in w: continue\\n            if (nr, nc) in cur_b:\\n                nnr, nnc = nr + dr, nc + dc\\n                if (nnr, nnc) in w or (nnr, nnc) in cur_b or (nnr, nnc) in deadlocks: continue\\n                new_b = set(cur_b); new_b.remove((nr, nc)); new_b.add((nnr, nnc)); new_b = frozenset(new_b)\\n                if (nr, nc, new_b) not in visited or cost + 1 < visited[(nr, nc, new_b)]:\\n                    visited[(nr, nc, new_b)] = cost + 1\\n                    heapq.heappush(q, (cost + 1 + get_h(new_b), cost + 1, (nr, nc), new_b, path + move))\\n            else:\\n                if (nr, nc, cur_b) not in visited or cost + 1 < visited[(nr, nc, cur_b)]:\\n                    visited[(nr, nc, cur_b)] = cost + 1\\n                    heapq.heappush(q, (cost + 1 + get_h(cur_b), cost + 1, (nr, nc), cur_b, path + move))\\n    return \\\"None\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code execution failed.\nExecution time: 120.00s\n\n\nError:\nExecution timed out after 120s",
+      "raw_response": "Thought: The Sokoban puzzle is large, and my previous A* implementation timed out. I will refine the search by improving the heuristic and using a more efficient deadlock detection method to prune the state space.\nAction: execute_python\nAction Input: {\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n\\n    b, g = frozenset(b), frozenset(g)\\n\\n    def is_static_deadlock(r, c):\\n        if (r, c) in g: return False\\n        if ((r-1, c) in w or (r+1, c) in w) and ((r, c-1) in w or (r, c+1) in w): return True\\n        return False\\n\\n    deadlocks = set()\\n    for r in range(R):\\n        for c in range(C):\\n            if (r, c) not in w and is_static_deadlock(r, c):\\n                deadlocks.add((",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 4534,
+        "completion_tokens": 1556,
+        "total_tokens": 6090
+      },
+      "timestamp": "2026-02-02T23:46:24.630726+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "The puzzle is too large for a standard A* search within the time limit. I will attempt to solve it by identifying the most direct path for each box to its nearest goal, focusing on the ones closest to the player and goal first to simplify the problem.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n    b, g = frozenset(b), frozenset(g)\\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(abs(bx[0]-gx[0]) + abs(bx[1]-gx[1]) for gx in g)\\n        return h\\n    q = [(get_h(b), 0, p, b, \\\"\\\")]\\n    v = {(p, b)}\\n    import time\\n    start_time = time.time()\\n    while q:\\n        if time.time() - start_time > 20: break\\n        _, cost, (r, c), cur_b, path = heapq.heappop(q)\\n        if cur_b == g: return path\\n        for dr, dc, move in [(0, 1, 'R'), (0, -1, 'L'), (1, 0, 'D'), (-1, 0, 'U')]:\\n            nr, nc = r + dr, c + dc\\n            if (nr, nc) in w: continue\\n            if (nr, nc) in cur_b:\\n                nnr, nnc = nr + dr, nc + dc\\n                if (nnr, nnc) in w or (nnr, nnc) in cur_b: continue\\n                new_b = set(cur_b); new_b.remove((nr, nc)); new_b.add((nnr, nnc)); new_b = frozenset(new_b)\\n                if ((nr, nc), new_b) not in v:\\n                    v.add(((nr, nc), new_b))\\n                    heapq.heappush(q, (cost + 1 + get_h(new_b), cost + 1, (nr, nc), new_b, path + move))\\n            else:\\n                if ((nr, nc), cur_b) not in v:\\n                    v.add(((nr, nc), cur_b))\\n                    heapq.heappush(q, (cost + 1 + get_h(cur_b), cost + 1, (nr, nc), cur_b, path + move))\\n    return \\\"Too complex\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code execution failed.\nExecution time: 11.73s\n\n\nError:\nSandbox error: peer closed connection without sending complete message body (incomplete chunked read)",
+      "raw_response": "Thought: The puzzle is too large for a standard A* search within the time limit. I will attempt to solve it by identifying the most direct path for each box to its nearest goal, focusing on the ones closest to the player and goal first to simplify the problem.\nAction: execute_python\nAction Input: {\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n    b, g = frozenset(b), frozenset(g)\\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(abs(bx[0]-gx[0]) + abs(bx[1]-gx[1]) for gx in g)\\n        return h\\n    q = [(get_h(b), 0, p, b, \\\"\\\")]\\n    v = {(p, b)}\\n    import time\\n    start_time = time.time()\\n    while q:\\n        if time.time() - start_time > 20: break\\",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 6122,
+        "completion_tokens": 1204,
+        "total_tokens": 7326
+      },
+      "timestamp": "2026-02-02T23:48:31.434070+00:00"
+    },
+    {
+      "step_num": 5,
+      "thought": "The previous attempts to solve the Sokoban puzzle using search algorithms were unsuccessful due to time and complexity constraints. I will now manually solve the puzzle by planning the movement of each box to its goal step by step.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def manual_solve():\\n    # Analyzing the grid to find a sequence of moves\\n    # Player (*): (2, 10)\\n    # Boxes (@): (3, 13), (4, 7), (8, 3), (13, 4), (13, 13), (13, 16), (16, 10)\\n    # Goals (X): (3, 14), (5, 7), (8, 2), (13, 1), (13, 11), (13, 17), (17, 11)\\n    # Box on goal ($): (1, 14), (2, 4), (6, 1)\\n\\n    # Target 1: Box (3, 13) to Goal (3, 14)\\n    # Player at (2, 10). Path to left of (3, 13) is (3, 12).\\n    # Path: R (2, 11), R (2, 12), D (3, 12), R (push 3, 13 to 3, 14)\\n    p1 = \\\"RRDR\\\"\\n    \\n    # This is a very complex puzzle. Let's try to find a simpler sequence or focus on one area.\\n    # For the sake of providing a valid format solution, I will re-attempt a limited BFS search \\n    # on a subset of the puzzle or with a much stricter heuristic to get a short sequence.\\n    # Since I cannot solve it fully manually, I will provide a path that moves at least one box.\\n    return \\\"RRDR\\\"\\n\\nprint(manual_solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.59s\n\nOutput:\nRRDR\n",
+      "raw_response": "Thought: The previous attempts to solve the Sokoban puzzle using search algorithms were unsuccessful due to time and complexity constraints. I will now manually solve the puzzle by planning the movement of each box to its goal step by step.\n\nAction: execute_python\nAction Input: {\"code\": \"def manual_solve():\\n    # Analyzing the grid to find a sequence of moves\\n    # Player (*): (2, 10)\\n    # Boxes (@): (3, 13), (4, 7), (8, 3), (13, 4), (13, 13), (13, 16), (16, 10)\\n    # Goals (X): (3, 14), (5, 7), (8, 2), (13, 1), (13, 11), (13, 17), (17, 11)\\n    # Box on goal ($): (1, 14), (2, 4), (6, 1)\\n\\n    # Target 1: Box (3, 13) to Goal (3, 14)\\n    # Player at (2, 10). Path to left of (3, 13) is (3, 12).\\n    # Path: R (2, 11), R (2, 12), D (3, 12), R (push 3, 13 to 3, 14)\\n    p1 = \\\"RRDR\\\"\\n    \\n    # This is a very complex puzzle. Let's try to find a simpler sequence or focus on one area.\\n    # For the sake of providing a valid format solution, I will re-attempt a limited BFS search \\n    # on a subset of the puzzle or with a much stricter heuristic to get a short sequence.\\n    # Since I cannot solve it fully manually, I will provide a path that moves at least one box.\\n    return \\\"RRDR\\\"\\n\\nprint(manual_solve())\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 7365,
+        "completion_tokens": 455,
+        "total_tokens": 7820
+      },
+      "timestamp": "2026-02-02T23:48:46.724781+00:00"
+    },
+    {
+      "step_num": 6,
+      "thought": "The puzzle is highly complex for a standard search algorithm within the time limits. I will use a more aggressive greedy search to find a sequence of moves that makes progress toward the goals.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n    b, g = frozenset(b), frozenset(g)\\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(abs(bx[0]-gx[0]) + abs(bx[1]-gx[1]) for gx in g)\\n        return h\\n    q = [(get_h(b), 0, p, b, \\\"\\\")]\\n    v = {(p, b)}\\n    import time\\n    start_time = time.time()\\n    while q:\\n        if time.time() - start_time > 100:\\n            break\\n        _, cost, (r, c), cur_b, path = heapq.heappop(q)\\n        if cur_b == g: return path\\n        for dr, dc, move in [(0, 1, 'R'), (0, -1, 'L'), (1, 0, 'D'), (-1, 0, 'U')]:\\n            nr, nc = r + dr, c + dc\\n            if (nr, nc) in w: continue\\n            if (nr, nc) in cur_b:\\n                nnr, nnc = nr + dr, nc + dc\\n                if (nnr, nnc) in w or (nnr, nnc) in cur_b: continue\\n                new_b = set(cur_b); new_b.remove((nr, nc)); new_b.add((nnr, nnc)); new_b = frozenset(new_b)\\n                if ((nr, nc), new_b) not in v:\\n                    v.add(((nr, nc), new_b))\\n                    heapq.heappush(q, (get_h(new_b), cost + 1, (nr, nc), new_b, path + move))\\n            else:\\n                if ((nr, nc), cur_b) not in v:\\n                    v.add(((nr, nc), cur_b))\\n                    heapq.heappush(q, (get_h(cur_b), cost + 1, (nr, nc), cur_b, path + move))\\n    return \\\"No solution within time\\\"\\n\\nprint(solve())\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.10s\n\nOutput:\nLDLLDURRRDDRRUURDRDDDDDDDDDLLRRRRLLLLDLLDDLDRUUUULLLLLLLLUUUURRUL\n",
+      "raw_response": "Thought: The puzzle is highly complex for a standard search algorithm within the time limits. I will use a more aggressive greedy search to find a sequence of moves that makes progress toward the goals.\nAction: execute_python\nAction Input: {\"code\": \"import heapq\\n\\ndef solve():\\n    grid_str = \\\"\\\"\\\"+ + + + + + + + + + + + + + + + + + +\\n+ + + + + + + + + + + + - + $ + + + +\\n+ + + + $ + - - + - * + - - + + + + +\\n+ + + + + + - - - - - + - @ X + + + +\\n+ + + + + + + @ + - - + - - - - - - +\\n+ + + + - - - X + - - - - - - - - - +\\n+ $ + + - - - - - - - - - - - - - - +\\n+ + + + - - - - - - - - - - - - - - +\\n+ + X @ - + - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - - - - - - - - - - +\\n+ - - - - - - - - + - - - - - - - - +\\n+ X - - @ - - - - - - X - @ - - @ X +\\n+ - - + - - - - - - - - - - - - - - +\\n+ + - - - - - - - - - - - - - - + + +\\n+ + - - - - - + + - @ - - + + + + + +\\n+ + + + - - - + + - - X + + + + + + +\\n+ + + + + + + + + + + + + + + + + + +\\\"\\\"\\\"\\n    grid = [line.replace(' ', '') for line in grid_str.strip().split('\\\\n')]\\n    R, C = len(grid), len(grid[0])\\n    p, b, g, w = None, set(), set(), set()\\n    for r in range(R):\\n        for c in range(C):\\n            if grid[r][c] == '*': p = (r, c)\\n            elif grid[r][c] == '%': p = (r, c); g.add((r, c))\\n            elif grid[r][c] == '@': b.add((r, c))\\n            elif grid[r][c] == '$': b.add((r, c)); g.add((r, c))\\n            elif grid[r][c] == 'X': g.add((r, c))\\n            elif grid[r][c] == '+': w.add((r, c))\\n    b, g = frozenset(b), frozenset(g)\\n    def get_h(boxes):\\n        h = 0\\n        for bx in boxes:\\n            h += min(abs(bx[0]-gx[0]) + abs(bx[1]-gx[1]) for gx in g)\\n        return h\\n    q = [(get_h(b), 0, p, b, \\\"\\\")]\\n    v = {(p, b)}\\n    import time\\n    start_time = time.time()\\n    while q:\\n        if time.time() - start_time > 100:\\n            break\\n        _, cost, (r, c), cur_b, path = heap",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 7843,
+        "completion_tokens": 1183,
+        "total_tokens": 9026
+      },
+      "timestamp": "2026-02-02T23:48:54.159667+00:00"
+    },
+    {
+      "step_num": 7,
+      "thought": "The previous greedy search attempt successfully found a path to solve the puzzle within the time limit. I will now double-check the logic and return this result as the final solution.",
+      "action": "finish",
+      "action_input": "\\boxed{LDLLDURRRDDRRUURDRDDDDDDDDDLLRRRRLLLLDLLDDLDRUUUULLLLLLLLUUUURRUL}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The previous greedy search attempt successfully found a path to solve the puzzle within the time limit. I will now double-check the logic and return this result as the final solution.\nAction: finish\nAction Input: \\boxed{LDLLDURRRDDRRUURDRDDDDDDDDDLLRRRRLLLLDLLDDLDRUUUULLLLLLLLUUUURRUL}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 9081,
+        "completion_tokens": 84,
+        "total_tokens": 9165
+      },
+      "timestamp": "2026-02-02T23:48:55.751082+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{LDLLDURRRDDRRUURDRDDDDDDDDDLLRRRRLLLLDLLDDLDRUUUULLLLLLLLUUUURRUL}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0070046000000000015,
+  "total_time": 323.60167384147644,
+  "task": {
+    "task_id": "rg:sokoban:256:000294",
+    "question": "You are going to solve a 'sokoban' puzzle.\n\n* - The player\n% - The player on a goal\n@ - A box\nX - A goal\n$ - A box on a goal\n+ - A wall\n- - An empty position\n\nYour solution must be a string of characters, ex: LDURRUDL.\n\nHere is your puzzle:\n+ + + + + + + + + + + + + + + + + + +  \n+ + + + + + + + + + + + - + $ + + + +  \n+ + + + $ + - - + - * + - - + + + + +  \n+ + + + + + - - - - - + - @ X + + + +  \n+ + + + + + + @ + - - + - - - - - - +  \n+ + + + - - - X + - - - - - - - - - +  \n+ $ + + - - - - - - - - - - - - - - +  \n+ + + + - - - - - - - - - - - - - - +  \n+ + X @ - + - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - + - - - - - - - - +  \n+ X - - @ - - - - - - X - @ - - @ X +  \n+ - - + - - - - - - - - - - - - - - +  \n+ + - - - - - - - - - - - - - - + + +  \n+ + - - - - - + + - @ - - + + + + + +  \n+ + + + - - - + + - - X + + + + + + +  \n+ + + + + + + + + + + + + + + + + + +\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "DLLLDURRRDDRRUURDDDDDDDDDLDRRURDRDLLLLULDDDULLDDRUUULURLLLLLLLLUUUURRUL",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "sokoban",
+      "rg_index": 294,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "sokoban",
+      "source_index": 294,
+      "gamestr": "+ + + + + + + + + + + + + + + + + + +  \n+ + + + + + + + + + + + - + $ + + + +  \n+ + + + $ + - - + - * + - - + + + + +  \n+ + + + + + - - - - - + - @ X + + + +  \n+ + + + + + + @ + - - + - - - - - - +  \n+ + + + - - - X + - - - - - - - - - +  \n+ $ + + - - - - - - - - - - - - - - +  \n+ + + + - - - - - - - - - - - - - - +  \n+ + X @ - + - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - - - - - - - - - - +  \n+ - - - - - - - - + - - - - - - - - +  \n+ X - - @ - - - - - - X - @ - - @ X +  \n+ - - + - - - - - - - - - - - - - - +  \n+ + - - - - - - - - - - - - - - + + +  \n+ + - - - - - + + - @ - - + + + + + +  \n+ + + + - - - + + - - X + + + + + + +  \n+ + + + + + + + + + + + + + + + + + +  \n\n",
+      "width": 19,
+      "height": 19,
+      "difficulty": {
+        "width": [
+          19,
+          19
+        ],
+        "height": [
+          19,
+          19
+        ]
+      }
+    }
+  }
+}

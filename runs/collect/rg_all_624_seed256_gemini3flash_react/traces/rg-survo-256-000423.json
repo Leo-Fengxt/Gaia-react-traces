@@ -1,0 +1,1068 @@
+{
+  "task_id": "rg:survo:256:000423",
+  "question": "Complete the following Survo puzzle. In this 7*7 matrix:\n0 7 0 1 0 0 22\n6 0 0 0 0 2 36\n0 0 0 8 4 0 33\n0 0 6 0 0 0 33\n0 0 3 0 2 0 24\n0 0 4 0 2 0 28\n27 43 34 29 22 21 176\nthe cells marked with 0 need to be filled with numbers. The last number in each row and column equals the sum of all other numbers in that row or column. You can use the following numbers: [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]. Each number can only be used once.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will solve this 6x6 Survo puzzle using a backtracking constraint satisfaction algorithm in Python, ensuring each number from the provided multiset is used exactly once to satisfy the row and column sums.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from collections import Counter\\n\\ndef solve():\\n    # Grid setup: 0 represents empty cells\\n    # Rows 0-5, Cols 0-5 are the playable area\\n    grid = [\\n        [0, 7, 0, 1, 0, 0],\\n        [6, 0, 0, 0, 0, 2],\\n        [0, 0, 0, 8, 4, 0],\\n        [0, 0, 6, 0, 0, 0],\\n        [0, 0, 3, 0, 2, 0],\\n        [0, 0, 4, 0, 2, 0]\\n    ]\\n    row_sums = [22, 36, 33, 33, 24, 28]\\n    col_sums = [27, 43, 34, 29, 22, 21]\\n    \\n    available_nums = [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]\\n    counts = Counter(available_nums)\\n    \\n    empty_cells = []\\n    for r in range(6):\\n        for c in range(6):\\n            if grid[r][c] == 0:\\n                empty_cells.append((r, c))\\n                \\n    def backtrack(idx):\\n        if idx == len(empty_cells):\\n            # Check all sums (though row sums are checked incrementally)\\n            for c in range(6):\\n                if sum(grid[r][c] for r in range(6)) != col_sums[c]:\\n                    return False\\n            return True\\n            \\n        r, c = empty_cells[idx]\\n        \\n        # Pruning: check if current row sum exceeds target\\n        current_row_sum = sum(grid[r])\\n        remaining_row_cells = sum(1 for col in range(c, 6) if grid[r][col] == 0)\\n        \\n        # Pruning: check if current col sum exceeds target\\n        current_col_sum = sum(grid[row][c] for row in range(r + 1))\\n        \\n        # Try unique available numbers\\n        for num in sorted(counts.keys(), reverse=True):\\n            if counts[num] > 0:\\n                # Row sum check (if last cell in row)\\n                if c == 5 or (r == empty_cells[idx+1][0] if idx+1 < len(empty_cells) else True):\\n                    # This is simple check; more precise: \\n                    pass\\n                \\n                grid[r][c] = num\\n                counts[num] -= 1\\n                \\n                # Mid-assignment sum checks\\n                row_sum_ok = sum(grid[r]) <= row_sums[r]\\n                col_sum_ok = sum(grid[i][c] for i in range(6)) <= col_sums[c]\\n                \\n                # If it's the last empty cell in a row, it MUST complete the sum\\n                is_last_in_row = True\\n                for next_idx in range(idx + 1, len(empty_cells)):\\n                    if empty_cells[next_idx][0] == r:\\n                        is_last_in_row = False\\n                        break\\n                \\n                if is_last_in_row and sum(grid[r]) != row_sums[r]:\\n                    row_sum_ok = False\\n                \\n                # If it's the last empty cell in a col, it MUST complete the sum\\n                is_last_in_col = True\\n                for next_idx in range(idx + 1, len(empty_cells)):\\n                    if empty_cells[next_idx][1] == c:\\n                        is_last_in_col = False\\n                        break\\n                \\n                if is_last_in_col and sum(grid[row][c] for row in range(6)) != col_sums[c]:\\n                    col_sum_ok = False\\n\\n                if row_sum_ok and col_sum_ok:\\n                    if backtrack(idx + 1):\\n                        return True\\n                \\n                # Backtrack\\n                counts[num] += 1\\n                grid[r][c] = 0\\n        return False\\n\\n    if backtrack(0):\\n        return grid\\n    else:\\n        return \\\"No solution\\\"\\n\\nresult = solve()\\nprint(result)\"}",
+      "observation": "Code executed successfully.\nExecution time: 3.23s\n\nOutput:\n[[8, 7, 3, 1, 2, 1], [6, 8, 9, 5, 6, 2], [4, 6, 9, 8, 4, 2], [3, 8, 6, 5, 6, 5], [3, 7, 3, 4, 2, 5], [3, 7, 4, 6, 2, 6]]\n",
+      "raw_response": "Thought: I will solve this 6x6 Survo puzzle using a backtracking constraint satisfaction algorithm in Python, ensuring each number from the provided multiset is used exactly once to satisfy the row and column sums.\nAction: execute_python\nAction Input: {\"code\": \"from collections import Counter\\n\\ndef solve():\\n    # Grid setup: 0 represents empty cells\\n    # Rows 0-5, Cols 0-5 are the playable area\\n    grid = [\\n        [0, 7, 0, 1, 0, 0],\\n        [6, 0, 0, 0, 0, 2],\\n        [0, 0, 0, 8, 4, 0],\\n        [0, 0, 6, 0, 0, 0],\\n        [0, 0, 3, 0, 2, 0],\\n        [0, 0, 4, 0, 2, 0]\\n    ]\\n    row_sums = [22, 36, 33, 33, 24, 28]\\n    col_sums = [27, 43, 34, 29, 22, 21]\\n    \\n    available_nums = [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]\\n    counts = Counter(available_nums)\\n    \\n    empty_cells = []\\n    for r in range(6):\\n        for c in range(6):\\n            if grid[r][c] == 0:\\n                empty_cells.append((r, c))\\n                \\n    def backtrack(idx):\\n        if idx == len(empty_cells):\\n            # Check all sums (though row sums are checked incrementally)\\n            for c in range(6):\\n                if sum(grid[r][c] for r in range(6)) != col_sums[c]:\\n                    return False\\n            return True\\n            \\n        r, c = empty_cells[idx]\\n        \\n        # Pruning: check if current row sum exceeds target\\n        current_row_sum = sum(grid[r])\\n        remaining_row_cells = sum(1 for col in range(c, 6) if grid[r][col] == 0)\\n        \\n        # Pruning: check if current col sum exceeds target\\n        current_col_sum = sum(grid[row][c] for row in range(r + 1))\\n        \\n        # Try unique available numbers\\n        for num in sorted(counts.keys(), reverse=True):\\n            if counts[num] > 0:\\n                # Row sum check (if last cell in row)\\n                if c == 5 or (r == empty_cells[idx+1][0] if idx+1 < len(empty_cells) else True):\\n                    # This is simple",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1041,
+        "completion_tokens": 1902,
+        "total_tokens": 2943
+      },
+      "timestamp": "2026-02-02T23:49:59.360394+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "The previous solver attempted to solve the Survo puzzle but the result was incorrect because it allowed using numbers not in the provided set or misused the counts. I need to re-verify the available numbers and the constraints. Specifically, I'll rewrite the solver to be more robust, ensuring the multiset of available numbers is respected exactly and all sums are correct.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from collections import Counter\\n\\ndef solve():\\n    # Target grid (6x6)\\n    row_sums = [22, 36, 33, 33, 24, 28]\\n    col_sums = [27, 43, 34, 29, 22, 21]\\n    \\n    # Fixed values in the grid (0 means empty)\\n    grid = [\\n        [0, 7, 0, 1, 0, 0],\\n        [6, 0, 0, 0, 0, 2],\\n        [0, 0, 0, 8, 4, 0],\\n        [0, 0, 6, 0, 0, 0],\\n        [0, 0, 3, 0, 2, 0],\\n        [0, 0, 4, 0, 2, 0]\\n    ]\\n    \\n    # The multiset of numbers to use for the '0' cells\\n    available_nums = [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]\\n    counts = Counter(available_nums)\\n    \\n    empty_cells = []\\n    for r in range(6):\\n        for c in range(6):\\n            if grid[r][c] == 0:\\n                empty_cells.append((r, c))\\n\\n    def backtrack(idx):\\n        if idx == len(empty_cells):\\n            # Check all column sums at the very end\\n            for c in range(6):\\n                if sum(grid[r][c] for r in range(6)) != col_sums[c]:\\n                    return False\\n            return True\\n        \\n        r, c = empty_cells[idx]\\n        \\n        # Which empty cells are left in this row and column?\\n        row_remaining_count = sum(1 for i in range(idx + 1, len(empty_cells)) if empty_cells[i][0] == r)\\n        col_remaining_count = sum(1 for i in range(idx + 1, len(empty_cells)) if empty_cells[i][1] == c)\\n        \\n        # Try numbers from the counter\\n        for num in sorted(counts.keys()):\\n            if counts[num] > 0:\\n                # Check row sum constraint\\n                curr_row_sum = sum(grid[r][j] for j in range(6) if grid[r][j] != 0) + num\\n                if row_remaining_count == 0:\\n                    if curr_row_sum != row_sums[r]: continue\\n                else:\\n                    if curr_row_sum >= row_sums[r]: continue\\n                \\n                # Check col sum constraint\\n                curr_col_sum = sum(grid[i][c] for i in range(6) if grid[i][c] != 0) + num\\n                if col_remaining_count == 0:\\n                    if curr_col_sum != col_sums[c]: continue\\n                else:\\n                    if curr_col_sum >= col_sums[c]: continue\\n                \\n                # Apply\\n                grid[r][c] = num\\n                counts[num] -= 1\\n                \\n                if backtrack(idx + 1):\\n                    return True\\n                \\n                # Backtrack\\n                counts[num] += 1\\n                grid[r][c] = 0\\n        return False\\n\\n    if backtrack(0):\\n        return grid\\n    return None\\n\\nsol = solve()\\nif sol:\\n    for row in sol:\\n        print(row)\"}",
+      "observation": "Code executed successfully.\nExecution time: 10.33s\n\nOutput:\n[1, 7, 3, 1, 2, 8]\n[6, 7, 9, 6, 6, 2]\n[4, 6, 9, 8, 4, 2]\n[5, 8, 6, 5, 6, 3]\n[5, 7, 3, 4, 2, 3]\n[6, 8, 4, 5, 2, 3]\n",
+      "raw_response": "Thought: The previous solver attempted to solve the Survo puzzle but the result was incorrect because it allowed using numbers not in the provided set or misused the counts. I need to re-verify the available numbers and the constraints. Specifically, I'll rewrite the solver to be more robust, ensuring the multiset of available numbers is respected exactly and all sums are correct.\n\nAction: execute_python\nAction Input: {\"code\": \"from collections import Counter\\n\\ndef solve():\\n    # Target grid (6x6)\\n    row_sums = [22, 36, 33, 33, 24, 28]\\n    col_sums = [27, 43, 34, 29, 22, 21]\\n    \\n    # Fixed values in the grid (0 means empty)\\n    grid = [\\n        [0, 7, 0, 1, 0, 0],\\n        [6, 0, 0, 0, 0, 2],\\n        [0, 0, 0, 8, 4, 0],\\n        [0, 0, 6, 0, 0, 0],\\n        [0, 0, 3, 0, 2, 0],\\n        [0, 0, 4, 0, 2, 0]\\n    ]\\n    \\n    # The multiset of numbers to use for the '0' cells\\n    available_nums = [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]\\n    counts = Counter(available_nums)\\n    \\n    empty_cells = []\\n    for r in range(6):\\n        for c in range(6):\\n            if grid[r][c] == 0:\\n                empty_cells.append((r, c))\\n\\n    def backtrack(idx):\\n        if idx == len(empty_cells):\\n            # Check all column sums at the very end\\n            for c in range(6):\\n                if sum(grid[r][c] for r in range(6)) != col_sums[c]:\\n                    return False\\n            return True\\n        \\n        r, c = empty_cells[idx]\\n        \\n        # Which empty cells are left in this row and column?\\n        row_remaining_count = sum(1 for i in range(idx + 1, len(empty_cells)) if empty_cells[i][0] == r)\\n        col_remaining_count = sum(1 for i in range(idx + 1, len(empty_cells)) if empty_cells[i][1] == c)\\n        \\n        # Try numbers from the counter\\n        for num in sorted(counts.keys()):\\n            if counts[num] > 0:\\n                # Check row sum constraint\\n                curr_row_sum = sum",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 2373,
+        "completion_tokens": 1021,
+        "total_tokens": 3394
+      },
+      "timestamp": "2026-02-02T23:50:08.671227+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "I will verify the output solution against the original constraints, ensuring all row and column sums are correct and all numbers from the provided multiset were used exactly once.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from collections import Counter\\nsol = [[1, 7, 3, 1, 2, 8], [6, 7, 9, 6, 6, 2], [4, 6, 9, 8, 4, 2], [5, 8, 6, 5, 6, 3], [5, 7, 3, 4, 2, 3], [6, 8, 4, 5, 2, 3]]\\nrow_sums = [22, 36, 33, 33, 24, 28]\\ncol_sums = [27, 43, 34, 29, 22, 21]\\noriginal_grid = [[0, 7, 0, 1, 0, 0], [6, 0, 0, 0, 0, 2], [0, 0, 0, 8, 4, 0], [0, 0, 6, 0, 0, 0], [0, 0, 3, 0, 2, 0], [0, 0, 4, 0, 2, 0]]\\navailable_nums = [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]\\nused_nums = []\\nfor r in range(6):\\n    for c in range(6):\\n        if original_grid[r][c] == 0: used_nums.append(sol[r][c])\\nprint('Row sums match:', [sum(row) for row in sol] == row_sums)\\nprint('Col sums match:', [sum(sol[r][c] for r in range(6)) for c in range(6)] == col_sums)\\nprint('Nums match:', Counter(used_nums) == Counter(available_nums))\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.07s\n\nOutput:\nRow sums match: True\nCol sums match: True\nNums match: True\n",
+      "raw_response": "Thought: I will verify the output solution against the original constraints, ensuring all row and column sums are correct and all numbers from the provided multiset were used exactly once.\nAction: execute_python\nAction Input: {\"code\": \"from collections import Counter\\nsol = [[1, 7, 3, 1, 2, 8], [6, 7, 9, 6, 6, 2], [4, 6, 9, 8, 4, 2], [5, 8, 6, 5, 6, 3], [5, 7, 3, 4, 2, 3], [6, 8, 4, 5, 2, 3]]\\nrow_sums = [22, 36, 33, 33, 24, 28]\\ncol_sums = [27, 43, 34, 29, 22, 21]\\noriginal_grid = [[0, 7, 0, 1, 0, 0], [6, 0, 0, 0, 0, 2], [0, 0, 0, 8, 4, 0], [0, 0, 6, 0, 0, 0], [0, 0, 3, 0, 2, 0], [0, 0, 4, 0, 2, 0]]\\navailable_nums = [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]\\nused_nums = []\\nfor r in range(6):\\n    for c in range(6):\\n        if original_grid[r][c] == 0: used_nums.append(sol[r][c])\\nprint('Row sums match:', [sum(row) for row in sol] == row_sums)\\nprint('Col sums match:', [sum(sol[r][c] for r in range(6)) for c in range(6)] == col_sums)\\nprint('Nums match:', Counter(used_nums) == Counter(available_nums))\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3529,
+        "completion_tokens": 545,
+        "total_tokens": 4074
+      },
+      "timestamp": "2026-02-02T23:50:22.452363+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "The solution found by the script satisfies all row and column sums, matches the initial fixed values, and correctly utilizes the provided multiset of numbers. The final 6x6 grid is extracted from the solution.",
+      "action": "finish",
+      "action_input": "\\boxed{1 7 3 1 2 8 22\\n6 7 9 6 6 2 36\\n4 6 9 8 4 2 33\\n5 8 6 5 6 3 33\\n5 7 3 4 2 3 24\\n6 8 4 5 2 3 28\\n27 43 34 29 22 21 176}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The solution found by the script satisfies all row and column sums, matches the initial fixed values, and correctly utilizes the provided multiset of numbers. The final 6x6 grid is extracted from the solution.\n\nAction: finish\nAction Input: \\boxed{1 7 3 1 2 8 22\\n6 7 9 6 6 2 36\\n4 6 9 8 4 2 33\\n5 8 6 5 6 3 33\\n5 7 3 4 2 3 24\\n6 8 4 5 2 3 28\\n27 43 34 29 22 21 176}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 4111,
+        "completion_tokens": 174,
+        "total_tokens": 4285
+      },
+      "timestamp": "2026-02-02T23:50:24.251954+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{1 7 3 1 2 8 22\\n6 7 9 6 6 2 36\\n4 6 9 8 4 2 33\\n5 8 6 5 6 3 33\\n5 7 3 4 2 3 24\\n6 8 4 5 2 3 28\\n27 43 34 29 22 21 176}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0025622,
+  "total_time": 35.813032388687134,
+  "task": {
+    "task_id": "rg:survo:256:000423",
+    "question": "Complete the following Survo puzzle. In this 7*7 matrix:\n0 7 0 1 0 0 22\n6 0 0 0 0 2 36\n0 0 0 8 4 0 33\n0 0 6 0 0 0 33\n0 0 3 0 2 0 24\n0 0 4 0 2 0 28\n27 43 34 29 22 21 176\nthe cells marked with 0 need to be filled with numbers. The last number in each row and column equals the sum of all other numbers in that row or column. You can use the following numbers: [6, 7, 8, 3, 5, 6, 5, 9, 4, 4, 9, 2, 8, 5, 7, 3, 3, 1, 6, 6, 6, 8, 3, 5, 2]. Each number can only be used once.\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "3 7 7 1 1 3 22\n6 9 9 2 8 2 36\n5 8 5 8 4 3 33\n5 8 6 6 5 3 33\n2 7 3 6 2 4 24\n6 4 4 6 2 6 28\n27 43 34 29 22 21 176",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "survo",
+      "rg_index": 423,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "survo",
+      "source_idx": 423,
+      "puzzle": [
+        [
+          0,
+          7,
+          0,
+          1,
+          0,
+          0,
+          22
+        ],
+        [
+          6,
+          0,
+          0,
+          0,
+          0,
+          2,
+          36
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          4,
+          0,
+          33
+        ],
+        [
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          33
+        ],
+        [
+          0,
+          0,
+          3,
+          0,
+          2,
+          0,
+          24
+        ],
+        [
+          0,
+          0,
+          4,
+          0,
+          2,
+          0,
+          28
+        ],
+        [
+          27,
+          43,
+          34,
+          29,
+          22,
+          21,
+          176
+        ]
+      ],
+      "solution": [
+        [
+          3,
+          7,
+          7,
+          1,
+          1,
+          3,
+          22
+        ],
+        [
+          6,
+          9,
+          9,
+          2,
+          8,
+          2,
+          36
+        ],
+        [
+          5,
+          8,
+          5,
+          8,
+          4,
+          3,
+          33
+        ],
+        [
+          5,
+          8,
+          6,
+          6,
+          5,
+          3,
+          33
+        ],
+        [
+          2,
+          7,
+          3,
+          6,
+          2,
+          4,
+          24
+        ],
+        [
+          6,
+          4,
+          4,
+          6,
+          2,
+          6,
+          28
+        ],
+        [
+          27,
+          43,
+          34,
+          29,
+          22,
+          21,
+          176
+        ]
+      ],
+      "candidate_numbers": [
+        6,
+        7,
+        8,
+        3,
+        5,
+        6,
+        5,
+        9,
+        4,
+        4,
+        9,
+        2,
+        8,
+        5,
+        7,
+        3,
+        3,
+        1,
+        6,
+        6,
+        6,
+        8,
+        3,
+        5,
+        2
+      ],
+      "board_size": 7,
+      "num_empty": 25,
+      "min_num": 1,
+      "max_num": 9,
+      "difficulty": {
+        "board_size": [
+          7,
+          7
+        ],
+        "empty": [
+          25,
+          25
+        ]
+      }
+    }
+  }
+}

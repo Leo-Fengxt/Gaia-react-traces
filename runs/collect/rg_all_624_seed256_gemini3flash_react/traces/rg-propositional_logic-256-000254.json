@@ -1,0 +1,1081 @@
+{
+  "task_id": "rg:propositional_logic:256:000254",
+  "question": "The following question is a propositional logic reasoning question.\n\nIn the question we provide a list of premises. The task is to infer a correct conclusion from the premise.\n\nFORMAT INSTRUCTIONS:\n- Return the conclusion logic statement, as your final answer.\n- Use the following notation to denote symbols\n    - OR = ∨\n    - AND = ∧\n    - IMPLIES = →\n    - IFF = ↔\n    - NOT = ¬\n\nHere is the question:\nGiven:\n1. ((((X ∧ X) → (S ∧ R)) ∨ ((P ∨ Y) ↔ (P ∨ T))) → (¬(R ∧ V) ∨ ((R ↔ R) ↔ (V ∧ X))))\n.2. (((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))\n.3. ¬((¬V → (R → U)) → ¬(P → P))\n.4. ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\n.5. ((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))\n.6. ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\n.7. ((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))\n.8. ((((Y → X) → (R → V)) → ¬¬W) ∧ ((¬R → (W ∨ W)) ↔ ((S ∨ U) ∨ (V ∧ V))))\n.9. ((((Y ∧ V) ∨ ¬Y) → ((W ↔ W) ∨ ¬P)) → (((P ↔ U) ↔ ¬U) ∨ ((V ∨ S) ∧ (V → Q))))\n.10. ((¬(U ↔ P) ↔ ¬¬V) → (¬(U → R) ∧ ((T ↔ T) ∨ ¬V)))\n.What can we conclude from the above statements?\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+  "steps": [
+    {
+      "step_num": 1,
+      "thought": "I will analyze the given premises to simplify them and derive a conclusion. I'll start by checking the simplest premises first, such as premise 4, to find atomic or near-atomic truths.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    # Premise 4: ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\\n    # For ¬(A ∨ B) to be true, both A and B must be false.\\n    # So, (¬Q ∨ (T ∨ W)) is false AND ¬(T → U) is false.\\n    # From (¬Q ∨ (T ∨ W)) is false, we get ¬Q is false (so Q is true) and (T ∨ W) is false (so T is false and W is false).\\n    # From ¬(T → U) is false, we get T → U is true.\\n    # Since T is false, T → U is indeed true (vacuously).\\n    \\n    # Premise 3: ¬((¬V → (R → U)) → ¬(P → P))\\n    # For ¬(A → B) to be true, A must be true and B must be false.\\n    # So, (¬V → (R → U)) is true AND ¬(P → P) is false.\\n    # From ¬(P → P) is false, we get P → P is true (which is always true).\\n    # From (¬V → (R → U)) is true, we have a condition.\\n    \\n    # Premise 6: ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\\n    # From ¬((X ↔ U) ∨ (Q → W)):\\n    # (X ↔ U) is false AND (Q → W) is false.\\n    # Since (Q → W) is false, Q must be true and W must be false.\\n    # This matches our findings from Premise 4.\\n    # Since (X ↔ U) is false, X and U must have different truth values.\\n    \\n    # Summary so far: Q=T, W=F, T=F, Q=T, (X != U).\\n    \\n    # Premise 7: ((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))\\n    # Part: ((T ∨ W) ↔ (U ∧ R))\\n    # T=F and W=F, so (T ∨ W) is false.\\n    # Thus (U ∧ R) must be false.\\n    # Part: (¬V ↔ (S → T))\\n    # T is false, so (S → T) is equivalent to ¬S.\\n    # Thus ¬V ↔ ¬S, which means V ↔ S.\\n    \\n    # From Premise 6 Part 1: (((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P)))\\n    # T is false, so (U → T) is ¬U.\\n    # Thus (¬U ↔ (R → U)) ↔ (¬R → (U ↔ P)).\\n    # Let's check (¬U ↔ (R → U)):\\n    # If U is true, ¬U is false, R → U is true. (False ↔ True) = False.\\n    # If U is false, ¬U is true, R → U is ¬R. (True ↔ ¬R) = ¬R.\\n    # So if U is true, (¬U ↔ (R → U)) is False.\\n    # If U is false, (¬U ↔ (R → U)) is ¬R.\\n    \\n    print('Q: True, W: False, T: False')\\n\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.30s\n\nOutput:\nQ: True, W: False, T: False\n",
+      "raw_response": "Thought: I will analyze the given premises to simplify them and derive a conclusion. I'll start by checking the simplest premises first, such as premise 4, to find atomic or near-atomic truths.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    # Premise 4: ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\\n    # For ¬(A ∨ B) to be true, both A and B must be false.\\n    # So, (¬Q ∨ (T ∨ W)) is false AND ¬(T → U) is false.\\n    # From (¬Q ∨ (T ∨ W)) is false, we get ¬Q is false (so Q is true) and (T ∨ W) is false (so T is false and W is false).\\n    # From ¬(T → U) is false, we get T → U is true.\\n    # Since T is false, T → U is indeed true (vacuously).\\n    \\n    # Premise 3: ¬((¬V → (R → U)) → ¬(P → P))\\n    # For ¬(A → B) to be true, A must be true and B must be false.\\n    # So, (¬V → (R → U)) is true AND ¬(P → P) is false.\\n    # From ¬(P → P) is false, we get P → P is true (which is always true).\\n    # From (¬V → (R → U)) is true, we have a condition.\\n    \\n    # Premise 6: ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\\n    # From ¬((X ↔ U) ∨ (Q → W)):\\n    # (X ↔ U) is false AND (Q → W) is false.\\n    # Since (Q → W) is false, Q must be true and W must be false.\\n    # This matches our findings from Premise 4.\\n    # Since (X ↔ U) is false, X and U must have different truth values.\\n    \\n    # Summary so far: Q=T, W=F, T=F, Q=T, (X != U).\\n    \\n    # Premise 7: ((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))\\n    # Part: ((T ∨ W) ↔ (U ∧ R))\\n    # T=F and W=F, so (T ∨ W) is false.\\n    # Thus (U ∧ R) must be false.\\n    # Part: (¬V ↔ (S → T))\\n    # T is false, so (S → T) is equivalent to ¬S.\\n    # Thus ¬V ↔ ¬S, which means V ↔ S.\\n    \\n    # From Premise 6 Part 1: (((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P)))\\n    # T is false, so (U → T) is ¬U.\\n    # Thus (¬U ↔ (R → U)) ↔ (¬R → (U ↔ P)).\\n    # Let's check (¬U ↔ (R → U)):\\n    # If U is true, ¬U is false, R → U is true. (False ↔ True) = False.\\n    # If U is",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 1360,
+        "completion_tokens": 937,
+        "total_tokens": 2297
+      },
+      "timestamp": "2026-02-02T23:41:42.165705+00:00"
+    },
+    {
+      "step_num": 2,
+      "thought": "I will continue simplifying the premises using the values found (Q: True, W: False, T: False). I need to determine the truth values of U, X, V, S, R, P, and Y.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    # Constants: Q=True, W=False, T=False\\n    # From Premise 6: (X != U) and (((U -> T) <-> (R -> U)) <-> (not R -> (U <-> P)))\\n    # Since T=False, (U -> T) is !U.\\n    # So: (!U <-> (R -> U)) <-> (!R -> (U <-> P))\\n    # case U=True: (!U <-> (R -> U)) is (F <-> T) = F.\\n    # So F <-> (!R -> (True <-> P)) must be True? No, the whole thing in P6 is True.\\n    # So (F <-> (!R -> P)) = True => (!R -> P) = False.\\n    # !R -> P is False only if !R is True (R=False) and P is False.\\n    # So if U=True, then R=False and P=False. Also X=False (since X!=U).\\n    # case U=False: (!U <-> (R -> U)) is (T <-> !R) = !R.\\n    # So !R <-> (!R -> (False <-> P)) = True.\\n    # !R <-> (!R -> !P) = True.\\n    # If R=True: !R is False. F <-> (F -> !P) = F <-> T = False. (Contradiction)\\n    # If R=False: !R is True. T <-> (T -> !P) = T <-> !P = !P.\\n    # For this to be True, !P must be True, so P=False.\\n    # So if U=False, then R=False, P=False. Also X=True (since X!=U).\\n\\n    # Summary possibilities:\\n    # 1. U=True, R=False, P=False, X=False, Q=True, W=False, T=False\\n    # 2. U=False, R=False, P=False, X=True, Q=True, W=False, T=False\\n\\n    # Let's check Premise 10: ((!(U <-> P) <-> !!V) -> (!(U -> R) && ((T <-> T) || !V)))\\n    # T <-> T is True, so ((T <-> T) || !V) is True.\\n    # So: (!(U <-> P) <-> V) -> !(U -> R)\\n    # If U=True, P=False: !(U <-> P) is T. So (T <-> V) -> !(U -> R).\\n    # If V=True: T -> !(T -> F) = T -> !F = T -> T (True).\\n    # If V=False: F -> ... (True).\\n    # If U=False, P=False: !(U <-> P) is F. So (F <-> V) -> !(U -> R).\\n    # If U=False, R=False, then U -> R is True, so !(U -> R) is False.\\n    # For the implication to be True, (F <-> V) must be False, so V=True.\\n\\n    # Check Premise 7: V <-> S (derived previously from (not V <-> (S -> T)) and T=False)\\n    # If V=True, then S=True.\\n\\n    # Re-evaluating Premise 2: ((!S || (X || W)) || ((U <-> U) <-> !U)) -> (((S && Q) <-> (T -> P)) && (!U <-> !T))\\n    # Part: (!U <-> !T). Since T=False, !T=True. So !U must be True, so U=False.\\n    # From U=False, we must have X=True, R=False, P=False (from earlier analysis).\\n    # From Premise 10 (with U=False, R=False, P=False), we found V must be True.\\n    # From Premise 7 (V <-> S), S must be True.\\n\\n    # Check values: U=False, X=True, R=False, P=False, Q=True, W=False, T=False, V=True, S=True.\\n    print(f'U: False, X: True, R: False, P: False, Q: True, W: False, T: False, V: True, S: True')\\n\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\nU: False, X: True, R: False, P: False, Q: True, W: False, T: False, V: True, S: True\n",
+      "raw_response": "Thought: I will continue simplifying the premises using the values found (Q: True, W: False, T: False). I need to determine the truth values of U, X, V, S, R, P, and Y.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    # Constants: Q=True, W=False, T=False\\n    # From Premise 6: (X != U) and (((U -> T) <-> (R -> U)) <-> (not R -> (U <-> P)))\\n    # Since T=False, (U -> T) is !U.\\n    # So: (!U <-> (R -> U)) <-> (!R -> (U <-> P))\\n    # case U=True: (!U <-> (R -> U)) is (F <-> T) = F.\\n    # So F <-> (!R -> (True <-> P)) must be True? No, the whole thing in P6 is True.\\n    # So (F <-> (!R -> P)) = True => (!R -> P) = False.\\n    # !R -> P is False only if !R is True (R=False) and P is False.\\n    # So if U=True, then R=False and P=False. Also X=False (since X!=U).\\n    # case U=False: (!U <-> (R -> U)) is (T <-> !R) = !R.\\n    # So !R <-> (!R -> (False <-> P)) = True.\\n    # !R <-> (!R -> !P) = True.\\n    # If R=True: !R is False. F <-> (F -> !P) = F <-> T = False. (Contradiction)\\n    # If R=False: !R is True. T <-> (T -> !P) = T <-> !P = !P.\\n    # For this to be True, !P must be True, so P=False.\\n    # So if U=False, then R=False, P=False. Also X=True (since X!=U).\\n\\n    # Summary possibilities:\\n    # 1. U=True, R=False, P=False, X=False, Q=True, W=False, T=False\\n    # 2. U=False, R=False, P=False, X=True, Q=True, W=False, T=False\\n\\n    # Let's check Premise 10: ((!(U <-> P) <-> !!V) -> (!(U -> R) && ((T <-> T) || !V)))\\n    # T <-> T is True, so ((T <-> T) || !V) is True.\\n    # So: (!(U <-> P) <-> V) -> !(U -> R)\\n    # If U=True, P=False: !(U <-> P) is T. So (T <-> V) -> !(U -> R).\\n    # If V=True: T -> !(T -> F) = T -> !F = T -> T (True).\\n    # If V=False: F -> ... (True).\\n    # If U=False, P=False: !(U <-> P) is F. So (F <-> V) -> !(U -> R).\\n    # If U=False, R=False, then U -> R is True, so !(U -> R) is False.\\n    # For the implication to be True, (F <-> V) must be False, so V=True.\\n\\n    # Check Premise 7: V <-> S (derived previou",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 2338,
+        "completion_tokens": 1115,
+        "total_tokens": 3453
+      },
+      "timestamp": "2026-02-02T23:41:49.425126+00:00"
+    },
+    {
+      "step_num": 3,
+      "thought": "I have determined the truth values for all variables: U=False, X=True, R=False, P=False, Q=True, W=False, T=False, V=True, S=True. I will now verify these values against the remaining premises (1, 5, 8, 9) to ensure consistency and then check if Y can be determined.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    U, X, R, P, Q, W, T, V, S = False, True, False, False, True, False, False, True, True\\n    \\n    def implies(a, b): return not a or b\\n    def iff(a, b): return a == b\\n\\n    # Premise 1: ((((X & X) -> (S & R)) | ((P | Y) <-> (P | T))) -> (!(R & V) | ((R <-> R) <-> (V & X))))\\n    # Inner: (X & X) -> (S & R) is 1 -> (1 & 0) = False\\n    # (P | Y) <-> (P | T) is (0 | Y) <-> (0 | 0) = (Y <-> 0) = !Y\\n    # LHS: False | !Y = !Y\\n    # RHS: !(0 & 1) | ((0 <-> 0) <-> (1 & 1)) = !0 | (1 <-> 1) = 1 | 1 = True\\n    # Premise 1: !Y -> True is always True.\\n\\n    # Premise 5: ((((X -> Y) & !S) -> (!Q -> (P & X))) -> (((R & R) | (V | U)) -> ((T -> P) & !V)))\\n    # Inner: (X -> Y) & !S = (1 -> Y) & 0 = False\\n    # (False -> (...)) = True\\n    # LHS = True\\n    # Inner RHS: (R & R) | (V | U) = 0 | (1 | 0) = True\\n    # Inner RHS result: (T -> P) & !V = (0 -> 0) & 0 = 1 & 0 = False\\n    # RHS: True -> False = False\\n    # Premise 5: True -> False is False.\\n    \\n    # Wait, Premise 5 must be true. Let me re-check my U, X, R, P, Q, W, T, V, S values.\\n    # Let's re-evaluate Premise 2 and 6 more carefully.\\n    \\n    print(\\\"Re-evaluating...\\\")\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\nRe-evaluating...\n",
+      "raw_response": "Thought: I have determined the truth values for all variables: U=False, X=True, R=False, P=False, Q=True, W=False, T=False, V=True, S=True. I will now verify these values against the remaining premises (1, 5, 8, 9) to ensure consistency and then check if Y can be determined.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    U, X, R, P, Q, W, T, V, S = False, True, False, False, True, False, False, True, True\\n    \\n    def implies(a, b): return not a or b\\n    def iff(a, b): return a == b\\n\\n    # Premise 1: ((((X & X) -> (S & R)) | ((P | Y) <-> (P | T))) -> (!(R & V) | ((R <-> R) <-> (V & X))))\\n    # Inner: (X & X) -> (S & R) is 1 -> (1 & 0) = False\\n    # (P | Y) <-> (P | T) is (0 | Y) <-> (0 | 0) = (Y <-> 0) = !Y\\n    # LHS: False | !Y = !Y\\n    # RHS: !(0 & 1) | ((0 <-> 0) <-> (1 & 1)) = !0 | (1 <-> 1) = 1 | 1 = True\\n    # Premise 1: !Y -> True is always True.\\n\\n    # Premise 5: ((((X -> Y) & !S) -> (!Q -> (P & X))) -> (((R & R) | (V | U)) -> ((T -> P) & !V)))\\n    # Inner: (X -> Y) & !S = (1 -> Y) & 0 = False\\n    # (False -> (...)) = True\\n    # LHS = True\\n    # Inner RHS: (R & R) | (V | U) = 0 | (1 | 0) = True\\n    # Inner RHS result: (T -> P) & !V = (0 -> 0) & 0 = 1 & 0 = False\\n    # RHS: True -> False = False\\n    # Premise 5: True -> False is False.\\n    \\n    # Wait, Premise 5 must be true. Let me re-check my U, X, R, P, Q, W, T, V, S values.\\n    # Let's re-evaluate Premise 2 and 6 more carefully.\\n    \\n    print(\\\"Re-evaluating...\\\")\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 3509,
+        "completion_tokens": 636,
+        "total_tokens": 4145
+      },
+      "timestamp": "2026-02-02T23:41:53.810903+00:00"
+    },
+    {
+      "step_num": 4,
+      "thought": "I will re-evaluate all premises systematically to ensure consistency, starting with the simplest ones (3, 4, 6) and checking the derived truth values.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from itertools import product\\n\\ndef solve():\\n    variables = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n\\n    # Premise 4: ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\\n    # (¬Q ∨ (T ∨ W)) is False AND ¬(T → U) is False\\n    # ¬Q is False (Q=T), (T ∨ W) is False (T=F, W=F)\\n    # ¬(T → U) is False => T → U is True. Since T=F, T → U is always True.\\n    # So: Q=True, T=False, W=False.\\n\\n    # Premise 6: ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\\n    # Part B: ¬((X ↔ U) ∨ (Q → W)) is True\\n    # (X ↔ U) is False (X != U), (Q → W) is False\\n    # Q → W is False => Q=True, W=False. (Matches P4)\\n    # Part A: (((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) is True\\n    \\n    # Premise 3: ¬((¬V → (R → U)) → ¬(P → P))\\n    # (¬V → (R → U)) is True AND ¬(P → P) is False\\n    # P → P is always True, so ¬(P → P) is False. (Always holds)\\n    # So (¬V → (R → U)) must be True.\\n\\n    # Premise 2: (((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))\\n    # T is False, so ¬T is True. (¬U ↔ ¬T) becomes (¬U ↔ True) => U is False.\\n    # If U is False, then X is True (from X != U).\\n\\n    for P, R, S, V, Y in product([True, False], repeat=5):\\n        Q, T, W, U, X = True, False, False, False, True\\n        \\n        p2_lhs = (not S or (X or W)) or (iff(iff(U, U), not U))\\n        p2_rhs = iff(S and Q, implies(T, P)) and iff(not U, not T)\\n        if not implies(p2_lhs, p2_rhs): continue\\n\\n        p3 = not implies(implies(not V, implies(R, U)), not implies(P, P))\\n        if not p3: continue\\n\\n        p6_a = iff(iff(implies(U, T), implies(R, U)), implies(not R, iff(U, P)))\\n        p6_b = not (iff(X, U) or implies(Q, W))\\n        if not (p6_a and p6_b): continue\\n\\n        p7_1 = (implies(Y, P) or implies(Y, Y)) and iff(T or W, U and R)\\n        p7_2 = implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T))\\n        if not (p7_1 and p7_2): continue\\n\\n        p5 = implies(implies(implies(X, Y) and not S, implies(not Q, P and X)), implies(R and R or (V or U), implies(T, P) and not V))\\n        if not p5: continue\\n\\n        print(f\\\"P={P}, Q={Q}, R={R}, S={S}, T={T}, U={U}, V={V}, W={W}, X={X}, Y={Y}\\\")\\n\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\n(no output)",
+      "raw_response": "Thought: I will re-evaluate all premises systematically to ensure consistency, starting with the simplest ones (3, 4, 6) and checking the derived truth values.\nAction: execute_python\nAction Input: {\"code\": \"from itertools import product\\n\\ndef solve():\\n    variables = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n\\n    # Premise 4: ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\\n    # (¬Q ∨ (T ∨ W)) is False AND ¬(T → U) is False\\n    # ¬Q is False (Q=T), (T ∨ W) is False (T=F, W=F)\\n    # ¬(T → U) is False => T → U is True. Since T=F, T → U is always True.\\n    # So: Q=True, T=False, W=False.\\n\\n    # Premise 6: ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\\n    # Part B: ¬((X ↔ U) ∨ (Q → W)) is True\\n    # (X ↔ U) is False (X != U), (Q → W) is False\\n    # Q → W is False => Q=True, W=False. (Matches P4)\\n    # Part A: (((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) is True\\n    \\n    # Premise 3: ¬((¬V → (R → U)) → ¬(P → P))\\n    # (¬V → (R → U)) is True AND ¬(P → P) is False\\n    # P → P is always True, so ¬(P → P) is False. (Always holds)\\n    # So (¬V → (R → U)) must be True.\\n\\n    # Premise 2: (((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))\\n    # T is False, so ¬T is True. (¬U ↔ ¬T) becomes (¬U ↔ True) => U is False.\\n    # If U is False, then X is True (from X != U).\\n\\n    for P, R, S, V, Y in product([True, False], repeat=5):\\n        Q, T, W, U, X = True, False, False, False, True\\n        \\n        p2_lhs = (not S or (X or W)) or (iff(iff(U, U), not U))\\n        p2_rhs = iff(S and Q, implies(T, P)) and iff(not U, not T)\\n        if not implies(p2_lhs, p2_rhs): continue\\n\\n        p3 = not implies(implies(not V, implies(R, U)), not implies(P, P))\\n        if not p3: continue\\n\\n        p6_a = iff(iff(implies(U, T), implies(R, U)), implies(not R, iff(U, P)))\\n        p6_b = not (iff(X, U) or implies(Q, W))\\n        if not (p6_a and p6_b): continue\\n\\n      ",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 4171,
+        "completion_tokens": 1055,
+        "total_tokens": 5226
+      },
+      "timestamp": "2026-02-02T23:42:00.401066+00:00"
+    },
+    {
+      "step_num": 5,
+      "thought": "My previous code yielded no results, which suggests an error in my simplification of the premises. I will write a script to test all possible truth values for all variables against all 10 premises to find a consistent model.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from itertools import product\\ndef solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    vars = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']\\n    for vals in product([True, False], repeat=10):\\n        P, Q, R, S, T, U, V, W, X, Y = vals\\n        p1 = implies(implies((X and X), (S and R)) or iff((P or Y), (P or T)), (not (R and V)) or iff(iff(R, R), (V and X)))\\n        p2 = implies((not S or (X or W)) or iff(iff(U, U), not U), iff(S and Q, implies(T, P)) and iff(not U, not T))\\n        p3 = not implies(implies(not V, implies(R, U)), not implies(P, P))\\n        p4 = not ((not Q or (T or W)) or not implies(T, U))\\n        p5 = implies(implies((implies(X, Y) and not S), implies(not Q, (P and X))), implies((R and R) or (V or U), implies(T, P) and not V))\\n        p6 = iff(iff(implies(U, T), implies(R, U)), implies(not R, iff(U, P))) and not (iff(X, U) or implies(Q, W))\\n        p7 = ((implies(Y, P) or implies(Y, Y)) and iff(T or W, U and R)) and (implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T)))\\n        p8 = implies(implies(Y, X), implies(R, V)) and (iff(not R, W or W) == ((S or U) or (V and V)))\\n        p9 = implies(implies((Y and V) or not Y, (iff(W, W) or not P)), iff(iff(P, U), not U) or ((V or S) and implies(V, Q)))\\n        p10 = implies(iff(not iff(U, P), not not V), (not implies(U, R) and (iff(T, T) or not V)))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print(f'P={P}, Q={Q}, R={R}, S={S}, T={T}, U={U}, V={V}, W={W}, X={X}, Y={Y}')\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\n(no output)",
+      "raw_response": "Thought: My previous code yielded no results, which suggests an error in my simplification of the premises. I will write a script to test all possible truth values for all variables against all 10 premises to find a consistent model.\nAction: execute_python\nAction Input: {\"code\": \"from itertools import product\\ndef solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    vars = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']\\n    for vals in product([True, False], repeat=10):\\n        P, Q, R, S, T, U, V, W, X, Y = vals\\n        p1 = implies(implies((X and X), (S and R)) or iff((P or Y), (P or T)), (not (R and V)) or iff(iff(R, R), (V and X)))\\n        p2 = implies((not S or (X or W)) or iff(iff(U, U), not U), iff(S and Q, implies(T, P)) and iff(not U, not T))\\n        p3 = not implies(implies(not V, implies(R, U)), not implies(P, P))\\n        p4 = not ((not Q or (T or W)) or not implies(T, U))\\n        p5 = implies(implies((implies(X, Y) and not S), implies(not Q, (P and X))), implies((R and R) or (V or U), implies(T, P) and not V))\\n        p6 = iff(iff(implies(U, T), implies(R, U)), implies(not R, iff(U, P))) and not (iff(X, U) or implies(Q, W))\\n        p7 = ((implies(Y, P) or implies(Y, Y)) and iff(T or W, U and R)) and (implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T)))\\n        p8 = implies(implies(Y, X), implies(R, V)) and (iff(not R, W or W) == ((S or U) or (V and V)))\\n        p9 = implies(implies((Y and V) or not Y, (iff(W, W) or not P)), iff(iff(P, U), not U) or ((V or S) and implies(V, Q)))\\n        p10 = implies(iff(not iff(U, P), not not V), (not implies(U, R) and (iff(T, T) or not V)))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print(f'P={P}, Q={Q}, R={R}, S={S}, T={T}, U={U}, V={V}, W={W}, X={X}, Y={Y}')\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 5251,
+        "completion_tokens": 709,
+        "total_tokens": 5960
+      },
+      "timestamp": "2026-02-02T23:42:05.663900+00:00"
+    },
+    {
+      "step_num": 6,
+      "thought": "The previous exhaustive search yielded no results, which implies a possible error in translating the logical expressions. I will carefully re-examine each premise and rewrite the script with higher precision.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    for p, q, r, s, t, u, v, w, x, y in __import__('itertools').product([True, False], repeat=10):\\n        p1 = implies(implies(x and x, s and r) or iff(p or y, p or t), not (r and v) or iff(iff(r, r), v and x))\\n        p2 = implies((not s or (x or w)) or iff(iff(u, u), not u), iff(s and q, implies(t, p)) and iff(not u, not t))\\n        p3 = not implies(implies(not v, implies(r, u)), not implies(p, p))\\n        p4 = not ((not q or (t or w)) or not implies(t, u))\\n        p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies((r and r) or (v or u), (implies(t, p) and not v)))\\n        p6 = (iff(iff(implies(u, t), implies(r, u)), implies(not r, iff(u, p)))) and (not (iff(x, u) or implies(q, w)))\\n        p7 = (((implies(y, p) or implies(y, y)) and iff(t or w, u and r)) and ((implies(iff(q, x), implies(q, y)) and iff(not v, implies(s, t)))))\\n        p8 = (implies(implies(implies(y, x), implies(r, v)), not not w) and iff(implies(not r, w or w), (s or u) or (v and v)))\\n        p9 = implies(implies((y and v) or not y, (iff(w, w) or not p)), iff(iff(p, u), not u) or ((v or s) and implies(v, q)))\\n        p10 = implies(iff(not iff(u, p), not not v), (not implies(u, r) and (iff(t, t) or not v)))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print(f'P={p}, Q={q}, R={r}, S={s}, T={t}, U={u}, V={v}, W={w}, X={x}, Y={y}')\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.13s\n\nOutput:\n(no output)",
+      "raw_response": "Thought: The previous exhaustive search yielded no results, which implies a possible error in translating the logical expressions. I will carefully re-examine each premise and rewrite the script with higher precision.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    for p, q, r, s, t, u, v, w, x, y in __import__('itertools').product([True, False], repeat=10):\\n        p1 = implies(implies(x and x, s and r) or iff(p or y, p or t), not (r and v) or iff(iff(r, r), v and x))\\n        p2 = implies((not s or (x or w)) or iff(iff(u, u), not u), iff(s and q, implies(t, p)) and iff(not u, not t))\\n        p3 = not implies(implies(not v, implies(r, u)), not implies(p, p))\\n        p4 = not ((not q or (t or w)) or not implies(t, u))\\n        p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies((r and r) or (v or u), (implies(t, p) and not v)))\\n        p6 = (iff(iff(implies(u, t), implies(r, u)), implies(not r, iff(u, p)))) and (not (iff(x, u) or implies(q, w)))\\n        p7 = (((implies(y, p) or implies(y, y)) and iff(t or w, u and r)) and ((implies(iff(q, x), implies(q, y)) and iff(not v, implies(s, t)))))\\n        p8 = (implies(implies(implies(y, x), implies(r, v)), not not w) and iff(implies(not r, w or w), (s or u) or (v and v)))\\n        p9 = implies(implies((y and v) or not y, (iff(w, w) or not p)), iff(iff(p, u), not u) or ((v or s) and implies(v, q)))\\n        p10 = implies(iff(not iff(u, p), not not v), (not implies(u, r) and (iff(t, t) or not v)))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print(f'P={p}, Q={q}, R={r}, S={s}, T={t}, U={u}, V={v}, W={w}, X={x}, Y={y}')\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": null,
+      "llm_usage": {
+        "prompt_tokens": 5985,
+        "completion_tokens": 667,
+        "total_tokens": 6652
+      },
+      "timestamp": "2026-02-02T23:42:09.619220+00:00"
+    },
+    {
+      "step_num": 7,
+      "thought": "I will re-examine Premise 8 and Premise 10 for potential translation errors, as the logic search returned no results. Specifically, I noticed that in Premise 8, the negation `¬¬W` and the nested implication structure `(((Y → X) → (R → V)) → ¬¬W)` might be sensitive. I'll also double-check the syntax of all premises.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    for p, q, r, s, t, u, v, w, x, y in __import__('itertools').product([True, False], repeat=10):\\n        p1 = implies(implies(x, s and r) or iff(p or y, p or t), not (r and v) or iff(True, v and x))\\n        p2 = implies((not s or (x or w)) or iff(True, not u), iff(s and q, implies(t, p)) and iff(not u, not t))\\n        p3 = (implies(not v, implies(r, u))) and (implies(p, p))\\n        p4 = (q and not (t or w)) and implies(t, u)\\n        p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies(r or (v or u), implies(t, p) and not v))\\n        p6 = (iff(iff(implies(u, t), implies(r, u)), implies(not r, iff(u, p)))) and (not (iff(x, u) or (implies(q, w))))\\n        p7 = (((implies(y, p) or True) and iff(t or w, u and r)) and (implies(iff(q, x), implies(q, y)) and iff(not v, implies(s, t))))\\n        p8 = (implies(implies(implies(y, x), implies(r, v)), w) and iff(implies(not r, w), s or u or v))\\n        p9 = implies(implies((y and v) or not y, True or not p), iff(iff(p, u), not u) or ((v or s) and implies(v, q)))\\n        p10 = implies(iff(not iff(u, p), v), (not implies(u, r) and (True or not v)))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print(f'P={p}, Q={q}, R={r}, S={s}, T={t}, U={u}, V={v}, W={w}, X={x}, Y={y}')\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\n(no output)",
+      "raw_response": "Thought: I will re-examine Premise 8 and Premise 10 for potential translation errors, as the logic search returned no results. Specifically, I noticed that in Premise 8, the negation `¬¬W` and the nested implication structure `(((Y → X) → (R → V)) → ¬¬W)` might be sensitive. I'll also double-check the syntax of all premises.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    for p, q, r, s, t, u, v, w, x, y in __import__('itertools').product([True, False], repeat=10):\\n        p1 = implies(implies(x, s and r) or iff(p or y, p or t), not (r and v) or iff(True, v and x))\\n        p2 = implies((not s or (x or w)) or iff(True, not u), iff(s and q, implies(t, p)) and iff(not u, not t))\\n        p3 = (implies(not v, implies(r, u))) and (implies(p, p))\\n        p4 = (q and not (t or w)) and implies(t, u)\\n        p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies(r or (v or u), implies(t, p) and not v))\\n        p6 = (iff(iff(implies(u, t), implies(r, u)), implies(not r, iff(u, p)))) and (not (iff(x, u) or (implies(q, w))))\\n        p7 = (((implies(y, p) or True) and iff(t or w, u and r)) and (implies(iff(q, x), implies(q, y)) and iff(not v, implies(s, t))))\\n        p8 = (implies(implies(implies(y, x), implies(r, v)), w) and iff(implies(not r, w), s or u or v))\\n        p9 = implies(implies((y and v) or not y, True or not p), iff(iff(p, u), not u) or ((v or s) and implies(v, q)))\\n        p10 = implies(iff(not iff(u, p), v), (not implies(u, r) and (True or not v)))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print(f'P={p}, Q={q}, R={r}, S={s}, T={t}, U={u}, V={v}, W={w}, X={x}, Y={y}')\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 6677,
+        "completion_tokens": 673,
+        "total_tokens": 7350
+      },
+      "timestamp": "2026-02-02T23:42:14.459213+00:00"
+    },
+    {
+      "step_num": 8,
+      "thought": "I will perform a very careful manual decomposition of the premises, focusing on those that provide immediate constraints (Premise 3, 4, 6) to identify any potential misinterpretations in my previous code.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    # Manual analysis of Premises:\\n    # P3: ¬((¬V → (R → U)) → ¬(P → P))\\n    # For ¬(A → B), A must be True and B must be False.\\n    # A: ¬V → (R → U) is True. B: ¬(P → P) is False (P → P is True, which is always True).\\n    \\n    # P4: ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\\n    # For ¬(A ∨ B), A must be False and B must be False.\\n    # A: (¬Q ∨ (T ∨ W)) is False => ¬Q is False (Q=T), (T ∨ W) is False (T=F, W=F).\\n    # B: ¬(T → U) is False => T → U is True (Holds since T=F).\\n\\n    # P6: ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\\n    # From ¬((X ↔ U) ∨ (Q → W)):\\n    # (X ↔ U) is False (X != U), (Q → W) is False (Q=T, W=F). (Matches P4)\\n    \\n    # P7: ((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))\\n    # T=F, W=F => (T ∨ W) is False.\\n    # So (U ∧ R) must be False. \\n    # Also, ¬V ↔ (S → T). Since T=F, (S → T) is ¬S. So ¬V ↔ ¬S => V = S.\\n    # Also, (Q ↔ X) → (Q → Y). Since Q=T, (T ↔ X) → (T → Y) => X → Y.\\n\\n    # P2: (((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))\\n    # T=F, so ¬T=T. (¬U ↔ ¬T) becomes (¬U ↔ T) => U=False.\\n    # Since U=False, from P6 (X != U), X=True.\\n    # From P7 (X → Y), True → Y => Y=True.\\n    # Since U=False, U ∧ R is False regardless of R (Matches P7 requirement).\\n    \\n    # Let's check P6 A part with U=F, T=F, X=T:\\n    # (((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P)))\\n    # ((F → F) ↔ (R → F)) ↔ (¬R → (F ↔ P))\\n    # (T ↔ ¬R) ↔ (¬R → ¬P)\\n    # case R=T: (T ↔ F) ↔ (F → ¬P) => F ↔ T => False.\\n    # case R=F: (T ↔ T) ↔ (T → ¬P) => T ↔ ¬P => ¬P.\\n    # So for P6 to be True, R=False and ¬P=True (P=False).\\n\\n    # Now we have: Q=T, T=F, W=F, U=F, X=T, Y=T, R=F, P=F.\\n    # Remaining: V, S. We know V=S (from P7).\\n    # Check P3: ¬V → (R → U) is ¬V → (F → F) is ¬V → T, which is always True.\\n    # Check P10: ((¬(U ↔ P) ↔ ¬¬V) → (¬(U → R) ∧ ((T ↔ T) ∨ ¬V)))\\n    # U=F, P=F. So (U ↔ P) is T. ¬(U ↔ P) is F.\\n    # (F ↔ V) → (¬(F → F) ∧ (T ∨ ¬V))\\n    # (F ↔ V) → (F ∧ T) => (F ↔ V) → False.\\n    # For this to be True, (F ↔ V) must be False => V=True.\\n    # Since V=S, S=True.\\n\\n    print('P=False, Q=True, R=False, S=True, T=False, U=False, V=True, W=False, X=True, Y=True')\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\nP=False, Q=True, R=False, S=True, T=False, U=False, V=True, W=False, X=True, Y=True\n",
+      "raw_response": "Thought: I will perform a very careful manual decomposition of the premises, focusing on those that provide immediate constraints (Premise 3, 4, 6) to identify any potential misinterpretations in my previous code.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    # Manual analysis of Premises:\\n    # P3: ¬((¬V → (R → U)) → ¬(P → P))\\n    # For ¬(A → B), A must be True and B must be False.\\n    # A: ¬V → (R → U) is True. B: ¬(P → P) is False (P → P is True, which is always True).\\n    \\n    # P4: ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\\n    # For ¬(A ∨ B), A must be False and B must be False.\\n    # A: (¬Q ∨ (T ∨ W)) is False => ¬Q is False (Q=T), (T ∨ W) is False (T=F, W=F).\\n    # B: ¬(T → U) is False => T → U is True (Holds since T=F).\\n\\n    # P6: ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\\n    # From ¬((X ↔ U) ∨ (Q → W)):\\n    # (X ↔ U) is False (X != U), (Q → W) is False (Q=T, W=F). (Matches P4)\\n    \\n    # P7: ((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))\\n    # T=F, W=F => (T ∨ W) is False.\\n    # So (U ∧ R) must be False. \\n    # Also, ¬V ↔ (S → T). Since T=F, (S → T) is ¬S. So ¬V ↔ ¬S => V = S.\\n    # Also, (Q ↔ X) → (Q → Y). Since Q=T, (T ↔ X) → (T → Y) => X → Y.\\n\\n    # P2: (((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))\\n    # T=F, so ¬T=T. (¬U ↔ ¬T) becomes (¬U ↔ T) => U=False.\\n    # Since U=False, from P6 (X != U), X=True.\\n    # From P7 (X → Y), True → Y => Y=True.\\n    # Since U=False, U ∧ R is False regardless of R (Matches P7 requirement).\\n    \\n    # Let's check P6 A part with U=F, T=F, X=T:\\n    # (((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P)))\\n    # ((F → F) ↔ (R → F)) ↔ (¬R → (F ↔ P))\\n    # (T ↔ ¬R) ↔ (¬R → ¬P)\\n    # case R=T: (T ↔ F) ↔ (F → ¬P) => F ↔ T => False.\\n    # case R=F: (T ↔ T) ↔ (T → ¬P) => T ↔ ¬P => ¬P.\\n    # So for P6 to be True, R=False and ¬P=True (P=False).\\n\\n   ",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 7375,
+        "completion_tokens": 1238,
+        "total_tokens": 8613
+      },
+      "timestamp": "2026-02-02T23:42:22.779749+00:00"
+    },
+    {
+      "step_num": 9,
+      "thought": "I have derived the truth values for all variables: P=False, Q=True, R=False, S=True, T=False, U=False, V=True, W=False, X=True, Y=True. I will now verify these values against Premise 5, which previously showed a potential inconsistency.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def solve():\\n    P, Q, R, S, T, U, V, W, X, Y = False, True, False, True, False, False, True, False, True, True\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies((r and r) or (v or u), (implies(t, p) and not v)))\\n    # Wait, the variables in my local code were lowercase. Let me use the values directly.\\n    # Premise 5: ((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))\\n    # (X -> Y) is (T -> T) = T. ¬S is F. (T and F) is F.\\n    # (F -> (...)) is T. So LHS is T.\\n    # RHS: ((R and R) or (V or U)) is (F or (T or F)) = T.\\n    # ((T -> P) and ¬V) is ((F -> F) and F) = (T and F) = F.\\n    # (T -> F) is F. \\n    # Thus Premise 5 is False with these values. \\n    # This implies that the values must be different. Let me reconsider Premise 10.\\n    # Premise 10: ((¬(U ↔ P) ↔ ¬¬V) → (¬(U → R) ∧ ((T ↔ T) ∨ ¬V)))\\n    # If the conclusion is that these premises are consistent, there must be a mistake in my U=F assumption.\\n    # Let's re-run the solver with the correct P5 structure.\\n    pass\\nsolve()\"}",
+      "observation": "Code execution failed.\nExecution time: 0.20s\n\nOutput:\n(no output)\n\nError:\n---------------------------------------------------------------------------NameError                                 Traceback (most recent call last)Cell In[9], line 19\n      6     # Wait, the variables in my local code were lowercase. Let me use the values directly.\n      7     # Premise 5: ((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))\n      8     # (X -> Y) is (T -> T) = T. ¬S is F. (T and F) is F.\n   (...)     16     # If the conclusion is that these premises are consistent, there must be a mistake in my U=F assumption.\n     17     # Let's re-run the solver with the correct P5 structure.\n     18     pass\n---> 19 solve()\nCell In[9], line 5, in solve()\n      3 def implies(a, b): return (not a) or b\n      4 def iff(a, b): return a == b\n----> 5 p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies((r and r) or (v or u), (implies(t, p) and not v)))\n      6 # Wait, the variables in my local code were lowercase. Let me use the values directly.\n      7 # Premise 5: ((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))\n      8 # (X -> Y) is (T -> T) = T. ¬S is F. (T and F) is F.\n   (...)     16 # If the conclusion is that these premises are consistent, there must be a mistake in my U=F assumption.\n     17 # Let's re-run the solver with the correct P5 structure.\n     18 pass\nNameError: name 'x' is not defined",
+      "raw_response": "Thought: I have derived the truth values for all variables: P=False, Q=True, R=False, S=True, T=False, U=False, V=True, W=False, X=True, Y=True. I will now verify these values against Premise 5, which previously showed a potential inconsistency.\nAction: execute_python\nAction Input: {\"code\": \"def solve():\\n    P, Q, R, S, T, U, V, W, X, Y = False, True, False, True, False, False, True, False, True, True\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    p5 = implies(implies(implies(x, y) and not s, implies(not q, p and x)), implies((r and r) or (v or u), (implies(t, p) and not v)))\\n    # Wait, the variables in my local code were lowercase. Let me use the values directly.\\n    # Premise 5: ((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))\\n    # (X -> Y) is (T -> T) = T. ¬S is F. (T and F) is F.\\n    # (F -> (...)) is T. So LHS is T.\\n    # RHS: ((R and R) or (V or U)) is (F or (T or F)) = T.\\n    # ((T -> P) and ¬V) is ((F -> F) and F) = (T and F) = F.\\n    # (T -> F) is F. \\n    # Thus Premise 5 is False with these values. \\n    # This implies that the values must be different. Let me reconsider Premise 10.\\n    # Premise 10: ((¬(U ↔ P) ↔ ¬¬V) → (¬(U → R) ∧ ((T ↔ T) ∨ ¬V)))\\n    # If the conclusion is that these premises are consistent, there must be a mistake in my U=F assumption.\\n    # Let's re-run the solver with the correct P5 structure.\\n    pass\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 8673,
+        "completion_tokens": 541,
+        "total_tokens": 9214
+      },
+      "timestamp": "2026-02-02T23:42:26.759801+00:00"
+    },
+    {
+      "step_num": 10,
+      "thought": "I will perform a more exhaustive search for truth values by reconsidering all premises. I noticed that my previous translations might have been too restrictive, so I will ensure the code strictly matches the symbolic representation provided in the question.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from itertools import product\\ndef solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    vars_names = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']\\n    for vals in product([True, False], repeat=10):\\n        P, Q, R, S, T, U, V, W, X, Y = vals\\n        p1 = implies(implies(X and X, S and R) or iff(P or Y, P or T), not (R and V) or iff(iff(R, R), V and X))\\n        p2 = implies((not S or (X or W)) or iff(iff(U, U), not U), iff(S and Q, implies(T, P)) and iff(not U, not T))\\n        p3 = not implies(implies(not V, implies(R, U)), not implies(P, P))\\n        p4 = not ((not Q or (T or W)) or not implies(T, U))\\n        p5 = implies(implies(implies(X, Y) and not S, implies(not Q, P and X)), implies((R and R) or (V or U), implies(T, P) and not V))\\n        p6 = iff(iff(implies(U, T), implies(R, U)), iff(not R, iff(U, P))) and not (iff(X, U) or implies(Q, W))\\n        p7 = (((implies(Y, P) or implies(Y, Y)) and iff(T or W, U and R)) and (implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T))))\\n        p8 = implies(implies(implies(Y, X), implies(R, V)), not not W) and iff(implies(not R, W or W), (S or U) or (V and V))\\n        p9 = implies(implies((Y and V) or not Y, iff(W, W) or not P), iff(iff(P, U), not U) or ((V or S) and implies(V, Q)))\\n        p10 = implies(iff(not iff(U, P), not not V), not implies(U, R) and (iff(T, T) or not V))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print({vars_names[i]: vals[i] for i in range(10)})\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\n(no output)",
+      "raw_response": "Thought: I will perform a more exhaustive search for truth values by reconsidering all premises. I noticed that my previous translations might have been too restrictive, so I will ensure the code strictly matches the symbolic representation provided in the question.\n\nAction: execute_python\nAction Input: {\"code\": \"from itertools import product\\ndef solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    vars_names = ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']\\n    for vals in product([True, False], repeat=10):\\n        P, Q, R, S, T, U, V, W, X, Y = vals\\n        p1 = implies(implies(X and X, S and R) or iff(P or Y, P or T), not (R and V) or iff(iff(R, R), V and X))\\n        p2 = implies((not S or (X or W)) or iff(iff(U, U), not U), iff(S and Q, implies(T, P)) and iff(not U, not T))\\n        p3 = not implies(implies(not V, implies(R, U)), not implies(P, P))\\n        p4 = not ((not Q or (T or W)) or not implies(T, U))\\n        p5 = implies(implies(implies(X, Y) and not S, implies(not Q, P and X)), implies((R and R) or (V or U), implies(T, P) and not V))\\n        p6 = iff(iff(implies(U, T), implies(R, U)), iff(not R, iff(U, P))) and not (iff(X, U) or implies(Q, W))\\n        p7 = (((implies(Y, P) or implies(Y, Y)) and iff(T or W, U and R)) and (implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T))))\\n        p8 = implies(implies(implies(Y, X), implies(R, V)), not not W) and iff(implies(not R, W or W), (S or U) or (V and V))\\n        p9 = implies(implies((Y and V) or not Y, iff(W, W) or not P), iff(iff(P, U), not U) or ((V or S) and implies(V, Q)))\\n        p10 = implies(iff(not iff(U, P), not not V), not implies(U, R) and (iff(T, T) or not V))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            print({vars_names[i]: vals[i] for i in range(10)})\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 9718,
+        "completion_tokens": 683,
+        "total_tokens": 10401
+      },
+      "timestamp": "2026-02-02T23:42:31.308590+00:00"
+    },
+    {
+      "step_num": 11,
+      "thought": "I will re-examine the premises for any logical contradictions or hints that could lead to a conclusion. I notice that Premise 3 and Premise 4 are both negated implications and disjunctions respectively, which provide strong constraints. If no model exists, it might suggest the premises lead to a contradiction, meaning any statement (or a specific one) could be the conclusion.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"def check_consistency():\\n    from itertools import product\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    for p, q, r, s, t, u, v, w, x, y in product([True, False], repeat=10):\\n        p3 = not (implies(implies(not v, implies(r, u)), not implies(p, p)))\\n        p4 = not ((not q or (t or w)) or not implies(t, u))\\n        if p3 and p4:\\n            # If P3 and P4 are true, then q=True, t=False, w=False, and p=True (from p->p).\\n            # Let's check p6: ((((U \\u2192 T) \\u2194 (R \\u2192 U)) \\u2194 (\\u00acR \\u2192 (U \\u2194 P))) \\u2227 \\u00ac((X \\u2194 U) \\u2228 (Q \\u2192 W)))\\n            p6_part2 = not (iff(x, u) or implies(q, w))\\n            if p6_part2:\\n                # This implies q=True, w=False (consistent) and x != u.\\n                p2 = implies((not s or (x or w)) or iff(iff(u, u), not u), iff(s and q, implies(t, p)) and iff(not u, not t))\\n                # With t=False, not t=True, so iff(not u, not t) means u=False.\\n                # Since u=False and x != u, then x=True.\\n                # Now let's check p7 part 2: (iff(q, x) -> (q -> y)) and iff(not v, implies(s, t))\\n                # Since q=True and x=True, iff(q, x) is True. q -> y is y. So y=True.\\n                # iff(not v, implies(s, t)): t=False, so implies(s, t) is not s. Thus not v = not s, so v=s.\\n                # Now check p5: ((((x -> y) and not s) -> (not q -> (p and x))) -> (((r and r) or (v or u)) -> ((t -> p) and not v)))\\n                # (x -> y) is (True -> True) = True. not q is False. \\n                # LHS of P5: implies(True and not s, True) = True.\\n                # RHS of P5: implies(r or v or u, implies(t, p) and not v).\\n                # r or v or False is r or v. implies(False, p) is True. so (True and not v) is not v.\\n                # So RHS is (r or v) -> not v.\\n                # For P5 to be True, (r or v) -> not v must be True.\\n                # If v=True, then (r or True) -> False is False. So v must be False.\\n                # If v=False, then (r or False) -> True is True. So v=False.\\n                # But v=s, so s=False.\\n                # Now check P2 LHS again: (not s or (x or w)) or iff(True, not u)\\n                # s=False, so not s=True. Thus LHS of P2 is True.\\n                # P2 RHS: iff(s and q, implies(t, p)) and iff(not u, not t)\\n                # s=False, q=True, so s and q is False. implies(t, p) is implies(False, p) which is True.\\n                # iff(False, True) is False. So RHS of P2 is False.\\n                # P2 is True -> False, which is False. \\n                return False\\n    return True\\nprint(check_consistency())\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.08s\n\nOutput:\nFalse\n",
+      "raw_response": "Thought: I will re-examine the premises for any logical contradictions or hints that could lead to a conclusion. I notice that Premise 3 and Premise 4 are both negated implications and disjunctions respectively, which provide strong constraints. If no model exists, it might suggest the premises lead to a contradiction, meaning any statement (or a specific one) could be the conclusion.\n\nAction: execute_python\nAction Input: {\"code\": \"def check_consistency():\\n    from itertools import product\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    for p, q, r, s, t, u, v, w, x, y in product([True, False], repeat=10):\\n        p3 = not (implies(implies(not v, implies(r, u)), not implies(p, p)))\\n        p4 = not ((not q or (t or w)) or not implies(t, u))\\n        if p3 and p4:\\n            # If P3 and P4 are true, then q=True, t=False, w=False, and p=True (from p->p).\\n            # Let's check p6: ((((U \\u2192 T) \\u2194 (R \\u2192 U)) \\u2194 (\\u00acR \\u2192 (U \\u2194 P))) \\u2227 \\u00ac((X \\u2194 U) \\u2228 (Q \\u2192 W)))\\n            p6_part2 = not (iff(x, u) or implies(q, w))\\n            if p6_part2:\\n                # This implies q=True, w=False (consistent) and x != u.\\n                p2 = implies((not s or (x or w)) or iff(iff(u, u), not u), iff(s and q, implies(t, p)) and iff(not u, not t))\\n                # With t=False, not t=True, so iff(not u, not t) means u=False.\\n                # Since u=False and x != u, then x=True.\\n                # Now let's check p7 part 2: (iff(q, x) -> (q -> y)) and iff(not v, implies(s, t))\\n                # Since q=True and x=True, iff(q, x) is True. q -> y is y. So y=True.\\n                # iff(not v, implies(s, t)): t=False, so implies(s, t) is not s. Thus not v = not s, so v=s.\\n                # Now check p5: ((((x -> y) and not s) -> (not q -> (p and x))) -> (((r and r) or (v or u)) -> ((t -> p) and not v)))\\n                # (x -> y) is (True -> True) = True. not q is False. \\n              ",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 10426,
+        "completion_tokens": 1042,
+        "total_tokens": 11468
+      },
+      "timestamp": "2026-02-02T23:42:38.430950+00:00"
+    },
+    {
+      "step_num": 12,
+      "thought": "The exhaustive search and manual analysis indicate the premises are inconsistent. In propositional logic, a set of inconsistent premises allows for any conclusion to be drawn. I will re-verify the consistency one last time with the most direct interpretation.",
+      "action": "execute_python",
+      "action_input": "{\"code\": \"from itertools import product\\ndef solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    results = []\\n    for vals in product([True, False], repeat=10):\\n        P, Q, R, S, T, U, V, W, X, Y = vals\\n        p1 = implies(implies(X, S and R) or iff(P or Y, P or T), not (R and V) or iff(True, V and X))\\n        p2 = implies((not S or (X or W)) or not U, iff(S and Q, implies(T, P)) and iff(not U, not T))\\n        p3 = implies(not V, implies(R, U)) and (P or not P)\\n        p4 = Q and not (T or W) and implies(T, U)\\n        p5 = implies(implies(implies(X, Y) and not S, implies(not Q, P and X)), implies(R or V or U, implies(T, P) and not V))\\n        p6 = iff(iff(implies(U, T), implies(R, U)), iff(not R, iff(U, P))) and not (iff(X, U) or implies(Q, W))\\n        p7 = (True and iff(T or W, U and R)) and (implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T)))\\n        p8 = implies(implies(implies(Y, X), implies(R, V)), W) and iff(implies(not R, W), S or U or V)\\n        p9 = implies(implies((Y and V) or not Y, True), iff(iff(P, U), not U) or ((V or S) and implies(V, Q)))\\n        p10 = implies(iff(not iff(U, P), V), not implies(U, R) and (True or not V))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            results.append(vals)\\n    print(len(results))\\nsolve()\"}",
+      "observation": "Code executed successfully.\nExecution time: 0.09s\n\nOutput:\n0\n",
+      "raw_response": "Thought: The exhaustive search and manual analysis indicate the premises are inconsistent. In propositional logic, a set of inconsistent premises allows for any conclusion to be drawn. I will re-verify the consistency one last time with the most direct interpretation.\nAction: execute_python\nAction Input: {\"code\": \"from itertools import product\\ndef solve():\\n    def implies(a, b): return (not a) or b\\n    def iff(a, b): return a == b\\n    results = []\\n    for vals in product([True, False], repeat=10):\\n        P, Q, R, S, T, U, V, W, X, Y = vals\\n        p1 = implies(implies(X, S and R) or iff(P or Y, P or T), not (R and V) or iff(True, V and X))\\n        p2 = implies((not S or (X or W)) or not U, iff(S and Q, implies(T, P)) and iff(not U, not T))\\n        p3 = implies(not V, implies(R, U)) and (P or not P)\\n        p4 = Q and not (T or W) and implies(T, U)\\n        p5 = implies(implies(implies(X, Y) and not S, implies(not Q, P and X)), implies(R or V or U, implies(T, P) and not V))\\n        p6 = iff(iff(implies(U, T), implies(R, U)), iff(not R, iff(U, P))) and not (iff(X, U) or implies(Q, W))\\n        p7 = (True and iff(T or W, U and R)) and (implies(iff(Q, X), implies(Q, Y)) and iff(not V, implies(S, T)))\\n        p8 = implies(implies(implies(Y, X), implies(R, V)), W) and iff(implies(not R, W), S or U or V)\\n        p9 = implies(implies((Y and V) or not Y, True), iff(iff(P, U), not U) or ((V or S) and implies(V, Q)))\\n        p10 = implies(iff(not iff(U, P), V), not implies(U, R) and (True or not V))\\n        if all([p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]):\\n            results.append(vals)\\n    print(len(results))\\nsolve()\"}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 11489,
+        "completion_tokens": 586,
+        "total_tokens": 12075
+      },
+      "timestamp": "2026-02-02T23:42:42.446516+00:00"
+    },
+    {
+      "step_num": 13,
+      "thought": "The premises provided in the problem are logically inconsistent. In propositional logic, when a set of premises is inconsistent, any statement can be concluded, but I must identify if there's a specific conclusion that was intended or if a contradiction itself is the result. Re-analyzing Premise 4 and 6, which imply Q ∧ ¬T ∧ ¬W and Q ∧ ¬W and X ≠ U, and combining this with Premise 2 and 7, which force U = False, X = True, Y = True, S = False, and V = False, leads to a contradiction in Premise 2 where the antecedent is true but the consequent (S ∧ Q ↔ (T → P)) is false. Since the premises are inconsistent, the standard logical conclusion is often a contradiction or any arbitrary statement derived from the contradiction.",
+      "action": "finish",
+      "action_input": "\\boxed{¬Q}",
+      "observation": "FINISH",
+      "raw_response": "Thought: The premises provided in the problem are logically inconsistent. In propositional logic, when a set of premises is inconsistent, any statement can be concluded, but I must identify if there's a specific conclusion that was intended or if a contradiction itself is the result. Re-analyzing Premise 4 and 6, which imply Q ∧ ¬T ∧ ¬W and Q ∧ ¬W and X ≠ U, and combining this with Premise 2 and 7, which force U = False, X = True, Y = True, S = False, and V = False, leads to a contradiction in Premise 2 where the antecedent is true but the consequent (S ∧ Q ↔ (T → P)) is false. Since the premises are inconsistent, the standard logical conclusion is often a contradiction or any arbitrary statement derived from the contradiction.\n\nAction: finish\nAction Input: \\boxed{¬Q}\n",
+      "parse_error": null,
+      "llm_finish_reason": "stop",
+      "llm_usage": {
+        "prompt_tokens": 12097,
+        "completion_tokens": 192,
+        "total_tokens": 12289
+      },
+      "timestamp": "2026-02-02T23:42:45.245742+00:00"
+    }
+  ],
+  "final_answer": "\\boxed{¬Q}",
+  "success": true,
+  "error": null,
+  "total_cost": 0.0129365,
+  "total_time": 69.29803347587585,
+  "task": {
+    "task_id": "rg:propositional_logic:256:000254",
+    "question": "The following question is a propositional logic reasoning question.\n\nIn the question we provide a list of premises. The task is to infer a correct conclusion from the premise.\n\nFORMAT INSTRUCTIONS:\n- Return the conclusion logic statement, as your final answer.\n- Use the following notation to denote symbols\n    - OR = ∨\n    - AND = ∧\n    - IMPLIES = →\n    - IFF = ↔\n    - NOT = ¬\n\nHere is the question:\nGiven:\n1. ((((X ∧ X) → (S ∧ R)) ∨ ((P ∨ Y) ↔ (P ∨ T))) → (¬(R ∧ V) ∨ ((R ↔ R) ↔ (V ∧ X))))\n.2. (((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))\n.3. ¬((¬V → (R → U)) → ¬(P → P))\n.4. ¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))\n.5. ((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))\n.6. ((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))\n.7. ((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))\n.8. ((((Y → X) → (R → V)) → ¬¬W) ∧ ((¬R → (W ∨ W)) ↔ ((S ∨ U) ∨ (V ∧ V))))\n.9. ((((Y ∧ V) ∨ ¬Y) → ((W ↔ W) ∨ ¬P)) → (((P ↔ U) ↔ ¬U) ∨ ((V ∨ S) ∧ (V → Q))))\n.10. ((¬(U ↔ P) ↔ ¬¬V) → (¬(U → R) ∧ ((T ↔ T) ∨ ¬V)))\n.What can we conclude from the above statements?\n\nIMPORTANT: When you finish, put ONLY the final answer inside \\boxed{...} (no extra text). If the task requests a multi-line format, encode it into a single line representation.",
+    "final_answer": "",
+    "source": "reasoning_gym",
+    "split": "generated",
+    "metadata": {
+      "rg_dataset": "propositional_logic",
+      "rg_index": 254,
+      "rg_seed": 256,
+      "rg_size": 624,
+      "rg_config_path": "configs/rg_all_tasks_seed256_n624.yaml",
+      "rg_spec_names": [
+        "ab",
+        "acre",
+        "advanced_geometry",
+        "aiw",
+        "arc_1d",
+        "arc_agi",
+        "base_conversion",
+        "basic_arithmetic",
+        "bf",
+        "binary_alternation",
+        "binary_matrix",
+        "bitwise_arithmetic",
+        "boxnet",
+        "caesar_cipher",
+        "calendar_arithmetic",
+        "chain_sum",
+        "circuit_logic",
+        "codeio",
+        "coin_flip",
+        "color_cube_rotation",
+        "complex_arithmetic",
+        "count_bits",
+        "count_primes",
+        "countdown",
+        "course_schedule",
+        "cryptarithm",
+        "decimal_arithmetic",
+        "decimal_chain_sum",
+        "dice",
+        "emoji_mystery",
+        "family_relationships",
+        "figlet_font",
+        "fraction_simplification",
+        "futoshiki",
+        "game_of_life",
+        "game_of_life_halting",
+        "gcd",
+        "graph_color",
+        "group_anagrams",
+        "gsm_symbolic",
+        "intermediate_integration",
+        "isomorphic_strings",
+        "jugs",
+        "kakurasu",
+        "knight_swap",
+        "knights_knaves",
+        "largest_island",
+        "lcm",
+        "leg_counting",
+        "letter_counting",
+        "letter_jumble",
+        "list_functions",
+        "mahjong_puzzle",
+        "manipulate_matrix",
+        "maze",
+        "mini_sudoku",
+        "modulo_grid",
+        "n_queens",
+        "needle_haystack",
+        "number_filtering",
+        "number_format",
+        "number_sequence",
+        "number_sorting",
+        "palindrome_generation",
+        "palindrome_partitioning",
+        "polynomial_equations",
+        "polynomial_multiplication",
+        "pool_matrix",
+        "power_function",
+        "prime_factorization",
+        "products",
+        "propositional_logic",
+        "puzzle24",
+        "quantum_lock",
+        "ransom_note",
+        "rearc",
+        "rectangle_count",
+        "rotate_matrix",
+        "rotten_oranges",
+        "rubiks_cube",
+        "rush_hour",
+        "self_reference",
+        "sentence_reordering",
+        "shortest_path",
+        "simple_equations",
+        "simple_geometry",
+        "simple_integration",
+        "sokoban",
+        "spell_backward",
+        "spiral_matrix",
+        "string_insertion",
+        "string_manipulation",
+        "string_splitting",
+        "string_synthesis",
+        "sudoku",
+        "survo",
+        "syllogism",
+        "time_intervals",
+        "tower_of_hanoi",
+        "tsumego",
+        "word_ladder",
+        "word_sequence_reversal",
+        "word_sorting",
+        "zebra_puzzles"
+      ],
+      "rg_spec_weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rg_spec_configs": [
+        {
+          "length": 100
+        },
+        {},
+        {
+          "max_coord": 10000,
+          "min_coord": -10000
+        },
+        {
+          "max_entities": 16,
+          "task_type_weights": [
+            0.1,
+            0.45,
+            0.45
+          ]
+        },
+        {
+          "max_size": 100,
+          "min_size": 100
+        },
+        {
+          "mirrors_weights": [
+            0.05,
+            0.05,
+            0.1,
+            0.4,
+            0.4
+          ],
+          "rotations_weights": [
+            0.0,
+            0.4,
+            0.2,
+            0.4
+          ]
+        },
+        {
+          "max_base": 36,
+          "max_value": 1000000,
+          "min_base": 27,
+          "min_value": 100000
+        },
+        {
+          "max_digits": 4,
+          "max_terms": 6,
+          "min_digits": 4,
+          "min_terms": 6
+        },
+        {
+          "difficulty": 3
+        },
+        {
+          "max_n": 1000,
+          "min_n": 500
+        },
+        {
+          "max_n": 100,
+          "min_n": 100,
+          "p_zero": 0.05
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_box_num": 9,
+          "max_column_num": 9,
+          "max_row_num": 9,
+          "min_box_num": 8,
+          "min_column_num": 8,
+          "min_row_num": 8
+        },
+        {
+          "max_rotation": 25,
+          "max_words": 50,
+          "min_rotation": 25,
+          "min_words": 25
+        },
+        {
+          "offset_upper_bound": 365,
+          "tasks": [
+            "weekday_of_date",
+            "is_leap_year",
+            "weekday_offset",
+            "count_days",
+            "count_business_days",
+            "weekday_of_date_from_first_date",
+            "recurring_event_day"
+          ]
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_inputs": 10,
+          "max_terms": 30,
+          "min_inputs": 8,
+          "min_terms": 20
+        },
+        {
+          "difficulty": 9
+        },
+        {
+          "max_trials": 15,
+          "min_trials": 15
+        },
+        {
+          "max_rotations": 100,
+          "min_rotations": 50
+        },
+        {
+          "max_imag": 100000000,
+          "max_real": 100000000,
+          "min_imag": -100000000,
+          "min_real": -100000000,
+          "operations_weights": [
+            0.1,
+            0.1,
+            0.4,
+            0.4
+          ]
+        },
+        {
+          "max_n": 2147483647,
+          "min_n": 100000000
+        },
+        {
+          "max_n": 100000,
+          "min_n": 50000
+        },
+        {
+          "max_numbers": 15,
+          "max_target": 1000000000000,
+          "max_value": 300,
+          "min_numbers": 12,
+          "min_target": 5000,
+          "min_value": 200
+        },
+        {
+          "max_cycle_length": 6,
+          "max_num_courses": 100,
+          "max_num_prerequisites": 5,
+          "min_cycle_length": 5,
+          "min_num_courses": 50,
+          "min_num_prerequisites": 4
+        },
+        {
+          "max_words": 50,
+          "min_words": 10
+        },
+        {
+          "max_num_decimal_places": 8,
+          "max_terms": 10,
+          "min_num_decimal_places": 6,
+          "min_terms": 10,
+          "precision": 12
+        },
+        {
+          "max_decimal_places": 8,
+          "max_digits": 10,
+          "max_terms": 10,
+          "min_decimal_places": 6,
+          "min_digits": 8,
+          "min_terms": 10
+        },
+        {
+          "max_dice_size": 35,
+          "num_dice": 10
+        },
+        {
+          "max_words_in_sentence": 50,
+          "min_words_in_sentence": 40
+        },
+        {
+          "max_family_size": 11,
+          "min_family_size": 11
+        },
+        {
+          "max_word_len": 30,
+          "min_word_len": 20
+        },
+        {
+          "max_factor": 1000,
+          "max_value": 10000,
+          "min_factor": 100,
+          "min_value": 1000
+        },
+        {
+          "max_board_size": 9,
+          "max_difficulty": 3,
+          "min_board_size": 9,
+          "min_difficulty": 3
+        },
+        {
+          "filled_cells_weights": 0.8,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "simulation_steps": 10
+        },
+        {
+          "difficulty": 3,
+          "grid_size_x": 100,
+          "grid_size_y": 100,
+          "max_simulation_steps": 200,
+          "num_oscillators": 20
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_num_vertices": 25,
+          "min_num_vertices": 20,
+          "num_colors": 3
+        },
+        {
+          "max_anagram_groups": 100,
+          "max_words_per_group": 10,
+          "min_anagram_groups": 50,
+          "min_words_per_group": 10
+        },
+        {},
+        {
+          "problem_type_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_string_length": 1000,
+          "min_string_length": 1000
+        },
+        {
+          "difficulty": 20,
+          "num_jugs": 5
+        },
+        {
+          "max_cols": 9,
+          "max_rows": 9,
+          "min_cols": 9,
+          "min_rows": 9,
+          "p_ones": 0.2
+        },
+        {
+          "max_nodes": 12,
+          "max_pieces": 6,
+          "max_steps": 30,
+          "min_nodes": 12,
+          "min_pieces": 6,
+          "min_steps": 20
+        },
+        {
+          "depth_constraint": 3,
+          "n_people": 5,
+          "width_constraint": 3
+        },
+        {
+          "max_cols": 100,
+          "max_island_size": 30,
+          "max_num_islands": 20,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_island_size": 30,
+          "min_num_islands": 20,
+          "min_rows": 100
+        },
+        {
+          "max_numbers": 5,
+          "max_value": 100000,
+          "min_numbers": 5,
+          "min_value": 10000
+        },
+        {
+          "max_animals": 36,
+          "max_instances": 1024,
+          "min_animals": 36,
+          "min_instances": 512
+        },
+        {
+          "max_words": 19,
+          "min_words": 17
+        },
+        {
+          "max_corruption_level": 0.9,
+          "max_word_len": 17,
+          "max_words": 100,
+          "min_corruption_level": 0.6,
+          "min_word_len": 12,
+          "min_words": 50
+        },
+        {},
+        {
+          "max_num_rounds": 500,
+          "min_num_rounds": 500
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "max_transforms": 15,
+          "min_cols": 100,
+          "min_rows": 100,
+          "min_transforms": 15
+        },
+        {
+          "max_dist": 20,
+          "max_grid_size": 100,
+          "min_dist": 15,
+          "min_grid_size": 50
+        },
+        {
+          "max_empty": 12,
+          "min_empty": 10
+        },
+        {
+          "max_divisor": 49,
+          "max_holes": 15,
+          "max_target": 21,
+          "size_x": 80,
+          "size_y": 80
+        },
+        {
+          "max_remove": 10,
+          "min_remove": 8,
+          "n": 12
+        },
+        {
+          "max_num_statements": 1000,
+          "min_num_statements": 500
+        },
+        {
+          "max_decimals": 6,
+          "max_numbers": 200,
+          "max_value": 10000,
+          "min_decimals": 4,
+          "min_numbers": 100,
+          "min_value": -10000
+        },
+        {
+          "max_delta": 1e-06,
+          "max_n": 1000000000,
+          "max_num_candidates": 500,
+          "min_n": 1000000,
+          "min_num_candidates": 100
+        },
+        {
+          "max_complexity": 3,
+          "max_terms": 12,
+          "max_value": 10000,
+          "min_terms": 8,
+          "min_value": -10000
+        },
+        {
+          "max_decimals": 7,
+          "max_numbers": 1000,
+          "max_value": 10000,
+          "min_decimals": 6,
+          "min_numbers": 500,
+          "min_value": -10000
+        },
+        {
+          "max_length": 500,
+          "min_length": 100
+        },
+        {
+          "max_string_len": 15,
+          "max_substring_palindrome_len": 7,
+          "min_string_len": 10,
+          "min_substring_palindrome_len": 5
+        },
+        {
+          "max_degree": 4,
+          "max_terms": 5,
+          "min_degree": 3,
+          "min_terms": 5
+        },
+        {
+          "max_degree": 10,
+          "max_polynomials": 10,
+          "max_terms": 16,
+          "max_value": 100000000,
+          "min_degree": 3,
+          "min_polynomials": 5,
+          "min_terms": 8,
+          "min_value": 1000
+        },
+        {
+          "max_cols": 100,
+          "max_pool_size": 9,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_pool_size": 9,
+          "min_rows": 100
+        },
+        {
+          "max_exponent": 10,
+          "min_exponent": 10
+        },
+        {
+          "max_value": 10000,
+          "min_value": 5000
+        },
+        {
+          "max_digits": 10,
+          "max_terms": 12,
+          "min_digits": 10,
+          "min_terms": 12
+        },
+        {
+          "max_complexity": 5,
+          "max_statements": 10,
+          "max_vars": 10,
+          "min_complexity": 5,
+          "min_statements": 10,
+          "min_vars": 10
+        },
+        {
+          "max_value": 10,
+          "min_value": 1
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_magazine_length": 1000,
+          "max_note_length": 500,
+          "min_magazine_length": 500,
+          "min_note_length": 100
+        },
+        {
+          "pso_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "rng_difficulty_weights": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "max_rectangles": 25
+        },
+        {
+          "max_n": 100,
+          "max_rotations": 20,
+          "min_n": 100,
+          "min_rotations": 15
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "cube_size": 6,
+          "max_scramble_steps": 100,
+          "min_scramble_steps": 50
+        },
+        {
+          "max_moves": 100,
+          "min_moves": 50
+        },
+        {
+          "difficulty": 10
+        },
+        {
+          "max_words_in_sentence": 100,
+          "min_words_in_sentence": 50
+        },
+        {
+          "max_cols": 100,
+          "max_rows": 100,
+          "min_cols": 100,
+          "min_rows": 100
+        },
+        {
+          "max_terms": 20,
+          "max_value": 100000000,
+          "min_terms": 5,
+          "min_value": 1000,
+          "operators_weights": [
+            0.2,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "max_sides": 30,
+          "min_sides": 15
+        },
+        {
+          "max_terms": 5,
+          "min_terms": 5
+        },
+        {
+          "max_h": 19,
+          "max_w": 19,
+          "min_h": 19,
+          "min_w": 19
+        },
+        {
+          "max_word_len": 10,
+          "min_word_len": 10
+        },
+        {
+          "max_n": 100,
+          "min_n": 100
+        },
+        {
+          "max_string_length": 500,
+          "min_string_length": 100
+        },
+        {
+          "max_num_rules": 20,
+          "max_string_length": 500,
+          "min_num_rules": 15,
+          "min_string_length": 100
+        },
+        {
+          "max_initial_machines": 500,
+          "min_initial_machines": 100
+        },
+        {
+          "max_initial_blocks": 500,
+          "min_initial_blocks": 100
+        },
+        {
+          "max_empty": 60,
+          "min_empty": 50
+        },
+        {
+          "max_board_size": 7,
+          "max_empty": 25,
+          "min_board_size": 7,
+          "min_empty": 25
+        },
+        {
+          "allow_all": true,
+          "allow_no": true,
+          "allow_some": true,
+          "allow_some_not": true
+        },
+        {
+          "max_date_difference_days": 1825,
+          "max_time_difference_seconds": 86400
+        },
+        {
+          "max_disks": 15,
+          "max_pegs": 5,
+          "min_disks": 15,
+          "min_pegs": 5
+        },
+        {
+          "max_board_size": 19,
+          "max_stones": 15,
+          "min_board_size": 19
+        },
+        {
+          "max_word_length": 5,
+          "min_word_length": 4
+        },
+        {
+          "max_words": 100,
+          "min_words": 50
+        },
+        {
+          "max_word_length": 15,
+          "max_words": 100,
+          "min_word_length": 10,
+          "min_words": 50
+        },
+        {
+          "num_characteristics": 7,
+          "num_people": 7
+        }
+      ],
+      "source_dataset": "propositional_logic",
+      "source_index": 254,
+      "premises": [
+        "((((X ∧ X) → (S ∧ R)) ∨ ((P ∨ Y) ↔ (P ∨ T))) → (¬(R ∧ V) ∨ ((R ↔ R) ↔ (V ∧ X))))",
+        "(((¬S ∨ (X ∨ W)) ∨ ((U ↔ U) ↔ ¬U)) → (((S ∧ Q) ↔ (T → P)) ∧ (¬U ↔ ¬T)))",
+        "¬((¬V → (R → U)) → ¬(P → P))",
+        "¬((¬Q ∨ (T ∨ W)) ∨ ¬(T → U))",
+        "((((X → Y) ∧ ¬S) → (¬Q → (P ∧ X))) → (((R ∧ R) ∨ (V ∨ U)) → ((T → P) ∧ ¬V)))",
+        "((((U → T) ↔ (R → U)) ↔ (¬R → (U ↔ P))) ∧ ¬((X ↔ U) ∨ (Q → W)))",
+        "((((Y → P) ∨ (Y → Y)) ∧ ((T ∨ W) ↔ (U ∧ R))) ∧ (((Q ↔ X) → (Q → Y)) ∧ (¬V ↔ (S → T))))",
+        "((((Y → X) → (R → V)) → ¬¬W) ∧ ((¬R → (W ∨ W)) ↔ ((S ∨ U) ∨ (V ∧ V))))",
+        "((((Y ∧ V) ∨ ¬Y) → ((W ↔ W) ∨ ¬P)) → (((P ↔ U) ↔ ¬U) ∨ ((V ∨ S) ∧ (V → Q))))",
+        "((¬(U ↔ P) ↔ ¬¬V) → (¬(U → R) ∧ ((T ↔ T) ∨ ¬V)))"
+      ],
+      "variables": [
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y"
+      ],
+      "complexity": 4,
+      "example_answer": "(¬W ∨ P)",
+      "difficulty": {
+        "vars": [
+          10,
+          10
+        ],
+        "statements": [
+          10,
+          10
+        ],
+        "complexity": [
+          5,
+          5
+        ]
+      }
+    }
+  }
+}
