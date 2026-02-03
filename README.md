@@ -1,4 +1,4 @@
-### Gaia agent traces synthesis
+### Gaia-like agent traces synthesis
 
 Standalone ReAct trace collection code for:
 - **GAIA** (text-only subset; file-based tasks filtered out)
