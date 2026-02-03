@@ -5,6 +5,8 @@ Standalone **ReAct trace collection** code for:
 - **BBH (modified)** (MCQ → open-ended “GAIA-style”, with `\\boxed{}` answer instruction)
 - **Reasoning Gym** (procedural task generator)
 
+It focuses only on GAIA, modified BBH, and Reasoning Gym.
+
 ### Install
 
 From the repo root:
