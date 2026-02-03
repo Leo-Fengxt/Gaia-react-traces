@@ -20,8 +20,6 @@ Supported tools:
 
 ### Install
 
-From the repo root:
-
 ```bash
 cd Gaia-react-traces
 python3 -m venv .venv
