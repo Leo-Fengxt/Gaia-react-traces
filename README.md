@@ -16,7 +16,7 @@ Supported backends:
 Supported tools:
 - Web search and web contents via **EXA**
 - Code sandbox (python) via **E2B**
-- Browser tools via **Browserbase** (not recommended) (set allowed-tools to "all" to exclude)
+- Browser automation via **Browserbase** (optional)
 
 ### Install
 
@@ -51,7 +51,6 @@ Example (Reasoning Gym via config file), from repo root:
 python collect_traces.py \
   --sources reasoning-gym \
   --rg-config configs/rg_all_tasks_seed256_n624.yaml \
-  --rg-root /home/ubuntu/workspace/reasoning-gym \
   --rg-size 624 \
   --model google/gemini-3-flash-preview \
   --reasoning-effort low \
@@ -60,6 +59,8 @@ python collect_traces.py \
   --max-steps 30 \
   --allowed-tools all
 ```
+
+If `reasoning_gym` is not installed, either install it (for example: `pip install reasoning_gym`) or pass `--rg-root /path/to/reasoning-gym`.
 
 Outputs are written to `runs/collect/<run_id>/`:
 - `traces/` (per-task JSON traces; filenames are sanitized by replacing `:` with `-`)

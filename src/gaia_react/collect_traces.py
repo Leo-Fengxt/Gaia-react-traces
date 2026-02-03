@@ -21,7 +21,7 @@ from .clients.exa import ExaClient
 from .clients.openrouter import OpenRouterClient
 from .config import AgentConfig, E2BConfig, ExaConfig, LLMConfig, RunConfig
 from .gaia.dataset import load_gaia_dataset
-from .rgym.dataset import default_reasoning_gym_root, list_reasoning_gym_datasets, load_reasoning_gym_tasks
+from .rgym.dataset import list_reasoning_gym_datasets, load_reasoning_gym_tasks
 from .tools.browserbase_playwright import BrowserbasePlaywrightTool
 from .tools.disabled import DisabledE2BPythonTool, DisabledWebContentsTool, DisabledWebSearchTool
 from .tools.e2b_python import E2BPythonTool
@@ -199,7 +199,10 @@ def _load_source_tasks(args: argparse.Namespace, source: str) -> List[TraceTask]
     cap = per_source_limit if per_source_limit is not None else limit
 
     if source in {"reasoning-gym", "reasoning_gym", "rgym"}:
-        rg_root = str(getattr(args, "rg_root", None) or default_reasoning_gym_root())
+        rg_root_raw = getattr(args, "rg_root", None)
+        rg_root = str(rg_root_raw).strip() if rg_root_raw else None
+        if rg_root == "":
+            rg_root = None
         if bool(getattr(args, "rg_list_datasets", False)):
             names = list_reasoning_gym_datasets(rg_root=rg_root)
             print("\n".join(names))
@@ -568,7 +571,7 @@ def parse_args() -> argparse.Namespace:
         "--rg-root",
         type=str,
         default=None,
-        help="Path to local reasoning-gym repo root (defaults to a sibling reasoning-gym/ if present).",
+        help="Optional path to a local reasoning-gym repo root. Omit if `reasoning_gym` is installed.",
     )
     p.add_argument(
         "--rg-list-datasets",
@@ -605,7 +608,10 @@ async def main() -> None:
     if bool(getattr(args, "rg_list_datasets", False)):
         srcs = [str(s).strip().lower() for s in list(getattr(args, "sources", []) or [])]
         if srcs and all(s in {"reasoning-gym", "reasoning_gym", "rgym"} for s in srcs):
-            rg_root = str(getattr(args, "rg_root", None) or default_reasoning_gym_root())
+            rg_root_raw = getattr(args, "rg_root", None)
+            rg_root = str(rg_root_raw).strip() if rg_root_raw else None
+            if rg_root == "":
+                rg_root = None
             names = list_reasoning_gym_datasets(rg_root=rg_root)
             print("\n".join(names))
             return

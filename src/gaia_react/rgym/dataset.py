@@ -53,10 +53,23 @@ def _ensure_reasoning_gym_on_path(rg_root: Optional[str]) -> None:
 
 
 def _import_reasoning_gym(rg_root: Optional[str]) -> Any:
-    _ensure_reasoning_gym_on_path(rg_root)
     try:
+        if rg_root:
+            _ensure_reasoning_gym_on_path(rg_root)
         import reasoning_gym  # type: ignore
+        return reasoning_gym
     except ModuleNotFoundError as e:
+        # If the package isn't installed but a local clone exists in a common location,
+        # try importing from that clone.
+        if not rg_root:
+            try:
+                p = default_reasoning_gym_root()
+                if p.exists():
+                    _ensure_reasoning_gym_on_path(str(p))
+                    import reasoning_gym  # type: ignore
+                    return reasoning_gym
+            except Exception:
+                pass
         msg = str(e)
         raise ModuleNotFoundError(
             "Failed to import `reasoning_gym`.\n"
@@ -68,7 +81,6 @@ def _import_reasoning_gym(rg_root: Optional[str]) -> Any:
             f"  pip install -e {default_reasoning_gym_root()}\n"
             f"\nOriginal error: {msg}"
         ) from e
-    return reasoning_gym
 
 
 @contextlib.contextmanager
