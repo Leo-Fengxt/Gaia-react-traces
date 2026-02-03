@@ -1,7 +1,5 @@
 """
 Convenience entrypoint for running the collector from repo root.
-
-This avoids requiring `PYTHONPATH=src` or an editable install.
 """
 
 from __future__ import annotations
