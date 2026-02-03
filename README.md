@@ -61,7 +61,7 @@ python collect_traces.py \
   --allowed-tools all
 ```
 
-If `reasoning_gym` is not installed, either install it (for example: `pip install reasoning_gym`) or pass `--rg-root /path/to/reasoning-gym`.
+`reasoning_gym` is installed as a normal dependency. Use `--rg-root /path/to/reasoning-gym` only if you want to run against a local checkout.
 
 Outputs are written to `runs/collect/<run_id>/`:
 - `traces/` (per-task JSON traces; filenames are sanitized by replacing `:` with `-`)
