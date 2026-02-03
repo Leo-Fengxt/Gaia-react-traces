@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from tqdm import tqdm
+
 from ..trace_task import TraceTask
 
 
@@ -238,7 +240,9 @@ def load_reasoning_gym_tasks(
     cap = max(0, int(cap))
 
     tasks: List[TraceTask] = []
-    for idx in range(cap):
+    it = range(cap)
+    show = cap >= 50 and sys.stderr.isatty() and not bool(os.getenv("TQDM_DISABLE"))
+    for idx in tqdm(it, total=cap, desc="Generating tasks (reasoning-gym)", unit="task", leave=False, disable=not show):
         with _suppress_generation_noise():
             entry = ds_obj[idx]
         if not isinstance(entry, dict):

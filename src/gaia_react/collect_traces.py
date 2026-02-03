@@ -644,6 +644,7 @@ async def main() -> None:
         ),
     )
 
+    print(f"Preparing tasks for sources: {list(getattr(args, 'sources', []) or [])}")
     tasks: List[TraceTask] = []
     for src in list(getattr(args, "sources", []) or []):
         tasks.extend(_load_source_tasks(args, str(src)))
