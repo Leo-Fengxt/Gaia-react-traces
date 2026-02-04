@@ -16,7 +16,7 @@ Supported backends:
 Supported tools:
 - Web search and web contents via **EXA**
 - Code sandbox (python) via **E2B**
-- Browser automation via **Browserbase** (optional)
+- Browser automation via **Browserbase** (not recommended, use allowed-tools "all" to exclude)
 
 ### Install
 
