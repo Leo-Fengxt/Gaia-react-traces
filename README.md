@@ -63,6 +63,6 @@ python collect_traces.py \
 
 Outputs are written to `runs/collect/<run_id>/`:
 - `traces/` (per-task JSON traces)
-- `reasoning/` (optional **hidden reasoning archive** per task; not included in traces)
+- `reasoning/` (optional **model internal reasoning archive** per task; not included in traces)
 - `tasks.jsonl`, `results.jsonl`, `summary.json`, `config.json`
 
