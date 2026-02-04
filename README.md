@@ -62,7 +62,7 @@ python collect_traces.py \
 `reasoning_gym` is installed as a dependency. Use `--rg-root /path/to/reasoning-gym` for local checkout.
 
 Outputs are written to `runs/collect/<run_id>/`:
-- `traces/` (per-task JSON traces; filenames are sanitized by replacing `:` with `-`)
+- `traces/` (per-task JSON traces)
 - `reasoning/` (optional **hidden reasoning archive** per task; not included in traces)
 - `tasks.jsonl`, `results.jsonl`, `summary.json`, `config.json`
 
